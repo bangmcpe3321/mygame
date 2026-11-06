@@ -314,49 +314,22 @@ class TroyCinematic {
     renderFleetDepartureScene() {
         return `
         <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="cinematic-svg">
+            <!-- TRANH MINH HỌA SỬ THI SOÁI HẠM TRIREME HY LẠP TIẾN VÀO BIỂN SÂU -->
+            <image href="assets/greek_trireme.jpg" x="0" y="0" width="1200" height="600" preserveAspectRatio="xMidYMid slice" />
+            
+            <!-- HIỆU ỨNG ÁNH HOÀNG HÔN RỰC LỬA VÀ BÓNG MÂY GIÔNG BÃO -->
+            <rect width="1200" height="600" fill="url(#stormSea)" opacity="0.25" />
+            
             <defs>
                 <linearGradient id="stormSea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#07131e" />
-                    <stop offset="50%" stop-color="#0d283d" />
-                    <stop offset="100%" stop-color="#040b12" />
+                    <stop offset="0%" stop-color="#07131e" stop-opacity="0.2"/>
+                    <stop offset="60%" stop-color="#0d283d" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#000000" stop-opacity="0.8"/>
                 </linearGradient>
-                <radialGradient id="settingSunFire" cx="15%" cy="30%" r="50%">
-                    <stop offset="0%" stop-color="#ff7b00" stop-opacity="0.8" />
-                    <stop offset="40%" stop-color="#c43b00" stop-opacity="0.4" />
-                    <stop offset="100%" stop-color="#07131e" stop-opacity="0" />
-                </radialGradient>
             </defs>
 
-            <rect width="1200" height="600" fill="url(#stormSea)" />
-            <circle cx="180" cy="200" r="300" fill="url(#settingSunFire)" />
-            <path d="M920,0 L880,110 L940,140 L890,260" stroke="#77ccff" stroke-width="2.5" opacity="0.6" fill="none"/>
-
-            <polygon points="0,220 220,380 0,600" fill="#140f0c" opacity="0.9"/>
-            <polygon points="20,180 80,300 0,350" fill="#ff3300" opacity="0.3" filter="blur(8px)"/>
-
-            <path d="M0,420 Q300,380 600,430 T1200,420 L1200,600 L0,600 Z" fill="#091c2b" />
-            <path d="M0,460 Q300,500 600,460 T1200,460 L1200,600 L0,600 Z" fill="#06121c" />
-
-            <!-- SOÁI HẠM CỦA ODYSSEUS -->
-            <g id="flagship-departure" transform="translate(480, 260) scale(1.15)">
-                <path d="M20,150 Q160,170 320,140 Q380,110 400,60 L330,145 L40,145 Q0,100 -20,50 Q-10,120 20,150 Z" fill="#42250d" />
-                <polygon points="380,120 440,135 370,145" fill="#c49a45" />
-
-                <line x1="180" y1="150" x2="180" y2="-40" stroke="#241407" stroke-width="7"/>
-                <path d="M180,-30 Q270,-10 270,70 L180,60 Z" fill="#11161b" opacity="0.9" stroke="#333" stroke-width="1.5"/>
-
-                <line x1="80" y1="150" x2="40" y2="210" stroke="#7a4d25" stroke-width="4"/>
-                <line x1="120" y1="150" x2="80" y2="210" stroke="#7a4d25" stroke-width="4"/>
-                <line x1="160" y1="150" x2="120" y2="210" stroke="#7a4d25" stroke-width="4"/>
-                <line x1="200" y1="150" x2="160" y2="210" stroke="#7a4d25" stroke-width="4"/>
-                <line x1="240" y1="150" x2="200" y2="210" stroke="#7a4d25" stroke-width="4"/>
-            </g>
-
-            <g id="fleet-distant" opacity="0.5" transform="translate(860, 310) scale(0.55)">
-                <path d="M0,140 Q150,160 300,130 L280,70 L20,70 Z" fill="#080e14"/>
-                <line x1="150" y1="130" x2="150" y2="-10" stroke="#000" stroke-width="6"/>
-                <path d="M150,-5 Q220,10 220,70 L150,60 Z" fill="#0a121a"/>
-            </g>
+            <!-- TIA CHỚP BÃO TỐ Ở CHÂN TRỜI -->
+            <path d="M920,0 L880,110 L940,140 L890,260" stroke="#77ccff" stroke-width="3" opacity="0.75" fill="none"/>
         </svg>
         `;
     }

@@ -1216,7 +1216,216 @@ body {
 }
 
 /* ========================================================
-   KEYFRAME ANIMATIONS
+   KEYFRAME ANIMATIONS & ĐỒ HỌA SỬ THI HD
+   ======================================================== */
+.scene-interactive-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 8;
+    pointer-events: none;
+}
+
+/* 1. STAGE CYCLOPS HD */
+.stage-cyclops-hd {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #080504;
+}
+
+.cyclops-art-backdrop {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    background: radial-gradient(circle at 60% 40%, #2b170c 0%, #0c0806 80%, #000 100%);
+    z-index: 1;
+}
+
+.hero-art-wrapper {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 48%;
+    height: 100%;
+    z-index: 3;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
+}
+
+.art-img-odysseus {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 15%;
+    filter: contrast(1.12) brightness(1.02) drop-shadow(10px 0 30px rgba(0,0,0,0.9));
+    transition: transform 0.5s ease;
+}
+
+.monster-art-wrapper {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 58%;
+    height: 100%;
+    z-index: 2;
+    overflow: hidden;
+    mask-image: linear-gradient(to left, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+}
+
+.art-img-cyclops {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    filter: contrast(1.15) brightness(0.95);
+    animation: cyclopsBreathe 4s infinite ease-in-out;
+}
+
+.cyclops-eye-glow-point {
+    position: absolute;
+    top: 25%;
+    left: 49%;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffcc 0%, #ff4500 70%, transparent 100%);
+    box-shadow: 0 0 18px #ff4500, 0 0 35px #ff0000;
+    animation: eyePulse 2s infinite alternate;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.cyclops-shadow-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 35%);
+    pointer-events: none;
+}
+
+/* 2. STAGE SIRENS HD */
+.stage-sirens-hd {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #040d16;
+}
+
+.sirens-art-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.art-img-sirens {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: contrast(1.1) brightness(0.95);
+    animation: oceanSway 9s infinite alternate ease-in-out;
+}
+
+.sirens-vignette-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 35%, rgba(2,10,18,0.75) 100%),
+                linear-gradient(to top, rgba(2,10,18,0.9) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+.trireme-ship-container {
+    position: absolute;
+    bottom: 25px;
+    left: 12%;
+    width: 440px;
+    height: 245px;
+    z-index: 4;
+    animation: shipRocking 4.2s infinite ease-in-out;
+}
+
+.art-img-trireme {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.9));
+}
+
+.wax-shield-bubble {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 215, 0, 0);
+    box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.shield-glow-active {
+    border-color: rgba(255, 215, 0, 0.95);
+    box-shadow: 0 0 35px #ffd700, inset 0 0 25px #ffea00;
+    animation: waxPulse 0.4s infinite alternate;
+}
+
+/* 3. STAGE SCYLLA HD */
+.stage-scylla-hd {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #05080f;
+}
+
+.scylla-art-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.art-img-scylla {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    filter: contrast(1.15) brightness(0.92);
+    animation: stormDrift 10s infinite alternate ease-in-out;
+}
+
+.scylla-storm-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 75% 20%, rgba(0,255,255,0.08) 0%, transparent 60%),
+                linear-gradient(to top, rgba(3,5,10,0.9) 0%, transparent 35%);
+    pointer-events: none;
+}
+
+.scylla-ship-wrapper {
+    position: absolute;
+    bottom: 25px;
+    left: 18%;
+    width: 400px;
+    height: 230px;
+    z-index: 4;
+    animation: straitShipBob 3.2s infinite ease-in-out;
+}
+
+.art-img-strait-ship {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.95));
+}
+
+/* ========================================================
+   KEYFRAME ANIMATIONS NÂNG CAO
    ======================================================== */
 .torch-flicker { animation: flicker 1.8s infinite alternate ease-in-out; }
 @keyframes flicker {
@@ -1225,149 +1434,151 @@ body {
     100% { opacity: 0.6; r: 135; }
 }
 
-.cyclops-idle { animation: cyclopsBreathe 3s infinite ease-in-out; }
+@keyframes eyePulse {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    100% { transform: scale(1.25); opacity: 1; }
+}
+
 @keyframes cyclopsBreathe {
-    0%, 100% { transform: translate(610px, 85px); }
-    50% { transform: translate(610px, 78px); }
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.02) translateY(-6px); }
 }
 
-.cyclops-roaring { animation: cyclopsRoarShake 0.15s infinite; }
-@keyframes cyclopsRoarShake {
-    0% { transform: translate(610px, 80px) scale(1.05); }
-    50% { transform: translate(616px, 88px) scale(1.08); }
-    100% { transform: translate(606px, 82px) scale(1.06); }
-}
-
-.wave-pulse { animation: waveExpand 0.8s infinite linear; }
-@keyframes waveExpand {
-    0% { r: 30; opacity: 1; }
-    100% { r: 190; opacity: 0; }
-}
-
-.soldiers-shaking { animation: soldierTremble 0.1s infinite; }
-@keyframes soldierTremble {
-    0% { transform: translate(140px, 270px); }
-    50% { transform: translate(137px, 271px); }
-    100% { transform: translate(143px, 269px); }
-}
-
-.arrow-flying-anim { animation: arrowShoot 0.3s ease-out forwards; }
-@keyframes arrowShoot {
-    0% { opacity: 0; transform: translate(-300px, 80px); }
+.spear-strike-anim { animation: spearThrust 0.35s ease-out forwards; }
+@keyframes spearThrust {
+    0% { opacity: 0; transform: translate(-250px, 40px); }
     100% { opacity: 1; transform: translate(0, 0); }
 }
 
-.monster-hit-anim { animation: monsterReel 0.6s ease-out; }
-@keyframes monsterReel {
-    0% { transform: translate(610px, 85px); }
-    25% { transform: translate(640px, 75px) rotate(5deg); }
-    100% { transform: translate(610px, 85px); }
+.monster-recoil-anim { animation: monsterRecoil 0.7s ease-out; }
+@keyframes monsterRecoil {
+    0% { transform: translate(0, 0); }
+    30% { transform: translate(45px, -15px) rotate(4deg); }
+    100% { transform: translate(0, 0); }
 }
 
-.cyclops-blinded-stumble { animation: blindFall 2s forwards ease-in-out; }
-@keyframes blindFall {
-    0% { transform: translate(610px, 85px); }
-    40% { transform: translate(650px, 50px) rotate(15deg); }
-    100% { transform: translate(720px, 220px) rotate(35deg); opacity: 0.3; }
+.eye-damage-pulse {
+    animation: eyeDamage 0.4s infinite alternate;
+}
+@keyframes eyeDamage {
+    0% { transform: scale(1); box-shadow: 0 0 20px #ff0000; }
+    100% { transform: scale(2.2); box-shadow: 0 0 50px #ffffff, 0 0 80px #ff0000; background: #ffffff; }
 }
 
-.ship-bobbing { animation: shipRock 3.5s infinite ease-in-out; }
-@keyframes shipRock {
-    0%, 100% { transform: translate(180px, 200px) rotate(0deg); }
-    50% { transform: translate(180px, 206px) rotate(-2deg); }
+.cyclops-slam-anim { animation: cyclopsSlam 0.5s ease-in-out; }
+@keyframes cyclopsSlam {
+    0% { transform: translateY(0); }
+    40% { transform: translateY(-25px) scale(1.04); }
+    70% { transform: translateY(12px) scale(0.98); }
+    100% { transform: translateY(0); }
 }
 
-.fog-drifting { animation: fogFloat 6s infinite alternate ease-in-out; }
-@keyframes fogFloat {
-    0% { opacity: 0.4; transform: translateX(0); }
-    100% { opacity: 0.7; transform: translateX(-40px); }
+.hero-stumble-anim { animation: heroStumble 0.4s ease-out; }
+@keyframes heroStumble {
+    0%, 100% { transform: translateX(0); }
+    30% { transform: translateX(-15px); }
+    70% { transform: translateX(5px); }
 }
 
-.sirens-floating { animation: sirenHover 2.5s infinite ease-in-out; }
-@keyframes sirenHover {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+.cyclops-defeated-anim { animation: cyclopsDefeated 2.2s forwards ease-in-out; }
+@keyframes cyclopsDefeated {
+    0% { transform: translate(0, 0); opacity: 1; }
+    30% { transform: translate(30px, -20px) rotate(8deg); }
+    100% { transform: translate(120px, 150px) rotate(25deg); opacity: 0.15; filter: grayscale(1) blur(4px); }
 }
 
-.sirens-furious { animation: sirenFrenzy 0.15s infinite; }
-@keyframes sirenFrenzy {
-    0% { transform: translate(0, 0) scale(1.1); }
-    50% { transform: translate(4px, -6px) scale(1.15); }
-    100% { transform: translate(-3px, 3px) scale(1.1); }
+/* SIRENS ANIMATIONS */
+@keyframes oceanSway {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.04) translate(-15px, -8px); }
 }
 
-.hero-struggling { animation: heroFrenzy 0.12s infinite; }
-@keyframes heroFrenzy {
-    0% { transform: translate(180px, 10px) rotate(-3deg); }
-    50% { transform: translate(180px, 8px) rotate(4deg); }
-    100% { transform: translate(180px, 12px) rotate(-2deg); }
+@keyframes shipRocking {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(8px) rotate(-2deg); }
 }
 
-.ship-accelerating { animation: shipBurst 1.2s ease-out; }
-@keyframes shipBurst {
-    0% { transform: translate(180px, 200px); }
-    50% { transform: translate(220px, 195px); }
-    100% { transform: translate(180px, 200px); }
+@keyframes waxPulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
 }
 
-.ship-escaping-fog { animation: shipLeave 2s ease-in forwards; }
-@keyframes shipLeave {
-    0% { transform: translate(180px, 200px); }
-    100% { transform: translate(700px, 180px); opacity: 0.2; }
+.ship-accelerating-anim { animation: shipSurge 1.3s ease-out; }
+@keyframes shipSurge {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(60px) translateY(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.ship-panic-anim { animation: shipPanic 0.12s 6; }
+@keyframes shipPanic {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-8px, 4px) rotate(-3deg); }
+    75% { transform: translate(8px, -4px) rotate(3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.ship-escaping-anim { animation: shipEscape 2s forwards ease-in; }
+@keyframes shipEscape {
+    0% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(650px); opacity: 0; }
+}
+
+.sirens-frenzy-anim { animation: sirensFrenzy 0.15s infinite; }
+@keyframes sirensFrenzy {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15) translate(4px, -4px); }
+    100% { transform: scale(1); }
+}
+
+/* SCYLLA ANIMATIONS */
+@keyframes stormDrift {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.05) translate(10px, -10px); }
+}
+
+@keyframes straitShipBob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(6px) rotate(-1.5deg); }
+}
+
+.scylla-head-dive-anim { animation: scyllaDive 0.8s ease-in-out; }
+@keyframes scyllaDive {
+    0% { transform: translate(0, 0); }
+    45% { transform: translate(-80px, 60px) scale(1.15); }
+    100% { transform: translate(0, 0); }
+}
+
+.scylla-head-recoil-anim { animation: scyllaHeadRecoil 0.7s ease-out; }
+@keyframes scyllaHeadRecoil {
+    0% { transform: translate(0, 0); }
+    35% { transform: translate(90px, -50px) rotate(-20deg); }
+    100% { transform: translate(0, 0); }
+}
+
+.ship-bitten-anim { animation: shipBitten 0.1s 8; }
+@keyframes shipBitten {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    30% { transform: translate(-6px, 6px) rotate(3deg); }
+    70% { transform: translate(6px, -6px) rotate(-3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.ship-surge-anim { animation: shipSurgeStrait 1.2s ease-out; }
+@keyframes shipSurgeStrait {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(45px); }
+    100% { transform: translateX(0); }
+}
+
+.ship-full-escape-anim { animation: shipFullEscape 2.2s forwards ease-in; }
+@keyframes shipFullEscape {
+    0% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(700px); opacity: 0; }
 }
 
 .whirlpool-spin { transform-origin: 0 0; animation: spinWhirl 2.5s infinite linear; }
 @keyframes spinWhirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.whirlpool-spin-reverse { transform-origin: 0 0; animation: spinWhirlRev 1.8s infinite linear; }
-@keyframes spinWhirlRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-
-.scylla-neck-idle { animation: snakeSway 3s infinite ease-in-out alternate; }
-@keyframes snakeSway {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-8px) rotate(2deg); }
-}
-
-.scylla-dive-attack { animation: scyllaChomp 0.8s ease-in-out; }
-@keyframes scyllaChomp {
-    0% { transform: translate(0, 0); }
-    40% { transform: translate(-140px, 130px) scale(1.2); }
-    100% { transform: translate(0, 0); }
-}
-
-.ship-bitten-shake { animation: shipDamage 0.1s infinite; }
-@keyframes shipDamage {
-    0% { transform: translate(340px, 240px) rotate(3deg); }
-    50% { transform: translate(335px, 246px) rotate(-4deg); }
-    100% { transform: translate(345px, 238px) rotate(2deg); }
-}
-
-.crew-panic-anim { animation: crewPanic 0.15s infinite; }
-@keyframes crewPanic {
-    0% { transform: translate(60px, 60px); }
-    50% { transform: translate(62px, 54px); }
-    100% { transform: translate(58px, 62px); }
-}
-
-.sword-slash-anim { animation: heroSwordSlash 0.4s ease-out; }
-@keyframes heroSwordSlash {
-    0% { transform: rotate(-30deg, 20, 35); }
-    50% { transform: rotate(60deg, 20, 35) scale(1.3); }
-    100% { transform: rotate(-30deg, 20, 35); }
-}
-
-.scylla-head-recoil { animation: headRecoil 0.6s ease-out; }
-@keyframes headRecoil {
-    0% { transform: translate(0, 0); }
-    30% { transform: translate(60px, -40px) rotate(-15deg); }
-    100% { transform: translate(0, 0); }
-}
-
-.ship-full-escape { animation: escapeStrait 2s ease-in forwards; }
-@keyframes escapeStrait {
-    0% { transform: translate(340px, 240px); }
-    100% { transform: translate(850px, 220px); opacity: 0; }
-}
 
 .screen-rumble { animation: rumble 0.1s 8; }
 @keyframes rumble {
@@ -1378,6 +1589,7 @@ body {
     100% { transform: translate(0, 0); }
 }
 
+.screen-flash-purple { box-shadow: inset 0 0 100px rgba(180, 0, 255, 0.75) !important; }
 .screen-flash-red { box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.8) !important; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1389,7 +1601,12 @@ body {
 @media (max-width: 768px) {
     .game-header { padding: 8px 12px; }
     .brand-title { font-size: 0.95rem; }
-    .visual-theater { height: 260px; }
+    .visual-theater { height: 280px; }
+    .hero-art-wrapper { width: 46%; }
+    .monster-art-wrapper { width: 68%; }
+    .trireme-ship-container { width: 280px; height: 155px; bottom: 12px; left: 5%; }
+    .scylla-ship-wrapper { width: 260px; height: 145px; bottom: 12px; left: 8%; }
+    .cyclops-eye-glow-point { width: 14px; height: 14px; top: 24%; left: 48%; }
     .options-grid { grid-template-columns: 1fr; }
     .scroll-container { padding: 24px 20px; }
     .story-title { font-size: 1.35rem; }
