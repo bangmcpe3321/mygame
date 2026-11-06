@@ -14,27 +14,27 @@ class TroyCinematic {
         this.particles = [];
         this.animFrame = null;
 
-        // Mỗi cảnh kéo dài 6 giây và tự động trôi mượt mà sang cảnh tiếp theo
+        // Mỗi cảnh kéo dài 3.5 giây và tự động trôi nhanh, gọn gàng sang cảnh tiếp theo
         this.scenes = [
             {
                 id: "scene-horse",
                 title: "HỒI I: ĐÊM THÀNH TROY – MƯU KẾ NGỰA GỖ",
                 desc: "Năm thứ mười của cuộc vây hãm huyền thoại... Mưu kế vĩ đại của Odysseus với Con Ngựa Gỗ khổng lồ đã mở toang cánh cổng thành tưởng chừng bất khả xâm phạm.",
-                duration: 6000,
+                duration: 3500,
                 render: () => this.renderTrojanHorseScene()
             },
             {
                 id: "scene-fire",
                 title: "HỒI II: BIỂN LỬA THÀNH TROY",
                 desc: "Ngọn lửa bốc cao ngùn ngụt thấu tận trời xanh, cung điện Priam sụp đổ trong tro tàn. Thắng lợi đẫm máu của người Hy Lạp đã khơi mào cơn thịnh nộ của thần biển Poseidon.",
-                duration: 6000,
+                duration: 3500,
                 render: () => this.renderBurningTroyScene()
             },
             {
                 id: "scene-fleet",
                 title: "HỒI III: HẠM ĐỘI XUẤT PHÁT VỀ ITHACA",
                 desc: "Những chiến thuyền rẽ sóng rời bến bờ rực lửa, tiến vào biển khơi bão tố. Odysseus không hề hay biết một hải trình 10 năm đằng đẵng với muôn vàn quái thú đang chực chờ...",
-                duration: 6000,
+                duration: 3500,
                 render: () => this.renderFleetDepartureScene()
             }
         ];
