@@ -1,30 +1,35 @@
-# 🏛️ Odyssey: The Epic Voyage
+# 🏛️ Odyssey: The Epic Voyage (Quizizz & Realistic Edition)
 
-Trò chơi trắc nghiệm tương tác sử thi ngắn theo chủ đề **Sử thi Odyssey** của Homer, được xây dựng bằng công nghệ Web thuần túy (HTML5, CSS3, JavaScript, SVG Animations & Web Audio API) – sẵn sàng chạy trực tiếp trên trình duyệt hoặc host miễn phí trên **GitHub Pages**.
+Trò chơi trắc nghiệm tương tác sử thi theo chủ đề **Sử thi Odyssey** của Homer, được thiết kế với phong cách đồ họa Hy Lạp cổ đại tả thực, hệ thống tính điểm tốc độ kiểu **Quizizz**, bảng xếp hạng trực tiếp (Live Leaderboard) và trường đoạn điện ảnh trận chiến thành Troy.
 
 ---
 
-## 📖 Cốt Truyện & 3 Thử Thách
+## 🌟 Các Tính Năng Mới Nổi Bật
 
-Trò chơi theo chân người anh hùng **Odysseus** và các binh sĩ Hy Lạp trên hành trình trở về quê hương Ithaca sau chiến tranh thành Troy:
+### 1. Trường Đoạn Điện Ảnh Mở Đầu Tả Thực (Troy Cinematic)
+* **Khung cảnh 1:** Đêm thành Troy huyền thoại với **Con Ngựa Gỗ Khổng Lồ (Trojan Horse)** sừng sững trước cổng thành Skaian, mưu trí của Odysseus mở toang cổng thành.
+* **Khung cảnh 2:** Biển lửa ngút trời thiêu rụi thành Troy, đền thờ và cung điện Priam sụp đổ trong tro tàn.
+* **Khung cảnh 3:** Hạm đội chiến thuyền Hy Lạp rẽ sóng rời bến bờ rực lửa tiến vào biển Aegean giông bão.
+* Tích hợp hiệu ứng hạt tàn tro than hồng lơ lửng (Ember Particle System) và chuyển động máy quay điện ảnh Ken Burns.
 
-1. **Thử thách 1: Hang đá Cyclops (Polyphemus)**
-   * **Bối cảnh:** Cửa hang đá tối tăm nơi người khổng lồ một mắt giam giữ nhóm lính.
-   * **Khi trả lời sai:** Polyphemus rống lên kinh hoàng đe dọa cửa hang, rung chuyển đất trời.
-   * **Khi trả lời đúng:** Một mũi tên xé gió bắn trúng tên quái vật.
-   * **Kết thúc thử thách:** Odysseus và đồng đội dồn sức đâm cọc lửa vào mắt Cyclops, mở đường thoát thân.
+### 2. Tự Động Chuyển Cảnh Ngay Sau Khi Trả Lời (Auto-Advance)
+* Người chơi không cần phải bấm thêm nút nào trên màn hình.
+* Khi nhấp chọn đáp án, hệ thống ngay lập tức kích hoạt hoạt họa hành động (mũi tên bắn, Cyclops rống, lính nhảy thuyền, chém kiếm Scylla) và tự động chuyển câu sau 1.8 giây.
 
-2. **Thử thách 2: Vùng biển Siren ma mị**
-   * **Bối cảnh:** Chiếc thuyền Hy Lạp lướt trên làn sóng mù sương, phía xa là hòn đảo đá với bóng đen các nàng Siren ma mị. Odysseus bị trói chặt vào cột buồm và bịt mắt.
-   * **Khi trả lời sai:** Odysseus quằn quại gào thét trong cơn căng thẳng tột độ (bong bóng thoại kêu gào), một thủy thủ không cưỡng lại được khúc ca mê hoặc đã nhảy xuống biển.
-   * **Khi trả lời đúng:** Thủy thủ đoàn vững tay chèo, không ai nhảy khỏi thuyền; các bóng đen Siren phía xa rít lên giận dữ.
-   * **Kết thúc thử thách:** Con thuyền kiên cường rẽ sóng vượt qua màn sương mù bí hiểm.
+### 3. Hệ Thống Phòng Chơi Host & Leaderboard Trực Tiếp (Multiplayer & Room PIN)
+* **Chế độ Host:** 
+  * Cung cấp **Mã phòng (Room PIN)** để người chơi tham gia.
+  * Trò chơi chỉ bắt đầu và mở khóa đồng loạt khi Host bấm **🚀 BẮT ĐẦU / DEPLOY GAME CHO MỌI NGƯỜI**.
+  * Nút **🔄 RESET BẢNG ĐIỂM** cho phép làm mới điểm số sau khi kết thúc để chuẩn bị cho lượt chơi tiếp theo.
+* **Bảng xếp hạng thời gian thực (Live Leaderboard Drawer):**
+  * Hiển thị bảng thứ hạng 1, 2, 3 (Huy chương Vàng 🥇, Bạc 🥈, Đồng 🥉), tên người chơi, điểm số và chuỗi Streak.
+  * Tích hợp sẵn dàn chiến binh Hy Lạp mô phỏng (Achilles, Diomedes, Ajax, Telemachus, Penelope) thi đấu trực tiếp, giúp bảng xếp hạng nhảy điểm kịch tính như phòng thi đấu Quizizz thực thụ.
 
-3. **Thử thách 3: Eo biển tử thần Scylla & Charybdis**
-   * **Bối cảnh:** Đoàn thuyền tiến vào khe núi hẹp giữa biển, một bên là vực xoáy Charybdis cuồn cuộn hút nước, phía đối diện là vách đá nơi quái thú 6 đầu Scylla chặn lối.
-   * **Khi trả lời đúng:** Odysseus vung thanh gươm đồng tung đòn chém đứt móng vuốt / đẩy lùi một chiếc đầu Scylla.
-   * **Khi trả lời sai:** Scylla lao xuống đớp vỡ be thuyền gây hoảng loạn tột cùng cho thủy thủ.
-   * **Kết thúc mở:** Con tàu bứt tốc thoát khỏi eo biển tử thần, hướng về chân trời bao la nơi quê nhà Ithaca vẫn đang chờ đón phía trước.
+### 4. Điểm Thưởng Tốc Độ (Speed Bonus) & Combo Streak Kiểu Quizizz
+* **Đồng hồ đếm ngược 15 giây:** Thanh thời gian đổi màu sinh động từ Xanh ➔ Cam ➔ Đỏ kèm tiếng tíc tắc trong 4 giây cuối.
+* **Công thức tính điểm:**
+  $$\text{Tổng điểm} = 1000 \text{ (Cơ bản)} + \text{Speed Bonus (Tối đa } +500\text{)} + \text{Streak Bonus (Chuỗi đúng)}$$
+* Trả lời sai sẽ nhận $0$ điểm và ngắt chuỗi streak.
 
 ---
 
@@ -32,51 +37,22 @@ Trò chơi theo chân người anh hùng **Odysseus** và các binh sĩ Hy Lạp
 
 ```
 mygame/
-├── index.html            # Trang giao diện chính của game
-├── style.css             # Giao diện Hy Lạp cổ đại & toàn bộ animation CSS
+├── index.html            # Giao diện chính, Timer, Leaderboard & Sảnh chờ Host
+├── style.css             # Giao diện tả thực, hoạt họa SVG, Ken Burns & hiệu ứng điểm
 ├── data/
-│   └── questions.js      # Cốt truyện mở đầu, chuyển màn, kết thúc và ngân hàng câu hỏi
+│   └── questions.js      # Lời dẫn truyện 3 màn và ngân hàng câu hỏi
 ├── js/
-│   ├── audio.js          # Hệ thống âm thanh sử thi (Web Audio API không cần file MP3 ngoài)
-│   ├── visuals.js        # Đồ họa vector động SVG cho 3 màn chơi
-│   └── game.js           # Trình điều khiển logic game, tính điểm và vòng lặp
-└── README.md             # Hướng dẫn chi tiết
+│   ├── cinematic.js      # Hoạt cảnh mở đầu thành Troy với hạt than hồng
+│   ├── multiplayer.js    # Quản trị phòng chơi Host, tính điểm Quizizz & Leaderboard
+│   ├── audio.js          # Hệ thống âm thanh sử thi: War Horn, Ticking, Combo Chime
+│   ├── visuals.js        # Đồ họa vector SVG tả thực cho 3 thử thách
+│   └── game.js           # Bộ điều khiển vòng lặp chính & tự động chuyển cảnh
+└── README.md
 ```
 
 ---
 
-## ✍️ Cách Thêm / Chỉnh Sửa Câu Hỏi
+## 🌐 Chơi Trực Tiếp Trên GitHub Pages
 
-Mở tệp [`data/questions.js`](data/questions.js). Mỗi thử thách (`cyclops`, `sirens`, `scylla`) là một danh sách câu hỏi:
-
-```javascript
-{
-    id: "c5", // Mã câu hỏi
-    question: "Câu hỏi bạn muốn đưa ra?",
-    options: [
-        "Lựa chọn A",
-        "Lựa chọn B",
-        "Lựa chọn C",
-        "Lựa chọn D"
-    ],
-    correctIndex: 1, // Vị trí đáp án đúng: 0 là A, 1 là B, 2 là C, 3 là D
-    explanation: "Lời giải thích thú vị hiển thị sau khi người chơi trả lời."
-}
-```
-
-Bạn có thể thêm bao nhiêu câu hỏi tùy thích vào bất kỳ thử thách nào, hệ thống sẽ tự động tính toán số câu hỏi và tạo các chấm tiến trình tương ứng!
-
----
-
-## 🚀 Cách Đưa Lên GitHub Pages (Chơi Trực Tiếp Online)
-
-1. Tạo một repository mới trên GitHub (khuyên dùng đặt chế độ **Public** để dùng GitHub Pages miễn phí).
-2. Tải toàn bộ mã nguồn trong thư mục này lên repository.
-3. Vào mục **Settings** của repository trên GitHub:
-   * Chọn mục **Pages** ở cột menu bên trái.
-   * Tại **Build and deployment** -> **Source**, chọn **Deploy from a branch**.
-   * Nhánh (Branch): chọn **`main`** (hoặc `master`), thư mục giữ nguyên **`/(root)`**, sau đó nhấn **Save**.
-4. Chờ 1–2 phút, GitHub sẽ cung cấp đường link dạng:
-   `https://<ten-user>.github.io/<ten-repo>/`
-   để bất kỳ ai cũng có thể vào chơi trực tiếp trên máy tính hoặc điện thoại!
-
+Trang web được xuất bản tại:
+👉 **`https://hta8819.github.io/mygame/`**

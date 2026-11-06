@@ -1,6 +1,6 @@
 /**
  * BỘ TẠO HIỆU ỨNG ÂM THANH SỬ THI BẰNG WEB AUDIO API
- * Không phụ thuộc tệp âm thanh bên ngoài, hoạt động mượt mà và độc lập.
+ * Hỗ trợ âm thanh chiến trận, đồng hồ đếm ngược Quizizz và chuỗi Combo Streak
  */
 
 class SoundSystem {
@@ -34,13 +34,80 @@ class SoundSystem {
         return this.enabled;
     }
 
-    // 1. Tiếng tên bắn trúng mục tiêu (Cyclops bị trúng tên)
+    // 1. Tiếng còi chiến trận Hy Lạp (War Horn) khi bắt đầu game
+    playWarHorn() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.exponentialRampToValueAtTime(240, now + 0.6);
+        osc.frequency.exponentialRampToValueAtTime(220, now + 1.4);
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(450, now);
+
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 1.5);
+    }
+
+    // 2. Tiếng đồng hồ đếm ngược Quizizz (Tick-Tock)
+    playTick() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(900, now);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
+    }
+
+    // 3. Tiếng chuỗi Combo Streak tăng điểm kiểu Quizizz (Cao dần theo streak)
+    playStreakChime(streakCount) {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const baseFreq = 440 + Math.min(streakCount * 110, 660);
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.2);
+
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+    }
+
+    // 4. Tiếng tên bắn trúng mục tiêu (Cyclops bị trúng tên)
     playArrowHit() {
         if (!this.enabled) return;
         this.init();
         const now = this.ctx.currentTime;
 
-        // Tiếng vút tên
         const whoosh = this.ctx.createOscillator();
         const whooshGain = this.ctx.createGain();
         whoosh.type = 'sine';
@@ -53,7 +120,6 @@ class SoundSystem {
         whoosh.start(now);
         whoosh.stop(now + 0.15);
 
-        // Tiếng cắm phập vào thịt / da
         setTimeout(() => {
             if (!this.ctx) return;
             const t = this.ctx.currentTime;
@@ -71,13 +137,12 @@ class SoundSystem {
         }, 120);
     }
 
-    // 2. Tiếng Cyclops gầm đe dọa (Khi trả lời sai)
+    // 5. Tiếng Cyclops gầm đe dọa (Khi trả lời sai)
     playCyclopsRoar() {
         if (!this.enabled) return;
         this.init();
         const now = this.ctx.currentTime;
 
-        // Tiếng gầm trầm rung chuyển
         const osc = this.ctx.createOscillator();
         const oscGain = this.ctx.createGain();
         osc.type = 'sawtooth';
@@ -85,7 +150,6 @@ class SoundSystem {
         osc.frequency.linearRampToValueAtTime(65, now + 0.6);
         osc.frequency.linearRampToValueAtTime(45, now + 1.1);
 
-        // Bộ lọc âm tần thấp (Lowpass) để tạo độ ồm, uy lực khổng lồ
         const filter = this.ctx.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(350, now);
@@ -102,13 +166,12 @@ class SoundSystem {
         osc.stop(now + 1.2);
     }
 
-    // 3. Tiếng chọc mù mắt Cyclops (Kết thúc thử thách 1)
+    // 6. Tiếng chọc mù mắt Cyclops (Kết thúc thử thách 1)
     playBlindImpact() {
         if (!this.enabled) return;
         this.init();
         const now = this.ctx.currentTime;
 
-        // Tiếng nứt vỡ rùng rợn + gầm thét đau đớn
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sawtooth';
@@ -123,13 +186,12 @@ class SoundSystem {
         osc.stop(now + 1.5);
     }
 
-    // 4. Tiếng gào thét của Odysseus & tiếng người lính nhảy xuống biển (Thử thách 2 - Trả lời sai)
+    // 7. Tiếng gào thét của Odysseus & tiếng người lính nhảy xuống biển (Thử thách 2)
     playScreamAndSplash() {
         if (!this.enabled) return;
         this.init();
         const now = this.ctx.currentTime;
 
-        // Tiếng rên xiết căng thẳng (Odysseus gào thét)
         const scream = this.ctx.createOscillator();
         const screamGain = this.ctx.createGain();
         scream.type = 'sine';
@@ -144,7 +206,6 @@ class SoundSystem {
         scream.start(now);
         scream.stop(now + 0.7);
 
-        // Tiếng nhảy tùm xuống nước (Splash)
         setTimeout(() => {
             if (!this.ctx) return;
             const t = this.ctx.currentTime;
@@ -163,13 +224,12 @@ class SoundSystem {
         }, 350);
     }
 
-    // 5. Tiếng Sirens gầm rú giận dữ (Thử thách 2 - Trả lời đúng)
+    // 8. Tiếng Sirens gào rít giận dữ (Thử thách 2)
     playSirenFurious() {
         if (!this.enabled) return;
         this.init();
         const now = this.ctx.currentTime;
 
-        // Tiếng rít the thé ghê rợn trong sương
         const hiss = this.ctx.createOscillator();
         const hissGain = this.ctx.createGain();
         hiss.type = 'sawtooth';
@@ -191,13 +251,12 @@ class SoundSystem {
         hiss.stop(now + 0.8);
     }
 
-    // 6. Tiếng chém kiếm của Odysseus (Thử thách 3 - Trả lời đúng)
+    // 9. Tiếng chém kiếm của Odysseus (Thử thách 3)
     playSwordSlash() {
         if (!this.enabled) return;
         this.init();
         const now = this.ctx.currentTime;
 
-        // Tiếng kim loại rít gió (slash)
         const slash = this.ctx.createOscillator();
         const slashGain = this.ctx.createGain();
         slash.type = 'sine';
@@ -211,7 +270,6 @@ class SoundSystem {
         slash.start(now);
         slash.stop(now + 0.22);
 
-        // Tiếng chém trúng quái vật Scylla (monster squeal)
         setTimeout(() => {
             if (!this.ctx) return;
             const t = this.ctx.currentTime;
@@ -230,13 +288,12 @@ class SoundSystem {
         }, 100);
     }
 
-    // 7. Tiếng Scylla cắn vào thuyền và vỡ gỗ (Thử thách 3 - Trả lời sai)
+    // 10. Tiếng Scylla cắn vào thuyền (Thử thách 3)
     playScyllaBite() {
         if (!this.enabled) return;
         this.init();
         const now = this.ctx.currentTime;
 
-        // Tiếng đớp răng sắc nhọn
         const snap = this.ctx.createOscillator();
         const snapGain = this.ctx.createGain();
         snap.type = 'triangle';
@@ -250,7 +307,6 @@ class SoundSystem {
         snap.start(now);
         snap.stop(now + 0.22);
 
-        // Tiếng gỗ gãy răng rắc
         setTimeout(() => {
             if (!this.ctx) return;
             const t = this.ctx.currentTime;
@@ -269,11 +325,11 @@ class SoundSystem {
         }, 120);
     }
 
-    // 8. Tiếng chuông khải hoàn / Hoàn thành màn
+    // 11. Tiếng chuông khải hoàn / Hoàn thành màn
     playStageVictory() {
         if (!this.enabled) return;
         this.init();
-        const notes = [261.63, 329.63, 392.00, 523.25]; // Đô - Mi - Sol - Đô
+        const notes = [261.63, 329.63, 392.00, 523.25];
         notes.forEach((freq, idx) => {
             setTimeout(() => {
                 if (!this.ctx) return;
@@ -292,7 +348,7 @@ class SoundSystem {
         });
     }
 
-    // 9. Âm thanh nền sóng biển & gió thổi nhẹ
+    // 12. Âm thanh sóng biển & gió nền
     startAmbient() {
         if (!this.enabled || this.ambientPlaying) return;
         this.init();
@@ -340,4 +396,3 @@ class SoundSystem {
 }
 
 const sounds = new SoundSystem();
-

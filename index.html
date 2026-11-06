@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odyssey: The Epic Voyage | Cuộc Hải Trình Sử Thi</title>
-    <!-- Phông chữ sử thi Hy Lạp -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
@@ -19,7 +18,23 @@
             <span>ODYSSEY: THE EPIC VOYAGE</span>
         </div>
         <div class="header-controls">
+            <!-- Điểm số & Chuỗi Streak kiểu Quizizz -->
+            <div class="hud-pill streak-pill" id="streak-display" style="display: none;">🔥 Chuỗi x1</div>
             <div class="hud-pill" id="score-display">0 ĐIỂM</div>
+
+            <!-- Nút mở Leaderboard trực tiếp -->
+            <button class="btn-leaderboard" id="leaderboard-toggle-btn" title="Bảng xếp hạng trực tiếp">
+                <span>🏆</span>
+                <span>BẢNG XẾP HẠNG</span>
+            </button>
+
+            <!-- Nút mở bảng điều khiển Host -->
+            <button class="btn-host-nav" id="host-control-btn" title="Quản lý phòng chơi">
+                <span>👑</span>
+                <span>PHÒNG HOST</span>
+            </button>
+
+            <!-- Bật / tắt âm thanh -->
             <button class="btn-icon" id="sound-toggle-btn" title="Bật/Tắt âm thanh">
                 <span id="sound-icon">🔊</span>
             </button>
@@ -44,57 +59,97 @@
 
     <!-- KHÔNG GIAN TRÒ CHƠI CHÍNH -->
     <main class="game-viewport">
-        <!-- 1. KHU VỰC ĐỒ HỌA TRỰC QUAN ĐỘNG (THEATER VIEW) -->
+        <!-- 1. KHU VỰC ĐỒ HỌA TRỰC QUAN TẢ THỰC -->
         <section class="visual-theater" id="visual-theater" aria-label="Khung cảnh trực quan">
-            <!-- Nội dung SVG của từng màn sẽ được VisualEngine chèn vào đây -->
+            <!-- SVG của từng thử thách sẽ được VisualEngine tạo ở đây -->
         </section>
 
-        <!-- 2. BẢNG CÂU HỎI VÀ LỰA CHỌN (QUIZ PANEL) -->
+        <!-- POPUP ĐIỂM THƯỞNG TỐC ĐỘ QUIZIZZ (FLOATING SCORE) -->
+        <div class="score-float-box" id="score-float-popup">
+            <div class="popup-title">+1,450 ĐIỂM</div>
+            <div class="popup-sub">⚡ Tốc độ: +450 | 🔥 Chuỗi x2</div>
+        </div>
+
+        <!-- 2. BẢNG CÂU HỎI & TIMER QUIZIZZ -->
         <section class="quiz-panel" id="quiz-panel" aria-label="Bảng câu hỏi">
+            <!-- THANH ĐẾM NGƯỢC THỜI GIAN QUIZIZZ -->
+            <div class="timer-container">
+                <div class="quiz-timer-track">
+                    <div class="quiz-timer-fill timer-normal" id="quiz-timer-bar"></div>
+                </div>
+                <span class="quiz-timer-text" id="quiz-timer-text">15s</span>
+            </div>
+
             <div class="quiz-header">
                 <span class="question-counter" id="question-counter">CÂU HỎI 1 / 4</span>
-                <div class="question-indicator-dots" id="indicator-dots">
-                    <!-- Các chấm câu hỏi -->
-                </div>
+                <div class="question-indicator-dots" id="indicator-dots"></div>
             </div>
 
             <!-- Nội dung câu hỏi -->
-            <h2 class="question-text" id="question-text">Đang tải câu hỏi sử thi...</h2>
+            <h2 class="question-text" id="question-text">Đang chuẩn bị thử thách...</h2>
 
-            <!-- 4 lựa chọn trả lời -->
-            <div class="options-grid" id="options-container">
-                <!-- Nút các đáp án A, B, C, D -->
-            </div>
+            <!-- 4 lựa chọn trả lời (Tự động chuyển câu ngay khi chọn) -->
+            <div class="options-grid" id="options-container"></div>
 
-            <!-- Khung giải thích sau khi trả lời -->
             <div class="explanation-box" id="explanation-box" style="display: none;"></div>
-
-            <!-- Nút điều hướng câu hỏi tiếp theo -->
-            <div class="quiz-actions">
-                <button class="btn-mythic" id="next-btn" style="display: none;">CÂU TIẾP THEO ➔</button>
-            </div>
         </section>
     </main>
 
-    <!-- MODAL DẪN CHUYỆN / MỞ ĐẦU / CHUYỂN MÀN / KẾT THÚC (STORY MODAL) -->
+    <!-- TRƯỜNG ĐOẠN ĐIỆN ẢNH TẢ THỰC VỀ THÀNH TROY (CINEMATIC OVERLAY) -->
+    <section class="cinematic-overlay" id="cinematic-container" style="display: none;"></section>
+
+    <!-- BẢNG ĐIỀU KHIỂN PHÒNG CHƠI HOST (HOST LOBBY MODAL) -->
+    <div class="host-modal-overlay" id="host-modal" style="display: none;">
+        <div class="host-card">
+            <h2 class="host-title">🏛️ SẢNH CHỜ PHÒNG CHƠI (HOST LOBBY)</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 6px;">
+                Trò chơi sẽ bắt đầu và mở khóa đồng loạt cho mọi người khi bạn nhấn <strong>BẮT ĐẦU</strong>.
+            </p>
+
+            <div class="host-pin-box">
+                <div class="pin-label">MÃ PHÒNG THI ĐẤU (ROOM PIN)</div>
+                <div class="pin-code" id="host-room-pin">ODY-8819</div>
+            </div>
+
+            <div style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--gold-light); font-weight: 600;">
+                DANH SÁCH CHIẾN BINH ĐÃ VÀO PHÒNG:
+            </div>
+            <div class="host-player-grid" id="host-player-list"></div>
+
+            <div class="host-actions">
+                <button class="btn-deploy-start" id="host-start-btn">🚀 BẮT ĐẦU / DEPLOY GAME CHO MỌI NGƯỜI</button>
+                <button class="btn-host-reset" id="host-reset-btn">🔄 RESET BẢNG ĐIỂM</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BẢNG XẾP HẠNG THỜI GIAN THỰC (LEADERBOARD DRAWER) -->
+    <aside class="leaderboard-drawer" id="leaderboard-drawer">
+        <div class="drawer-header">
+            <h3 class="drawer-title">🏆 BẢNG XẾP HẠNG TRỰC TIẾP</h3>
+            <button class="btn-close-drawer" id="leaderboard-close-btn">&times;</button>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-body"></div>
+    </aside>
+
+    <!-- MODAL DẪN TRUYỆN MỞ ĐẦU / CHUYỂN MÀN / KẾT THÚC MỞ -->
     <aside class="story-overlay" id="story-overlay" style="display: none;">
         <div class="scroll-container">
             <div class="greek-border-top"></div>
             <h1 class="story-title" id="story-title">KHỞI HÀNH TỪ TROY</h1>
             <div class="story-subtitle" id="story-subtitle">Cuộc hành trình vĩ đại trở về quê hương Ithaca</div>
-            <div class="story-content" id="story-body">
-                <!-- Nội dung các đoạn văn dẫn truyện -->
-            </div>
+            <div class="story-content" id="story-body"></div>
             <div class="greek-border-bottom"></div>
-            <button class="btn-mythic" id="story-action-btn">BẮT ĐẦU VƯỢT BIỂN</button>
+            <button class="btn-mythic" id="story-action-btn">TIẾP TỤC</button>
         </div>
     </aside>
 
     <!-- SCRIPTS -->
     <script src="data/questions.js"></script>
+    <script src="js/cinematic.js"></script>
+    <script src="js/multiplayer.js"></script>
     <script src="js/audio.js"></script>
     <script src="js/visuals.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>
-

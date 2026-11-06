@@ -1,25 +1,24 @@
 /* ========================================================
-   ODYSSEY: THE EPIC VOYAGE - STYLESHEET
-   Phong cách Thần Thoại Hy Lạp Cổ Đại (Gold, Bronze & Aegean Blue)
+   ODYSSEY: THE EPIC VOYAGE - STYLESHEET (REALISTIC & MULTIPLAYER)
    ======================================================== */
 
 :root {
-    --bg-dark: #0a0e14;
-    --bg-parchment: #181c24;
+    --bg-dark: #070a0f;
+    --bg-card: #121620;
     --gold: #d4af37;
     --gold-light: #f7e28b;
-    --gold-glow: rgba(212, 175, 55, 0.4);
+    --gold-glow: rgba(212, 175, 55, 0.45);
     --bronze: #cd7f32;
-    --terracotta: #c0392b;
     --aegean-blue: #145374;
-    --aegean-deep: #002233;
+    --aegean-deep: #001f33;
     --seafoam: #64dfdf;
-    --text-primary: #e6e6e6;
+    --text-primary: #ededed;
     --text-muted: #9aa0a6;
     --text-gold: #f4d03f;
-    --danger: #e74c3c;
-    --success: #2ecc71;
-    --font-heading: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+    --danger: #ff4757;
+    --success: #2ed573;
+    --warning: #ffa502;
+    --font-heading: 'Cinzel', 'Palatino Linotype', Georgia, serif;
     --font-body: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 }
 
@@ -40,8 +39,8 @@ body {
     flex-direction: column;
     overflow-x: hidden;
     background-image: 
-        radial-gradient(circle at 50% 10%, rgba(20, 83, 116, 0.25) 0%, transparent 60%),
-        radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 50% 15%, rgba(20, 83, 116, 0.28) 0%, transparent 65%),
+        radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
 }
 
 /* ========================================================
@@ -51,10 +50,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 24px;
-    background: rgba(10, 14, 20, 0.85);
-    backdrop-filter: blur(8px);
-    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+    padding: 10px 24px;
+    background: rgba(7, 10, 15, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(212, 175, 55, 0.35);
     z-index: 100;
 }
 
@@ -63,33 +62,45 @@ body {
     align-items: center;
     gap: 10px;
     font-family: var(--font-heading);
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: 2px;
     color: var(--gold-light);
-    text-shadow: 0 0 10px var(--gold-glow);
+    text-shadow: 0 0 12px var(--gold-glow);
 }
 
 .brand-icon {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 
 .header-controls {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .hud-pill {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 20px;
-    padding: 6px 14px;
+    padding: 5px 14px;
     font-size: 0.85rem;
     color: var(--text-gold);
     display: flex;
     align-items: center;
     gap: 6px;
+    font-weight: 600;
+}
+
+.streak-pill {
+    background: rgba(255, 71, 87, 0.15);
+    border-color: rgba(255, 71, 87, 0.5);
+    color: #ff6b81;
+    animation: pulseStreak 1s infinite alternate;
+}
+@keyframes pulseStreak {
+    from { transform: scale(1); }
+    to { transform: scale(1.06); }
 }
 
 .btn-icon {
@@ -109,17 +120,54 @@ body {
 .btn-icon:hover {
     background: var(--gold-glow);
     border-color: var(--gold);
-    transform: scale(1.05);
+    transform: scale(1.08);
+}
+
+.btn-leaderboard {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+.btn-leaderboard:hover {
+    background: var(--gold);
+    color: #000;
+}
+
+.btn-host-nav {
+    background: rgba(46, 213, 115, 0.15);
+    border: 1px solid var(--success);
+    color: var(--success);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.btn-host-nav:hover {
+    background: var(--success);
+    color: #000;
 }
 
 /* ========================================================
-   TIẾN TRÌNH THỬ THÁCH (PROGRESS BAR)
+   THANH TIẾN TRÌNH & ĐỒNG HỒ ĐẾM NGƯỢC QUIZIZZ
    ======================================================== */
 .progress-strip {
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 8px 16px;
+    padding: 7px 16px;
     background: rgba(0, 0, 0, 0.4);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -163,12 +211,66 @@ body {
 
 .challenge-step.completed .step-circle {
     border-color: var(--success);
-    background: rgba(46, 204, 113, 0.2);
+    background: rgba(46, 213, 115, 0.2);
     color: var(--success);
 }
 
+/* THANH TIMER QUIZIZZ */
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.quiz-timer-track {
+    flex: 1;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.quiz-timer-fill {
+    height: 100%;
+    width: 100%;
+    transition: width 0.1s linear, background-color 0.3s ease;
+    border-radius: 6px;
+}
+
+.timer-normal {
+    background: linear-gradient(90deg, #2ed573, #10ac84);
+    box-shadow: 0 0 8px rgba(46, 213, 115, 0.5);
+}
+
+.timer-warning {
+    background: linear-gradient(90deg, #ffa502, #ff7f50);
+    box-shadow: 0 0 8px rgba(255, 165, 2, 0.6);
+}
+
+.timer-danger {
+    background: linear-gradient(90deg, #ff4757, #ee5253);
+    box-shadow: 0 0 12px rgba(255, 71, 87, 0.8);
+    animation: dangerPulse 0.3s infinite alternate;
+}
+@keyframes dangerPulse {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
+}
+
+.quiz-timer-text {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    min-width: 32px;
+    text-align: right;
+}
+
 /* ========================================================
-   KHU VỰC CHÍNH CỦA TRÒ CHƠI
+   KHU VỰC TRÒ CHƠI CHÍNH
    ======================================================== */
 .game-viewport {
     flex: 1;
@@ -177,13 +279,11 @@ body {
     max-width: 1040px;
     width: 100%;
     margin: 0 auto;
-    padding: 16px;
-    gap: 16px;
+    padding: 14px 16px;
+    gap: 14px;
+    position: relative;
 }
 
-/* ========================================================
-   KHU VỰC ĐỒ HỌA TRỰC QUAN (STAGE VIEW)
-   ======================================================== */
 .visual-theater {
     position: relative;
     width: 100%;
@@ -192,7 +292,7 @@ body {
     overflow: hidden;
     background: #000;
     border: 2px solid rgba(212, 175, 55, 0.4);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
 }
 
 .stage-view {
@@ -212,8 +312,8 @@ body {
     bottom: 12px;
     left: 12px;
     right: 12px;
-    background: rgba(10, 14, 20, 0.88);
-    backdrop-filter: blur(6px);
+    background: rgba(10, 14, 20, 0.9);
+    backdrop-filter: blur(8px);
     border: 1px solid rgba(212, 175, 55, 0.3);
     padding: 8px 14px;
     border-radius: 8px;
@@ -232,9 +332,9 @@ body {
     white-space: nowrap;
 }
 
-.badge-cave { background: #5c3818; color: #f5deb3; }
-.badge-siren { background: #14324f; color: #aeeeff; }
-.badge-scylla { background: #4a1525; color: #ffb3c6; }
+.badge-cave { background: #4a2c14; color: #f5deb3; }
+.badge-siren { background: #112a42; color: #aeeeff; }
+.badge-scylla { background: #3d121e; color: #ffb3c6; }
 
 .action-caption {
     font-size: 0.88rem;
@@ -248,17 +348,75 @@ body {
 .text-gold { color: var(--gold-light) !important; font-weight: bold; }
 
 /* ========================================================
-   BẢNG CÂU HỎI & LỰA CHỌN (QUIZ INTERFACE)
+   POPUP ĐIỂM THƯỞNG QUIZIZZ (FLOATING SCORE)
+   ======================================================== */
+.score-float-box {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+    background: rgba(18, 22, 32, 0.95);
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    padding: 16px 32px;
+    text-align: center;
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.6);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.score-float-box.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.score-float-box.score-positive {
+    border-color: var(--success);
+    box-shadow: 0 0 35px rgba(46, 213, 115, 0.6);
+}
+
+.score-float-box.score-zero {
+    border-color: var(--danger);
+    box-shadow: 0 0 35px rgba(255, 71, 87, 0.6);
+}
+
+.popup-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+}
+
+.score-positive .popup-title {
+    color: var(--success);
+}
+
+.score-zero .popup-title {
+    color: var(--danger);
+}
+
+.popup-sub {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+/* ========================================================
+   BẢNG CÂU HỎI & LỰA CHỌN (QUIZ PANEL)
    ======================================================== */
 .quiz-panel {
-    background: rgba(24, 28, 36, 0.95);
+    background: rgba(18, 22, 32, 0.95);
     border: 2px solid rgba(212, 175, 55, 0.35);
     border-radius: 12px;
-    padding: 20px 24px;
+    padding: 18px 24px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     position: relative;
 }
 
@@ -273,7 +431,7 @@ body {
 .question-counter {
     font-family: var(--font-heading);
     color: var(--gold-light);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 600;
     letter-spacing: 1px;
 }
@@ -297,13 +455,8 @@ body {
     box-shadow: 0 0 8px var(--gold);
 }
 
-.dot.correct {
-    background: var(--success);
-}
-
-.dot.wrong {
-    background: var(--danger);
-}
+.dot.correct { background: var(--success); }
+.dot.wrong { background: var(--danger); }
 
 .question-text {
     font-size: 1.15rem;
@@ -329,7 +482,7 @@ body {
     font-family: var(--font-body);
     line-height: 1.4;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -353,67 +506,399 @@ body {
     background: rgba(212, 175, 55, 0.15);
     border-color: var(--gold);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
 }
 
 .option-btn.selected-correct {
-    background: rgba(46, 204, 113, 0.25) !important;
+    background: rgba(46, 213, 115, 0.3) !important;
     border-color: var(--success) !important;
     color: #ffffff !important;
+    transform: scale(1.02);
 }
 
 .option-btn.selected-wrong {
-    background: rgba(231, 76, 60, 0.25) !important;
+    background: rgba(255, 71, 87, 0.3) !important;
     border-color: var(--danger) !important;
     color: #ffffff !important;
 }
 
 .option-btn:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-/* Lời giải thích */
-.explanation-box {
-    margin-top: 8px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.4);
-    border-left: 4px solid var(--gold);
-    font-size: 0.9rem;
-    color: #d1d5db;
-    line-height: 1.4;
-}
-
-/* Nút tiếp tục sau khi trả lời */
-.quiz-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.btn-mythic {
-    background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
-    color: #111;
-    border: none;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 1px;
-    padding: 12px 28px;
-    border-radius: 6px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    transition: all 0.25s ease;
-}
-
-.btn-mythic:hover {
-    background: linear-gradient(135deg, #f7e28b 0%, #d4af37 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+    cursor: default;
+    opacity: 0.8;
 }
 
 /* ========================================================
-   MODAL DẪN CHUYỆN / MỞ ĐẦU / CHUYỂN MÀN / KẾT THÚC
+   CINEMATIC TROY CUTSCENE STYLES
+   ======================================================== */
+.cinematic-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 2000;
+    overflow: hidden;
+    animation: fadeIn 0.6s ease;
+}
+
+.cinematic-fade-out {
+    animation: fadeOut 0.6s forwards ease;
+}
+
+.cinematic-canvas-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.cinematic-viewport {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cinematic-slide {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.cinematic-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Ken Burns effect: Pan & Zoom chậm điện ảnh */
+.kenburns-anim {
+    animation: kenBurns 7s infinite alternate ease-in-out;
+}
+@keyframes kenBurns {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.08) translate(-10px, -5px); }
+}
+
+.cinematic-text-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(5, 7, 10, 0.95) 40%, #05070a 100%);
+    padding: 40px 60px 30px 60px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cinematic-step-pill {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.cinematic-heading {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px rgba(255, 120, 0, 0.5);
+}
+
+.cinematic-caption {
+    font-size: 1.05rem;
+    color: #d8d8d8;
+    max-width: 850px;
+    line-height: 1.6;
+}
+
+.cinematic-controls {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.btn-skip-cinematic {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ccc;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.btn-skip-cinematic:hover { background: rgba(255, 255, 255, 0.2); }
+
+.btn-next-cinematic {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+.btn-next-cinematic:hover { background: var(--gold-light); }
+
+/* ========================================================
+   BẢNG ĐIỀU KHIỂN HOST (HOST LOBBY MODAL)
+   ======================================================== */
+.host-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1500;
+}
+
+.host-card {
+    background: var(--bg-card);
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.35);
+    border-radius: 14px;
+    max-width: 580px;
+    width: 90%;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.host-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+}
+
+.host-pin-box {
+    margin: 20px 0;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    border: 1px dashed var(--gold);
+}
+
+.pin-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.pin-code {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    letter-spacing: 6px;
+    margin-top: 4px;
+}
+
+.host-player-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+    padding: 4px;
+}
+
+.lobby-player-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+}
+
+.chip-badge {
+    margin-left: auto;
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.chip-online {
+    background: rgba(46, 213, 115, 0.2);
+    color: var(--success);
+}
+
+.host-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.btn-deploy-start {
+    background: linear-gradient(135deg, #2ed573 0%, #10ac84 100%);
+    color: #fff;
+    border: none;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+}
+.btn-deploy-start:hover { transform: scale(1.03); }
+
+.btn-host-reset {
+    background: rgba(255, 71, 87, 0.15);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ========================================================
+   LEADERBOARD DRAWER (BẢNG XẾP HẠNG TRỰC TIẾP)
+   ======================================================== */
+.leaderboard-drawer {
+    position: fixed;
+    top: 0;
+    right: -380px;
+    width: 360px;
+    height: 100%;
+    background: rgba(18, 22, 32, 0.98);
+    backdrop-filter: blur(12px);
+    border-left: 2px solid var(--gold);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.35s ease-in-out;
+    padding: 20px;
+}
+
+.leaderboard-drawer.open {
+    right: 0;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.drawer-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+}
+
+.btn-close-drawer {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.leaderboard-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.leaderboard-row {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.leaderboard-row.is-self {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.12);
+}
+
+.rank-gold {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.12);
+}
+.rank-silver {
+    border-color: #c0c0c0;
+    background: rgba(192, 192, 192, 0.08);
+}
+.rank-bronze {
+    border-color: #cd7f32;
+    background: rgba(205, 127, 50, 0.08);
+}
+
+.cell-rank {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    min-width: 32px;
+    color: var(--gold-light);
+}
+
+.cell-name {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.cell-avatar {
+    font-size: 1.1rem;
+}
+
+.streak-mini {
+    font-size: 0.72rem;
+    background: rgba(255, 71, 87, 0.2);
+    color: #ff6b81;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.cell-score {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-gold);
+    font-size: 0.95rem;
+}
+
+/* ========================================================
+   STORY MODAL
    ======================================================== */
 .story-overlay {
     position: fixed;
@@ -482,243 +967,180 @@ body {
     text-indent: 20px;
 }
 
+.btn-mythic {
+    background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+    color: #111;
+    border: none;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    padding: 12px 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    transition: all 0.25s ease;
+}
+.btn-mythic:hover {
+    background: linear-gradient(135deg, #f7e28b 0%, #d4af37 100%);
+    transform: translateY(-2px);
+}
+
 /* ========================================================
-   HOẠT HỌA SVG (KEYFRAMES & ANIMATION CLASSES)
+   KEYFRAME ANIMATIONS
    ======================================================== */
-
-/* Đuốc bập bùng */
-.torch-flicker {
-    animation: flicker 1.8s infinite alternate ease-in-out;
-}
+.torch-flicker { animation: flicker 1.8s infinite alternate ease-in-out; }
 @keyframes flicker {
-    0% { opacity: 0.7; r: 130; }
-    50% { opacity: 0.9; r: 150; }
-    100% { opacity: 0.6; r: 125; }
+    0% { opacity: 0.7; r: 140; }
+    50% { opacity: 0.95; r: 165; }
+    100% { opacity: 0.6; r: 135; }
 }
 
-/* Cyclops thở bình thường */
-.cyclops-idle {
-    animation: cyclopsBreathe 3s infinite ease-in-out;
-}
+.cyclops-idle { animation: cyclopsBreathe 3s infinite ease-in-out; }
 @keyframes cyclopsBreathe {
-    0%, 100% { transform: translate(620px, 100px); }
-    50% { transform: translate(620px, 94px); }
+    0%, 100% { transform: translate(610px, 85px); }
+    50% { transform: translate(610px, 78px); }
 }
 
-/* Cyclops gầm dữ dội */
-.cyclops-roaring {
-    animation: cyclopsRoarShake 0.15s infinite;
-}
+.cyclops-roaring { animation: cyclopsRoarShake 0.15s infinite; }
 @keyframes cyclopsRoarShake {
-    0% { transform: translate(620px, 95px) scale(1.05); }
-    50% { transform: translate(625px, 102px) scale(1.08); }
-    100% { transform: translate(615px, 98px) scale(1.06); }
+    0% { transform: translate(610px, 80px) scale(1.05); }
+    50% { transform: translate(616px, 88px) scale(1.08); }
+    100% { transform: translate(606px, 82px) scale(1.06); }
 }
 
-/* Vòng sóng âm phát tán khi gầm */
-.wave-pulse {
-    animation: waveExpand 0.8s infinite linear;
-}
+.wave-pulse { animation: waveExpand 0.8s infinite linear; }
 @keyframes waveExpand {
     0% { r: 30; opacity: 1; }
-    100% { r: 180; opacity: 0; }
+    100% { r: 190; opacity: 0; }
 }
 
-/* Binh lính run sợ */
-.soldiers-shaking {
-    animation: soldierTremble 0.1s infinite;
-}
+.soldiers-shaking { animation: soldierTremble 0.1s infinite; }
 @keyframes soldierTremble {
     0% { transform: translate(140px, 270px); }
-    50% { transform: translate(138px, 271px); }
-    100% { transform: translate(142px, 269px); }
+    50% { transform: translate(137px, 271px); }
+    100% { transform: translate(143px, 269px); }
 }
 
-/* Mũi tên xé gió bay */
-.arrow-flying-anim {
-    animation: arrowShoot 0.3s ease-out forwards;
-}
+.arrow-flying-anim { animation: arrowShoot 0.3s ease-out forwards; }
 @keyframes arrowShoot {
     0% { opacity: 0; transform: translate(-300px, 80px); }
     100% { opacity: 1; transform: translate(0, 0); }
 }
 
-/* Quái vật trúng tên giật lùi */
-.monster-hit-anim {
-    animation: monsterReel 0.6s ease-out;
-}
+.monster-hit-anim { animation: monsterReel 0.6s ease-out; }
 @keyframes monsterReel {
-    0% { transform: translate(620px, 100px); }
-    25% { transform: translate(650px, 90px) rotate(5deg); }
-    100% { transform: translate(620px, 100px); }
+    0% { transform: translate(610px, 85px); }
+    25% { transform: translate(640px, 75px) rotate(5deg); }
+    100% { transform: translate(610px, 85px); }
 }
 
-/* Mù mắt lảo đảo ngã */
-.cyclops-blinded-stumble {
-    animation: blindFall 2s forwards ease-in-out;
-}
+.cyclops-blinded-stumble { animation: blindFall 2s forwards ease-in-out; }
 @keyframes blindFall {
-    0% { transform: translate(620px, 100px); }
-    40% { transform: translate(660px, 70px) rotate(15deg); }
-    100% { transform: translate(720px, 200px) rotate(35deg); opacity: 0.3; }
+    0% { transform: translate(610px, 85px); }
+    40% { transform: translate(650px, 50px) rotate(15deg); }
+    100% { transform: translate(720px, 220px) rotate(35deg); opacity: 0.3; }
 }
 
-/* Thuyền nhấp nhô trên sóng */
-.ship-bobbing {
-    animation: shipRock 3.5s infinite ease-in-out;
-}
+.ship-bobbing { animation: shipRock 3.5s infinite ease-in-out; }
 @keyframes shipRock {
     0%, 100% { transform: translate(180px, 200px) rotate(0deg); }
     50% { transform: translate(180px, 206px) rotate(-2deg); }
 }
 
-/* Sương mù trôi */
-.fog-drifting {
-    animation: fogFloat 6s infinite alternate ease-in-out;
-}
+.fog-drifting { animation: fogFloat 6s infinite alternate ease-in-out; }
 @keyframes fogFloat {
     0% { opacity: 0.4; transform: translateX(0); }
     100% { opacity: 0.7; transform: translateX(-40px); }
 }
 
-/* Sirens bay lơ lửng */
-.sirens-floating {
-    animation: sirenHover 2.5s infinite ease-in-out;
-}
+.sirens-floating { animation: sirenHover 2.5s infinite ease-in-out; }
 @keyframes sirenHover {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
 
-/* Sirens tức giận giãy giụa */
-.sirens-furious {
-    animation: sirenFrenzy 0.15s infinite;
-}
+.sirens-furious { animation: sirenFrenzy 0.15s infinite; }
 @keyframes sirenFrenzy {
     0% { transform: translate(0, 0) scale(1.1); }
     50% { transform: translate(4px, -6px) scale(1.15); }
     100% { transform: translate(-3px, 3px) scale(1.1); }
 }
 
-/* Odysseus giãy giụa vì khúc ca mê hoặc */
-.hero-struggling {
-    animation: heroFrenzy 0.12s infinite;
-}
+.hero-struggling { animation: heroFrenzy 0.12s infinite; }
 @keyframes heroFrenzy {
     0% { transform: translate(180px, 10px) rotate(-3deg); }
     50% { transform: translate(180px, 8px) rotate(4deg); }
     100% { transform: translate(180px, 12px) rotate(-2deg); }
 }
 
-/* Thuyền tăng tốc vượt qua sương mù */
-.ship-accelerating {
-    animation: shipBurst 1.2s ease-out;
-}
+.ship-accelerating { animation: shipBurst 1.2s ease-out; }
 @keyframes shipBurst {
     0% { transform: translate(180px, 200px); }
     50% { transform: translate(220px, 195px); }
     100% { transform: translate(180px, 200px); }
 }
 
-.ship-escaping-fog {
-    animation: shipLeave 2s ease-in forwards;
-}
+.ship-escaping-fog { animation: shipLeave 2s ease-in forwards; }
 @keyframes shipLeave {
     0% { transform: translate(180px, 200px); }
     100% { transform: translate(700px, 180px); opacity: 0.2; }
 }
 
-/* Xoáy nước quay tròn */
-.whirlpool-spin {
-    transform-origin: 0 0;
-    animation: spinWhirl 2.5s infinite linear;
-}
-@keyframes spinWhirl {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+.whirlpool-spin { transform-origin: 0 0; animation: spinWhirl 2.5s infinite linear; }
+@keyframes spinWhirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.whirlpool-spin-reverse {
-    transform-origin: 0 0;
-    animation: spinWhirlRev 1.8s infinite linear;
-}
-@keyframes spinWhirlRev {
-    from { transform: rotate(360deg); }
-    to { transform: rotate(0deg); }
-}
+.whirlpool-spin-reverse { transform-origin: 0 0; animation: spinWhirlRev 1.8s infinite linear; }
+@keyframes spinWhirlRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
 
-/* Cổ Scylla lắc lư chờ mồi */
-.scylla-neck-idle {
-    animation: snakeSway 3s infinite ease-in-out alternate;
-}
+.scylla-neck-idle { animation: snakeSway 3s infinite ease-in-out alternate; }
 @keyframes snakeSway {
     0% { transform: translateY(0); }
     100% { transform: translateY(-8px) rotate(2deg); }
 }
 
-/* Scylla bổ nhào xuống đớp thuyền */
-.scylla-dive-attack {
-    animation: scyllaChomp 0.8s ease-in-out;
-}
+.scylla-dive-attack { animation: scyllaChomp 0.8s ease-in-out; }
 @keyframes scyllaChomp {
     0% { transform: translate(0, 0); }
     40% { transform: translate(-140px, 130px) scale(1.2); }
     100% { transform: translate(0, 0); }
 }
 
-/* Thuyền bị cắn rung lắc mạnh */
-.ship-bitten-shake {
-    animation: shipDamage 0.1s infinite;
-}
+.ship-bitten-shake { animation: shipDamage 0.1s infinite; }
 @keyframes shipDamage {
     0% { transform: translate(340px, 240px) rotate(3deg); }
     50% { transform: translate(335px, 246px) rotate(-4deg); }
     100% { transform: translate(345px, 238px) rotate(2deg); }
 }
 
-/* Thủy thủ hoảng sợ nhảy nhót */
-.crew-panic-anim {
-    animation: crewPanic 0.15s infinite;
-}
+.crew-panic-anim { animation: crewPanic 0.15s infinite; }
 @keyframes crewPanic {
     0% { transform: translate(60px, 60px); }
     50% { transform: translate(62px, 54px); }
     100% { transform: translate(58px, 62px); }
 }
 
-/* Nhát chém của Odysseus */
-.sword-slash-anim {
-    animation: heroSwordSlash 0.4s ease-out;
-}
+.sword-slash-anim { animation: heroSwordSlash 0.4s ease-out; }
 @keyframes heroSwordSlash {
     0% { transform: rotate(-30deg, 20, 35); }
     50% { transform: rotate(60deg, 20, 35) scale(1.3); }
     100% { transform: rotate(-30deg, 20, 35); }
 }
 
-/* Đầu Scylla bị chém rụt lại */
-.scylla-head-recoil {
-    animation: headRecoil 0.6s ease-out;
-}
+.scylla-head-recoil { animation: headRecoil 0.6s ease-out; }
 @keyframes headRecoil {
     0% { transform: translate(0, 0); }
     30% { transform: translate(60px, -40px) rotate(-15deg); }
     100% { transform: translate(0, 0); }
 }
 
-/* Thuyền thoát khỏi Scylla */
-.ship-full-escape {
-    animation: escapeStrait 2s ease-in forwards;
-}
+.ship-full-escape { animation: escapeStrait 2s ease-in forwards; }
 @keyframes escapeStrait {
     0% { transform: translate(340px, 240px); }
     100% { transform: translate(850px, 220px); opacity: 0; }
 }
 
-/* Rung màn hình */
-.screen-rumble {
-    animation: rumble 0.1s 8;
-}
+.screen-rumble { animation: rumble 0.1s 8; }
 @keyframes rumble {
     0% { transform: translate(0, 0); }
     25% { transform: translate(-4px, 4px); }
@@ -727,40 +1149,23 @@ body {
     100% { transform: translate(0, 0); }
 }
 
-/* Chớp đỏ màn hình */
-.screen-flash-red {
-    box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.8) !important;
-}
+.screen-flash-red { box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.8) !important; }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
 /* ========================================================
-   RESPONSIVE DESIGN (CHO ĐIỆN THOẠI & TABLET)
+   RESPONSIVE DESIGN (MOBILE & TABLET)
    ======================================================== */
 @media (max-width: 768px) {
-    .game-header {
-        padding: 8px 14px;
-    }
-    .brand-title {
-        font-size: 1rem;
-    }
-    .visual-theater {
-        height: 260px;
-    }
-    .options-grid {
-        grid-template-columns: 1fr;
-    }
-    .scroll-container {
-        padding: 24px 20px;
-    }
-    .story-title {
-        font-size: 1.35rem;
-    }
-    .story-content {
-        font-size: 0.92rem;
-    }
+    .game-header { padding: 8px 12px; }
+    .brand-title { font-size: 0.95rem; }
+    .visual-theater { height: 260px; }
+    .options-grid { grid-template-columns: 1fr; }
+    .scroll-container { padding: 24px 20px; }
+    .story-title { font-size: 1.35rem; }
+    .story-content { font-size: 0.92rem; }
+    .cinematic-heading { font-size: 1.3rem; }
+    .cinematic-caption { font-size: 0.9rem; }
+    .leaderboard-drawer { width: 100%; right: -100%; }
 }
-
