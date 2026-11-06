@@ -294,16 +294,16 @@ body {
 }
 
 /* ========================================================
-   KHU VỰC TRÒ CHƠI CHÍNH
+   KHU VỰC TRÒ CHƠI CHÍNH (TRÀN VIỀN & RỘNG RÃI HƠN)
    ======================================================== */
 .game-viewport {
     flex: 1;
     display: flex;
     flex-direction: column;
-    max-width: 1040px;
+    max-width: 1260px;
     width: 100%;
     margin: 0 auto;
-    padding: 14px 16px;
+    padding: 12px 20px;
     gap: 14px;
     position: relative;
 }
@@ -311,12 +311,13 @@ body {
 .visual-theater {
     position: relative;
     width: 100%;
-    height: 380px;
-    border-radius: 12px;
+    height: 480px;
+    min-height: 440px;
+    border-radius: 14px;
     overflow: hidden;
     background: #000;
-    border: 2px solid rgba(212, 175, 55, 0.4);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+    border: 2px solid rgba(212, 175, 55, 0.45);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(0, 0, 0, 0.7);
 }
 
 .stage-view {
@@ -609,21 +610,55 @@ body {
     100% { transform: scale(1.08) translate(-10px, -5px); }
 }
 
+/* THANH TIẾN TRÌNH TỰ ĐỘNG CHUYỂN CẢNH ĐIỆN ẢNH */
+.cinematic-timeline-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    z-index: 30;
+}
+
+.cinematic-timeline-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff5500, #ffd700);
+    box-shadow: 0 0 10px #ffaa00;
+    animation: fillTimeline linear forwards;
+}
+@keyframes fillTimeline {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.cinematic-fade-transition {
+    opacity: 0;
+    transition: opacity 0.45s ease-in-out;
+}
+
 .cinematic-text-bar {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     background: linear-gradient(180deg, transparent 0%, rgba(5, 7, 10, 0.95) 40%, #05070a 100%);
-    padding: 40px 60px 30px 60px;
+    padding: 35px 50px 25px 50px;
     z-index: 20;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+.cinematic-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 .cinematic-step-pill {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--gold-light);
     letter-spacing: 2px;
@@ -641,39 +676,26 @@ body {
 .cinematic-caption {
     font-size: 1.05rem;
     color: #d8d8d8;
-    max-width: 850px;
+    max-width: 900px;
     line-height: 1.6;
 }
 
-.cinematic-controls {
-    display: flex;
-    gap: 16px;
-    margin-top: 10px;
-}
-
 .btn-skip-cinematic {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #ccc;
-    padding: 8px 18px;
+    color: #eee;
+    padding: 6px 14px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    transition: all 0.2s;
 }
-.btn-skip-cinematic:hover { background: rgba(255, 255, 255, 0.2); }
-
-.btn-next-cinematic {
+.btn-skip-cinematic:hover {
     background: var(--gold);
     color: #000;
-    border: none;
-    padding: 8px 22px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 0.85rem;
+    border-color: var(--gold-light);
 }
-.btn-next-cinematic:hover { background: var(--gold-light); }
 
 /* ========================================================
    MODAL TÙY CHỈNH TÊN NGƯỜI CHƠI & AVATAR
