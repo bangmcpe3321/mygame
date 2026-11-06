@@ -1,6 +1,6 @@
 /**
  * HỆ THỐNG PHÒNG CHƠI (HOST/PLAYER), BẢNG XẾP HẠNG TRỰC TIẾP & TÍNH ĐIỂM QUIZIZZ
- * Đồng bộ qua BroadcastChannel + localStorage, hỗ trợ thi đấu nhiều người chơi cùng lúc.
+ * Hỗ trợ người chơi tùy chỉnh tên, đổi Avatar và đồng bộ thời gian thực
  */
 
 class OdysseyMultiplayer {
@@ -13,18 +13,24 @@ class OdysseyMultiplayer {
         this.isHost = false;
         this.roomCode = "ODY-8819";
         this.roomState = "LOBBY"; // LOBBY, RUNNING, ENDED
-        this.playerName = "Odysseus (Bạn)";
+
+        // Tên & Avatar tùy chỉnh của người chơi (Lấy từ localStorage nếu có)
+        const savedName = localStorage.getItem("odyssey_player_name");
+        const savedAvatar = localStorage.getItem("odyssey_player_avatar");
+        this.playerName = savedName || "Odysseus";
+        this.playerAvatar = savedAvatar || "👑";
         this.playerId = "p_" + Math.random().toString(36).substring(2, 9);
         
         // Dữ liệu người chơi & điểm
         this.players = {};
         this.currentStreak = 0;
-        this.enableBots = true; // Bật các đối thủ Hy Lạp mô phỏng để bảng xếp hạng sống động
+        this.enableBots = true;
         this.botInterval = null;
 
         // Callback kết nối với Game Engine
         this.onRoomStarted = null;
         this.onLeaderboardUpdate = null;
+        this.onPlayerListChange = null;
 
         this.initCommunication();
         this.loadInitialState();
@@ -67,12 +73,34 @@ class OdysseyMultiplayer {
             case "ROOM_STATE_SYNC":
                 this.roomState = msg.roomState;
                 this.players = msg.players || {};
+                // Bảo đảm giữ thông tin bản thân nếu đã có
+                if (!this.players[this.playerId]) {
+                    this.players[this.playerId] = {
+                        id: this.playerId,
+                        name: this.playerName,
+                        avatar: this.playerAvatar,
+                        score: 0,
+                        streak: 0,
+                        isSelf: true
+                    };
+                }
                 this.triggerLeaderboardUpdate();
+                if (this.onPlayerListChange) this.onPlayerListChange();
                 break;
 
             case "HOST_START_GAME":
                 this.roomState = "RUNNING";
                 if (this.onRoomStarted) this.onRoomStarted();
+                break;
+
+            case "PLAYER_NAME_CHANGED":
+                if (msg.playerId && this.players[msg.playerId]) {
+                    this.players[msg.playerId].name = msg.newName;
+                    if (msg.newAvatar) this.players[msg.playerId].avatar = msg.newAvatar;
+                    this.triggerLeaderboardUpdate();
+                    if (this.onPlayerListChange) this.onPlayerListChange();
+                    if (this.isHost) this.syncRoomState();
+                }
                 break;
 
             case "PLAYER_ANSWERED":
@@ -82,11 +110,7 @@ class OdysseyMultiplayer {
                     this.players[msg.playerId].lastBonus = msg.speedBonus;
                     this.players[msg.playerId].lastAnswerTime = Date.now();
                     this.triggerLeaderboardUpdate();
-
-                    // Nếu là Host, đồng bộ lại cho mọi người
-                    if (this.isHost) {
-                        this.syncRoomState();
-                    }
+                    if (this.isHost) this.syncRoomState();
                 }
                 break;
 
@@ -94,9 +118,8 @@ class OdysseyMultiplayer {
                 if (msg.player) {
                     this.players[msg.player.id] = msg.player;
                     this.triggerLeaderboardUpdate();
-                    if (this.isHost) {
-                        this.syncRoomState();
-                    }
+                    if (this.onPlayerListChange) this.onPlayerListChange();
+                    if (this.isHost) this.syncRoomState();
                 }
                 break;
 
@@ -108,7 +131,34 @@ class OdysseyMultiplayer {
         }
     }
 
-    // Đăng ký làm Host
+    // ==========================================
+    // THAY ĐỔI TÊN NGƯỜI CHƠI & AVATAR
+    // ==========================================
+    setPlayerProfile(name, avatar) {
+        if (!name || name.trim() === "") return;
+        this.playerName = name.trim();
+        if (avatar) this.playerAvatar = avatar;
+
+        localStorage.setItem("odyssey_player_name", this.playerName);
+        if (avatar) localStorage.setItem("odyssey_player_avatar", this.playerAvatar);
+
+        if (this.players[this.playerId]) {
+            this.players[this.playerId].name = this.playerName;
+            this.players[this.playerId].avatar = this.playerAvatar;
+        }
+
+        // Phát tín hiệu đổi tên cho toàn bộ phòng
+        this.broadcast({
+            type: "PLAYER_NAME_CHANGED",
+            playerId: this.playerId,
+            newName: this.playerName,
+            newAvatar: this.playerAvatar
+        });
+
+        this.triggerLeaderboardUpdate();
+        if (this.onPlayerListChange) this.onPlayerListChange();
+    }
+
     setAsHost(enable) {
         this.isHost = enable;
         if (this.isHost) {
@@ -119,7 +169,6 @@ class OdysseyMultiplayer {
         }
     }
 
-    // Khởi tạo người chơi mặc định & đối thủ Hy Lạp huyền thoại
     initDefaultPlayers() {
         this.players = {};
         
@@ -127,13 +176,13 @@ class OdysseyMultiplayer {
         this.players[this.playerId] = {
             id: this.playerId,
             name: this.playerName,
+            avatar: this.playerAvatar,
             score: 0,
             streak: 0,
-            avatar: "👑",
             isSelf: true
         };
 
-        // Các chiến binh Hy Lạp mô phỏng thi đấu (Tạo cảm giác phòng chơi sôi động như Quizizz)
+        // Các chiến binh Hy Lạp mô phỏng thi đấu
         if (this.enableBots) {
             const greekWarriors = [
                 { id: "bot_1", name: "Achilles", avatar: "🛡️", baseSpeed: 0.85, accuracy: 0.9 },
@@ -161,7 +210,6 @@ class OdysseyMultiplayer {
         this.initDefaultPlayers();
     }
 
-    // Đồng bộ trạng thái phòng
     syncRoomState() {
         this.broadcast({
             type: "ROOM_STATE_SYNC",
@@ -171,7 +219,6 @@ class OdysseyMultiplayer {
         });
     }
 
-    // Host nhấn BẮT ĐẦU / DEPLOY PHÒNG CHƠI
     startRoomByHost() {
         this.roomState = "RUNNING";
         this.broadcast({
@@ -180,13 +227,11 @@ class OdysseyMultiplayer {
         });
         if (this.onRoomStarted) this.onRoomStarted();
 
-        // Bắt đầu mô phỏng điểm số của các chiến binh bot
         if (this.enableBots) {
             this.startBotSimulation();
         }
     }
 
-    // Host Reset phòng chơi sau khi kết thúc
     resetRoomByHost() {
         this.roomState = "LOBBY";
         this.resetScores();
@@ -205,14 +250,12 @@ class OdysseyMultiplayer {
         this.currentStreak = 0;
     }
 
-    // Bảng mô phỏng đối thủ trả lời ngẫu nhiên
     startBotSimulation() {
         if (this.botInterval) clearInterval(this.botInterval);
         
         this.botInterval = setInterval(() => {
             if (this.roomState !== "RUNNING") return;
             
-            // Chọn ngẫu nhiên 1 bot để tăng điểm
             const botIds = Object.keys(this.players).filter(id => this.players[id].isBot);
             if (botIds.length === 0) return;
 
@@ -249,18 +292,12 @@ class OdysseyMultiplayer {
             };
         }
 
-        // 1. Điểm cơ bản
         const basePoints = 1000;
-
-        // 2. Điểm thưởng tốc độ (càng nhanh càng cao, tối đa +500 điểm)
         const speedRatio = Math.max(0, Math.min(1, timeRemainingSec / totalTimeSec));
         const speedBonus = Math.round(speedRatio * 500);
 
-        // 3. Chuỗi trả lời đúng liên tiếp (Streak Bonus)
         this.currentStreak++;
         const streakBonus = Math.min(300, (this.currentStreak - 1) * 100);
-
-        // Tổng điểm câu này
         const totalPoints = basePoints + speedBonus + streakBonus;
 
         this.updatePlayerScore(totalPoints, speedBonus, this.currentStreak);
@@ -274,15 +311,14 @@ class OdysseyMultiplayer {
         };
     }
 
-    // Cập nhật điểm của người chơi hiện tại
     updatePlayerScore(addedScore, speedBonus, streak) {
         if (!this.players[this.playerId]) {
             this.players[this.playerId] = {
                 id: this.playerId,
                 name: this.playerName,
+                avatar: this.playerAvatar,
                 score: 0,
                 streak: 0,
-                avatar: "👑",
                 isSelf: true
             };
         }
@@ -291,7 +327,6 @@ class OdysseyMultiplayer {
         this.players[this.playerId].streak = streak;
         this.players[this.playerId].lastBonus = speedBonus;
 
-        // Báo cho toàn phòng
         this.broadcast({
             type: "PLAYER_ANSWERED",
             playerId: this.playerId,
@@ -303,7 +338,6 @@ class OdysseyMultiplayer {
         this.triggerLeaderboardUpdate();
     }
 
-    // Lấy danh sách bảng xếp hạng đã sắp xếp
     getSortedLeaderboard() {
         const list = Object.values(this.players);
         list.sort((a, b) => b.score - a.score);

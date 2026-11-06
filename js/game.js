@@ -1,9 +1,6 @@
 /**
- * TRÌNH ĐIỀU KHIỂN CHÍNH CỦA GAME ODYSSEY (PHIÊN BẢN SỬ THI QUIZIZZ & CINEMATIC)
- * - Tự động chuyển cảnh ngay sau khi trả lời (không cần ấn màn hình)
- * - Tính điểm thưởng tốc độ (Speed Bonus) & Combo Streak kiểu Quizizz
- * - Phòng chơi Host / Leaderboard trực tiếp thời gian thực
- * - Mở đầu bằng trường đoạn điện ảnh thành Troy tả thực
+ * TRÌNH ĐIỀU KHIỂN CHÍNH CỦA GAME ODYSSEY (PHIÊN BẢN SỬ THI QUIZIZZ & MULTIPLAYER)
+ * Hỗ trợ đổi tên người chơi, chọn Avatar, Leaderboard trực tiếp và tự động chuyển cảnh
  */
 
 class OdysseyGame {
@@ -18,10 +15,13 @@ class OdysseyGame {
         this.hasAnswered = false;
 
         // Bộ đếm thời gian cho mỗi câu hỏi (Quizizz Timer)
-        this.questionTimeLimit = 15; // 15 giây mỗi câu
+        this.questionTimeLimit = 15;
         this.timeRemaining = 15;
         this.timerInterval = null;
         this.autoAdvanceTimeout = null;
+
+        // Quản lý Avatar đang chọn
+        this.selectedAvatar = multiplayer.playerAvatar || "👑";
 
         this.initDOMElements();
         this.bindEvents();
@@ -37,6 +37,18 @@ class OdysseyGame {
         this.leaderboardBtn = document.getElementById('leaderboard-toggle-btn');
         this.hostControlBtn = document.getElementById('host-control-btn');
         
+        // Profile & Name elements
+        this.profileBtn = document.getElementById('player-profile-btn');
+        this.headerPlayerName = document.getElementById('header-player-name');
+        this.headerPlayerAvatar = document.getElementById('header-player-avatar');
+        this.profileModal = document.getElementById('profile-modal');
+        this.customNameInput = document.getElementById('custom-name-input');
+        this.avatarGrid = document.getElementById('avatar-grid');
+        this.saveProfileBtn = document.getElementById('save-profile-btn');
+        this.cancelProfileBtn = document.getElementById('cancel-profile-btn');
+        this.lobbyPlayerDisplay = document.getElementById('lobby-player-display');
+        this.lobbyRenameBtn = document.getElementById('lobby-rename-btn');
+
         // Timer bar
         this.timerBar = document.getElementById('quiz-timer-bar');
         this.timerText = document.getElementById('quiz-timer-text');
@@ -69,11 +81,13 @@ class OdysseyGame {
 
         // Host Lobby modal
         this.hostModal = document.getElementById('host-modal');
-        this.hostCloseBtn = document.getElementById('host-modal-close-btn');
         this.hostStartBtn = document.getElementById('host-start-btn');
         this.hostResetBtn = document.getElementById('host-reset-btn');
         this.hostRoomPinText = document.getElementById('host-room-pin');
         this.hostPlayerList = document.getElementById('host-player-list');
+
+        // Khởi tạo hiển thị tên ban đầu
+        this.updateProfileDisplay();
     }
 
     bindEvents() {
@@ -87,9 +101,7 @@ class OdysseyGame {
 
         // Bật / tắt bảng xếp hạng Leaderboard
         if (this.leaderboardBtn) {
-            this.leaderboardBtn.addEventListener('click', () => {
-                this.toggleLeaderboard();
-            });
+            this.leaderboardBtn.addEventListener('click', () => this.toggleLeaderboard());
         }
         if (this.leaderboardCloseBtn) {
             this.leaderboardCloseBtn.addEventListener('click', () => {
@@ -97,16 +109,42 @@ class OdysseyGame {
             });
         }
 
-        // Bảng điều khiển Host
-        if (this.hostControlBtn) {
-            this.hostControlBtn.addEventListener('click', () => {
-                this.openHostModal();
+        // Sự kiện đổi tên & Avatar
+        if (this.profileBtn) {
+            this.profileBtn.addEventListener('click', () => this.openProfileModal());
+        }
+        if (this.lobbyRenameBtn) {
+            this.lobbyRenameBtn.addEventListener('click', () => this.openProfileModal());
+        }
+        if (this.cancelProfileBtn) {
+            this.cancelProfileBtn.addEventListener('click', () => {
+                this.profileModal.style.display = 'none';
             });
         }
-        if (this.hostCloseBtn) {
-            this.hostCloseBtn.addEventListener('click', () => {
-                this.hostModal.style.display = 'none';
+        if (this.saveProfileBtn) {
+            this.saveProfileBtn.addEventListener('click', () => this.handleSaveProfile());
+        }
+        if (this.customNameInput) {
+            this.customNameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') this.handleSaveProfile();
             });
+        }
+
+        // Chọn Avatar emoji
+        if (this.avatarGrid) {
+            const avatarBtns = this.avatarGrid.querySelectorAll('.avatar-btn');
+            avatarBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    avatarBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.selectedAvatar = btn.getAttribute('data-avatar');
+                });
+            });
+        }
+
+        // Bảng điều khiển Host
+        if (this.hostControlBtn) {
+            this.hostControlBtn.addEventListener('click', () => this.openHostModal());
         }
         if (this.hostStartBtn) {
             this.hostStartBtn.addEventListener('click', () => {
@@ -124,26 +162,74 @@ class OdysseyGame {
     }
 
     bindMultiplayerEvents() {
-        // Khi Host bấm bắt đầu từ xa hoặc cục bộ
         multiplayer.onRoomStarted = () => {
             sounds.playWarHorn();
             this.startCinematicIntro();
         };
 
-        // Khi bảng xếp hạng cập nhật
         multiplayer.onLeaderboardUpdate = (sortedList) => {
             this.renderLeaderboardTable(sortedList);
         };
+
+        multiplayer.onPlayerListChange = () => {
+            this.renderHostPlayerList();
+            this.updateProfileDisplay();
+        };
+    }
+
+    // ==========================================
+    // QUẢN LÝ ĐỔI TÊN NGƯỜI CHƠI & AVATAR
+    // ==========================================
+    openProfileModal() {
+        if (!this.profileModal) return;
+        if (this.customNameInput) {
+            this.customNameInput.value = multiplayer.playerName;
+        }
+
+        // Cập nhật trạng thái active của avatar
+        if (this.avatarGrid) {
+            const avatarBtns = this.avatarGrid.querySelectorAll('.avatar-btn');
+            avatarBtns.forEach(btn => {
+                if (btn.getAttribute('data-avatar') === multiplayer.playerAvatar) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        this.profileModal.style.display = 'flex';
+        setTimeout(() => {
+            if (this.customNameInput) this.customNameInput.focus();
+        }, 150);
+    }
+
+    handleSaveProfile() {
+        const newName = this.customNameInput.value.trim();
+        if (newName === "") {
+            alert("Vui lòng nhập tên người chơi của bạn!");
+            return;
+        }
+
+        multiplayer.setPlayerProfile(newName, this.selectedAvatar);
+        this.updateProfileDisplay();
+        this.renderHostPlayerList();
+        this.profileModal.style.display = 'none';
+    }
+
+    updateProfileDisplay() {
+        if (this.headerPlayerName) this.headerPlayerName.textContent = multiplayer.playerName;
+        if (this.headerPlayerAvatar) this.headerPlayerAvatar.textContent = multiplayer.playerAvatar;
+        if (this.lobbyPlayerDisplay) {
+            this.lobbyPlayerDisplay.textContent = `${multiplayer.playerAvatar} ${multiplayer.playerName}`;
+        }
     }
 
     start() {
-        // Mặc định tự động đăng ký làm Host cho người dùng hiện tại
         multiplayer.setAsHost(true);
         if (this.hostRoomPinText) {
             this.hostRoomPinText.textContent = multiplayer.roomCode;
         }
-
-        // Hiển thị màn hình chờ phòng chơi (Lobby) để Host có thể ấn Deploy / Bắt đầu
         this.openHostModal();
     }
 
@@ -151,6 +237,7 @@ class OdysseyGame {
         if (!this.hostModal) return;
         if (this.hostRoomPinText) this.hostRoomPinText.textContent = multiplayer.roomCode;
         this.renderHostPlayerList();
+        this.updateProfileDisplay();
         this.hostModal.style.display = 'flex';
     }
 
@@ -166,17 +253,15 @@ class OdysseyGame {
         `).join('');
     }
 
-    // 1. Chạy đoạn phim mở đầu tả thực về thành Troy (Troy Cinematic)
     startCinematicIntro() {
         sounds.init();
         sounds.startAmbient();
         const cinematic = new TroyCinematic('cinematic-container', () => {
-            this.loadStage(0); // Bắt đầu màn Cyclops sau đoạn phim
+            this.loadStage(0);
         });
         cinematic.start();
     }
 
-    // Nạp một màn chơi (thử thách)
     loadStage(stageIndex) {
         this.currentStageIndex = stageIndex;
         this.currentQuestionIndex = 0;
@@ -209,7 +294,6 @@ class OdysseyGame {
         });
     }
 
-    // Nạp câu hỏi và bắt đầu đồng hồ đếm ngược Quizizz
     loadQuestion() {
         this.hasAnswered = false;
         clearInterval(this.timerInterval);
@@ -223,7 +307,6 @@ class OdysseyGame {
         this.questionText.textContent = currentQ.question;
         this.explanationBox.style.display = 'none';
 
-        // Tạo danh sách 4 lựa chọn
         this.optionsContainer.innerHTML = '';
         const letters = ['A', 'B', 'C', 'D'];
         currentQ.options.forEach((optText, optIdx) => {
@@ -239,7 +322,6 @@ class OdysseyGame {
             this.optionsContainer.appendChild(btn);
         });
 
-        // Bắt đầu đếm ngược thời gian (15 giây)
         this.startQuestionTimer();
     }
 
@@ -252,12 +334,10 @@ class OdysseyGame {
             const ratio = Math.max(0, this.timeRemaining / this.questionTimeLimit);
             this.updateTimerUI(ratio);
 
-            // Tiếng tíc tắc 4 giây cuối
             if (this.timeRemaining <= 4.0 && this.timeRemaining > 0 && Math.abs(this.timeRemaining % 1) < 0.15) {
                 sounds.playTick();
             }
 
-            // Hết giờ -> Tự động tính là sai và chuyển câu
             if (this.timeRemaining <= 0) {
                 clearInterval(this.timerInterval);
                 this.handleAnswer(-1, this.currentStageQuestions[this.currentQuestionIndex].correctIndex, "Hết thời gian trả lời!");
@@ -295,9 +375,6 @@ class OdysseyGame {
         }
     }
 
-    // ==========================================
-    // XỬ LÝ TRẢ LỜI & TỰ ĐỘNG CHUYỂN CẢNH
-    // ==========================================
     handleAnswer(selectedIndex, correctIndex, explanation) {
         if (this.hasAnswered) return;
         this.hasAnswered = true;
@@ -307,7 +384,6 @@ class OdysseyGame {
         this.stageQuestionResults.push(isCorrect);
         this.totalQuestionsAnswered++;
 
-        // Khóa các nút lựa chọn và tô màu
         const buttons = this.optionsContainer.querySelectorAll('.option-btn');
         buttons.forEach((btn, idx) => {
             btn.disabled = true;
@@ -318,11 +394,9 @@ class OdysseyGame {
             }
         });
 
-        // TÍNH ĐIỂM QUIZIZZ SPEED BONUS
         const scoreResult = multiplayer.calculateQuizizzScore(isCorrect, this.timeRemaining, this.questionTimeLimit);
         this.updateScoreDisplay();
 
-        // HIỆN POPUP ĐIỂM THƯỞNG TỐC ĐỘ (SPEED BONUS POPUP)
         if (isCorrect) {
             sounds.playStreakChime(scoreResult.streak);
             this.showScorePopup(`+${scoreResult.totalPoints.toLocaleString()} ĐIỂM`, `⚡ Tốc độ: +${scoreResult.speedBonus} ${scoreResult.streak > 1 ? `| 🔥 Chuỗi x${scoreResult.streak}` : ''}`, 'score-positive');
@@ -330,7 +404,6 @@ class OdysseyGame {
             this.showScorePopup("0 ĐIỂM", selectedIndex === -1 ? "⏱️ Hết thời gian!" : "❌ Trả lời chưa chính xác", 'score-zero');
         }
 
-        // KÍCH HOẠT HIỆU ỨNG THỬ THÁCH
         const stageName = this.stages[this.currentStageIndex];
         if (stageName === 'cyclops') {
             if (isCorrect) {
@@ -358,7 +431,7 @@ class OdysseyGame {
             }
         }
 
-        // TỰ ĐỘNG CHUYỂN CẢNH SAU 1.8 GIÂY (KHÔNG CẦN BẤM MÀN HÌNH)
+        // TỰ ĐỘNG CHUYỂN CÂU SAU 1.8 GIÂY
         this.autoAdvanceTimeout = setTimeout(() => {
             this.handleAutoNext();
         }, 1800);
@@ -405,7 +478,6 @@ class OdysseyGame {
         }
     }
 
-    // Hoàn thành một màn thử thách
     finishCurrentStage() {
         const stageName = this.stages[this.currentStageIndex];
 
@@ -419,7 +491,7 @@ class OdysseyGame {
                     ODYSSEY_STORY.transition1.paragraphs,
                     ODYSSEY_STORY.transition1.buttonText,
                     () => {
-                        this.loadStage(1); // Chuyển sang Sirens
+                        this.loadStage(1);
                     }
                 );
             });
@@ -432,7 +504,7 @@ class OdysseyGame {
                     ODYSSEY_STORY.transition2.paragraphs,
                     ODYSSEY_STORY.transition2.buttonText,
                     () => {
-                        this.loadStage(2); // Chuyển sang Scylla
+                        this.loadStage(2);
                     }
                 );
             });
@@ -458,7 +530,6 @@ class OdysseyGame {
         this.storyOverlay.style.display = 'flex';
     }
 
-    // Kết thúc mở và vinh danh Bảng Xếp Hạng cuối cùng (Podium)
     showEpilogue() {
         [this.stepCyclops, this.stepSirens, this.stepScylla].forEach(s => s.classList.add('completed'));
 
@@ -482,7 +553,6 @@ class OdysseyGame {
         );
     }
 
-    // Toggle Leaderboard Drawer
     toggleLeaderboard() {
         if (!this.leaderboardDrawer) return;
         this.leaderboardDrawer.classList.toggle('open');
@@ -515,7 +585,6 @@ class OdysseyGame {
     }
 }
 
-// Khởi chạy game khi DOM sẵn sàng
 document.addEventListener('DOMContentLoaded', () => {
     const game = new OdysseyGame();
     game.start();

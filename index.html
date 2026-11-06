@@ -18,6 +18,13 @@
             <span>ODYSSEY: THE EPIC VOYAGE</span>
         </div>
         <div class="header-controls">
+            <!-- Nút Tùy Chỉnh Tên Người Chơi & Avatar -->
+            <button class="btn-profile" id="player-profile-btn" title="Bấm để đổi tên & avatar của bạn">
+                <span id="header-player-avatar">👑</span>
+                <span id="header-player-name">Odysseus</span>
+                <span class="edit-icon">✏️</span>
+            </button>
+
             <!-- Điểm số & Chuỗi Streak kiểu Quizizz -->
             <div class="hud-pill streak-pill" id="streak-display" style="display: none;">🔥 Chuỗi x1</div>
             <div class="hud-pill" id="score-display">0 ĐIỂM</div>
@@ -98,6 +105,37 @@
     <!-- TRƯỜNG ĐOẠN ĐIỆN ẢNH TẢ THỰC VỀ THÀNH TROY (CINEMATIC OVERLAY) -->
     <section class="cinematic-overlay" id="cinematic-container" style="display: none;"></section>
 
+    <!-- MODAL ĐỔI TÊN NGƯỜI CHƠI & CHỌN AVATAR -->
+    <div class="profile-modal-overlay" id="profile-modal" style="display: none;">
+        <div class="profile-card">
+            <h3 class="profile-title">⚔️ DANH XƯNG CHIẾN BINH CỦA BẠN</h3>
+            <p class="profile-desc">Nhập tên của bạn để hiển thị trên Bảng xếp hạng trực tiếp cùng các đấu thủ khác:</p>
+
+            <div class="profile-input-group">
+                <input type="text" id="custom-name-input" class="custom-name-input" placeholder="Nhập tên của bạn..." maxlength="22" autocomplete="off">
+            </div>
+
+            <div class="avatar-label">CHỌN BIỂU TƯỢNG (AVATAR):</div>
+            <div class="avatar-selection-grid" id="avatar-grid">
+                <button class="avatar-btn active" data-avatar="👑">👑</button>
+                <button class="avatar-btn" data-avatar="⚔️">⚔️</button>
+                <button class="avatar-btn" data-avatar="🛡️">🛡️</button>
+                <button class="avatar-btn" data-avatar="🏹">🏹</button>
+                <button class="avatar-btn" data-avatar="⚡">⚡</button>
+                <button class="avatar-btn" data-avatar="🦅">🦅</button>
+                <button class="avatar-btn" data-avatar="🔱">🔱</button>
+                <button class="avatar-btn" data-avatar="🦁">🦁</button>
+                <button class="avatar-btn" data-avatar="🦉">🦉</button>
+                <button class="avatar-btn" data-avatar="⚓">⚓</button>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-save-profile" id="save-profile-btn">LƯU TÊN & TIẾP TỤC ➔</button>
+                <button class="btn-cancel-profile" id="cancel-profile-btn">HỦY</button>
+            </div>
+        </div>
+    </div>
+
     <!-- BẢNG ĐIỀU KHIỂN PHÒNG CHƠI HOST (HOST LOBBY MODAL) -->
     <div class="host-modal-overlay" id="host-modal" style="display: none;">
         <div class="host-card">
@@ -109,6 +147,13 @@
             <div class="host-pin-box">
                 <div class="pin-label">MÃ PHÒNG THI ĐẤU (ROOM PIN)</div>
                 <div class="pin-code" id="host-room-pin">ODY-8819</div>
+            </div>
+
+            <!-- KHU VỰC NHẬP TÊN NGAY TRONG SẢNH CHỜ -->
+            <div class="lobby-name-bar">
+                <span class="label">Tên của bạn:</span>
+                <span class="current-player-display" id="lobby-player-display">👑 Odysseus</span>
+                <button class="btn-inline-rename" id="lobby-rename-btn">Đổi tên</button>
             </div>
 
             <div style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--gold-light); font-weight: 600;">
