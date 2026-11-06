@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odyssey: The Epic Voyage | Cuộc Hải Trình Sử Thi</title>
+    <!-- Phông chữ sử thi Hy Lạp -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- THANH TIÊU ĐỀ & ĐIỀU KHIỂN (HEADER) -->
+    <header class="game-header">
+        <div class="brand-title">
+            <span class="brand-icon">🏛️</span>
+            <span>ODYSSEY: THE EPIC VOYAGE</span>
+        </div>
+        <div class="header-controls">
+            <div class="hud-pill" id="score-display">0 ĐIỂM</div>
+            <button class="btn-icon" id="sound-toggle-btn" title="Bật/Tắt âm thanh">
+                <span id="sound-icon">🔊</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- THANH TIẾN TRÌNH CÁC THỬ THÁCH (PROGRESS STRIP) -->
+    <nav class="progress-strip" aria-label="Tiến trình trò chơi">
+        <div class="challenge-step active" id="step-cyclops">
+            <div class="step-circle">1</div>
+            <span>Cyclops Polyphemus</span>
+        </div>
+        <div class="challenge-step" id="step-sirens">
+            <div class="step-circle">2</div>
+            <span>Khúc Ca Sirens</span>
+        </div>
+        <div class="challenge-step" id="step-scylla">
+            <div class="step-circle">3</div>
+            <span>Quái Thú Scylla</span>
+        </div>
+    </nav>
+
+    <!-- KHÔNG GIAN TRÒ CHƠI CHÍNH -->
+    <main class="game-viewport">
+        <!-- 1. KHU VỰC ĐỒ HỌA TRỰC QUAN ĐỘNG (THEATER VIEW) -->
+        <section class="visual-theater" id="visual-theater" aria-label="Khung cảnh trực quan">
+            <!-- Nội dung SVG của từng màn sẽ được VisualEngine chèn vào đây -->
+        </section>
+
+        <!-- 2. BẢNG CÂU HỎI VÀ LỰA CHỌN (QUIZ PANEL) -->
+        <section class="quiz-panel" id="quiz-panel" aria-label="Bảng câu hỏi">
+            <div class="quiz-header">
+                <span class="question-counter" id="question-counter">CÂU HỎI 1 / 4</span>
+                <div class="question-indicator-dots" id="indicator-dots">
+                    <!-- Các chấm câu hỏi -->
+                </div>
+            </div>
+
+            <!-- Nội dung câu hỏi -->
+            <h2 class="question-text" id="question-text">Đang tải câu hỏi sử thi...</h2>
+
+            <!-- 4 lựa chọn trả lời -->
+            <div class="options-grid" id="options-container">
+                <!-- Nút các đáp án A, B, C, D -->
+            </div>
+
+            <!-- Khung giải thích sau khi trả lời -->
+            <div class="explanation-box" id="explanation-box" style="display: none;"></div>
+
+            <!-- Nút điều hướng câu hỏi tiếp theo -->
+            <div class="quiz-actions">
+                <button class="btn-mythic" id="next-btn" style="display: none;">CÂU TIẾP THEO ➔</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL DẪN CHUYỆN / MỞ ĐẦU / CHUYỂN MÀN / KẾT THÚC (STORY MODAL) -->
+    <aside class="story-overlay" id="story-overlay" style="display: none;">
+        <div class="scroll-container">
+            <div class="greek-border-top"></div>
+            <h1 class="story-title" id="story-title">KHỞI HÀNH TỪ TROY</h1>
+            <div class="story-subtitle" id="story-subtitle">Cuộc hành trình vĩ đại trở về quê hương Ithaca</div>
+            <div class="story-content" id="story-body">
+                <!-- Nội dung các đoạn văn dẫn truyện -->
+            </div>
+            <div class="greek-border-bottom"></div>
+            <button class="btn-mythic" id="story-action-btn">BẮT ĐẦU VƯỢT BIỂN</button>
+        </div>
+    </aside>
+
+    <!-- SCRIPTS -->
+    <script src="data/questions.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/visuals.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
+

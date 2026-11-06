@@ -1,0 +1,14 @@
+# File cấu hình & môi trường
+.env
+.env.*
+*.config.json
+mcp_config.json
+
+# Thư mục tạm & log
+*.log
+.DS_Store
+Thumbs.db
+pa/
+.idea/
+.vscode/
+

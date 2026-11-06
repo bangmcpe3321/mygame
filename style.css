@@ -1,0 +1,766 @@
+/* ========================================================
+   ODYSSEY: THE EPIC VOYAGE - STYLESHEET
+   Phong cách Thần Thoại Hy Lạp Cổ Đại (Gold, Bronze & Aegean Blue)
+   ======================================================== */
+
+:root {
+    --bg-dark: #0a0e14;
+    --bg-parchment: #181c24;
+    --gold: #d4af37;
+    --gold-light: #f7e28b;
+    --gold-glow: rgba(212, 175, 55, 0.4);
+    --bronze: #cd7f32;
+    --terracotta: #c0392b;
+    --aegean-blue: #145374;
+    --aegean-deep: #002233;
+    --seafoam: #64dfdf;
+    --text-primary: #e6e6e6;
+    --text-muted: #9aa0a6;
+    --text-gold: #f4d03f;
+    --danger: #e74c3c;
+    --success: #2ecc71;
+    --font-heading: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+    --font-body: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    background-image: 
+        radial-gradient(circle at 50% 10%, rgba(20, 83, 116, 0.25) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+}
+
+/* ========================================================
+   HEADER & TOP CONTROLS
+   ======================================================== */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: rgba(10, 14, 20, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+    z-index: 100;
+}
+
+.brand-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    text-shadow: 0 0 10px var(--gold-glow);
+}
+
+.brand-icon {
+    font-size: 1.5rem;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.hud-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    color: var(--text-gold);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-light);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    background: var(--gold-glow);
+    border-color: var(--gold);
+    transform: scale(1.05);
+}
+
+/* ========================================================
+   TIẾN TRÌNH THỬ THÁCH (PROGRESS BAR)
+   ======================================================== */
+.progress-strip {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.challenge-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.challenge-step.active {
+    color: var(--gold-light);
+    text-shadow: 0 0 8px var(--gold-glow);
+}
+
+.challenge-step.completed {
+    color: var(--success);
+}
+
+.step-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+}
+
+.challenge-step.active .step-circle {
+    border-color: var(--gold);
+    background: var(--gold-glow);
+    color: #fff;
+    box-shadow: 0 0 10px var(--gold);
+}
+
+.challenge-step.completed .step-circle {
+    border-color: var(--success);
+    background: rgba(46, 204, 113, 0.2);
+    color: var(--success);
+}
+
+/* ========================================================
+   KHU VỰC CHÍNH CỦA TRÒ CHƠI
+   ======================================================== */
+.game-viewport {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 1040px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px;
+    gap: 16px;
+}
+
+/* ========================================================
+   KHU VỰC ĐỒ HỌA TRỰC QUAN (STAGE VIEW)
+   ======================================================== */
+.visual-theater {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.stage-view {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.scene-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.stage-status-overlay {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    background: rgba(10, 14, 20, 0.88);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 8px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.badge-cave { background: #5c3818; color: #f5deb3; }
+.badge-siren { background: #14324f; color: #aeeeff; }
+.badge-scylla { background: #4a1525; color: #ffb3c6; }
+
+.action-caption {
+    font-size: 0.88rem;
+    color: #e0e0e0;
+    line-height: 1.4;
+    transition: all 0.3s;
+}
+
+.text-danger { color: #ff6b6b !important; }
+.text-success { color: #51cf66 !important; }
+.text-gold { color: var(--gold-light) !important; font-weight: bold; }
+
+/* ========================================================
+   BẢNG CÂU HỎI & LỰA CHỌN (QUIZ INTERFACE)
+   ======================================================== */
+.quiz-panel {
+    background: rgba(24, 28, 36, 0.95);
+    border: 2px solid rgba(212, 175, 55, 0.35);
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding-bottom: 8px;
+}
+
+.question-counter {
+    font-family: var(--font-heading);
+    color: var(--gold-light);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.question-indicator-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s;
+}
+
+.dot.active {
+    background: var(--gold);
+    transform: scale(1.3);
+    box-shadow: 0 0 8px var(--gold);
+}
+
+.dot.correct {
+    background: var(--success);
+}
+
+.dot.wrong {
+    background: var(--danger);
+}
+
+.question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.5;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.option-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: var(--text-primary);
+    padding: 14px 18px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.95rem;
+    font-family: var(--font-body);
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.option-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--gold-light);
+    font-weight: bold;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.option-btn:hover:not(:disabled) {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.option-btn.selected-correct {
+    background: rgba(46, 204, 113, 0.25) !important;
+    border-color: var(--success) !important;
+    color: #ffffff !important;
+}
+
+.option-btn.selected-wrong {
+    background: rgba(231, 76, 60, 0.25) !important;
+    border-color: var(--danger) !important;
+    color: #ffffff !important;
+}
+
+.option-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Lời giải thích */
+.explanation-box {
+    margin-top: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border-left: 4px solid var(--gold);
+    font-size: 0.9rem;
+    color: #d1d5db;
+    line-height: 1.4;
+}
+
+/* Nút tiếp tục sau khi trả lời */
+.quiz-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-mythic {
+    background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+    color: #111;
+    border: none;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    padding: 12px 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    transition: all 0.25s ease;
+}
+
+.btn-mythic:hover {
+    background: linear-gradient(135deg, #f7e28b 0%, #d4af37 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+}
+
+/* ========================================================
+   MODAL DẪN CHUYỆN / MỞ ĐẦU / CHUYỂN MÀN / KẾT THÚC
+   ======================================================== */
+.story-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 7, 10, 0.92);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.4s ease;
+}
+
+.scroll-container {
+    background: #1c202a;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.8);
+    border-radius: 14px;
+    max-width: 680px;
+    width: 100%;
+    padding: 36px 40px;
+    text-align: center;
+    position: relative;
+}
+
+.greek-border-top,
+.greek-border-bottom {
+    height: 8px;
+    background: repeating-linear-gradient(90deg, var(--gold) 0, var(--gold) 15px, transparent 15px, transparent 25px);
+    opacity: 0.6;
+    margin: 10px 0 20px 0;
+}
+
+.story-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+    text-shadow: 0 0 15px var(--gold-glow);
+}
+
+.story-subtitle {
+    font-size: 0.95rem;
+    color: var(--seafoam);
+    font-style: italic;
+    margin-bottom: 24px;
+}
+
+.story-content {
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: #e0e0e0;
+    text-align: justify;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.story-content p {
+    text-indent: 20px;
+}
+
+/* ========================================================
+   HOẠT HỌA SVG (KEYFRAMES & ANIMATION CLASSES)
+   ======================================================== */
+
+/* Đuốc bập bùng */
+.torch-flicker {
+    animation: flicker 1.8s infinite alternate ease-in-out;
+}
+@keyframes flicker {
+    0% { opacity: 0.7; r: 130; }
+    50% { opacity: 0.9; r: 150; }
+    100% { opacity: 0.6; r: 125; }
+}
+
+/* Cyclops thở bình thường */
+.cyclops-idle {
+    animation: cyclopsBreathe 3s infinite ease-in-out;
+}
+@keyframes cyclopsBreathe {
+    0%, 100% { transform: translate(620px, 100px); }
+    50% { transform: translate(620px, 94px); }
+}
+
+/* Cyclops gầm dữ dội */
+.cyclops-roaring {
+    animation: cyclopsRoarShake 0.15s infinite;
+}
+@keyframes cyclopsRoarShake {
+    0% { transform: translate(620px, 95px) scale(1.05); }
+    50% { transform: translate(625px, 102px) scale(1.08); }
+    100% { transform: translate(615px, 98px) scale(1.06); }
+}
+
+/* Vòng sóng âm phát tán khi gầm */
+.wave-pulse {
+    animation: waveExpand 0.8s infinite linear;
+}
+@keyframes waveExpand {
+    0% { r: 30; opacity: 1; }
+    100% { r: 180; opacity: 0; }
+}
+
+/* Binh lính run sợ */
+.soldiers-shaking {
+    animation: soldierTremble 0.1s infinite;
+}
+@keyframes soldierTremble {
+    0% { transform: translate(140px, 270px); }
+    50% { transform: translate(138px, 271px); }
+    100% { transform: translate(142px, 269px); }
+}
+
+/* Mũi tên xé gió bay */
+.arrow-flying-anim {
+    animation: arrowShoot 0.3s ease-out forwards;
+}
+@keyframes arrowShoot {
+    0% { opacity: 0; transform: translate(-300px, 80px); }
+    100% { opacity: 1; transform: translate(0, 0); }
+}
+
+/* Quái vật trúng tên giật lùi */
+.monster-hit-anim {
+    animation: monsterReel 0.6s ease-out;
+}
+@keyframes monsterReel {
+    0% { transform: translate(620px, 100px); }
+    25% { transform: translate(650px, 90px) rotate(5deg); }
+    100% { transform: translate(620px, 100px); }
+}
+
+/* Mù mắt lảo đảo ngã */
+.cyclops-blinded-stumble {
+    animation: blindFall 2s forwards ease-in-out;
+}
+@keyframes blindFall {
+    0% { transform: translate(620px, 100px); }
+    40% { transform: translate(660px, 70px) rotate(15deg); }
+    100% { transform: translate(720px, 200px) rotate(35deg); opacity: 0.3; }
+}
+
+/* Thuyền nhấp nhô trên sóng */
+.ship-bobbing {
+    animation: shipRock 3.5s infinite ease-in-out;
+}
+@keyframes shipRock {
+    0%, 100% { transform: translate(180px, 200px) rotate(0deg); }
+    50% { transform: translate(180px, 206px) rotate(-2deg); }
+}
+
+/* Sương mù trôi */
+.fog-drifting {
+    animation: fogFloat 6s infinite alternate ease-in-out;
+}
+@keyframes fogFloat {
+    0% { opacity: 0.4; transform: translateX(0); }
+    100% { opacity: 0.7; transform: translateX(-40px); }
+}
+
+/* Sirens bay lơ lửng */
+.sirens-floating {
+    animation: sirenHover 2.5s infinite ease-in-out;
+}
+@keyframes sirenHover {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Sirens tức giận giãy giụa */
+.sirens-furious {
+    animation: sirenFrenzy 0.15s infinite;
+}
+@keyframes sirenFrenzy {
+    0% { transform: translate(0, 0) scale(1.1); }
+    50% { transform: translate(4px, -6px) scale(1.15); }
+    100% { transform: translate(-3px, 3px) scale(1.1); }
+}
+
+/* Odysseus giãy giụa vì khúc ca mê hoặc */
+.hero-struggling {
+    animation: heroFrenzy 0.12s infinite;
+}
+@keyframes heroFrenzy {
+    0% { transform: translate(180px, 10px) rotate(-3deg); }
+    50% { transform: translate(180px, 8px) rotate(4deg); }
+    100% { transform: translate(180px, 12px) rotate(-2deg); }
+}
+
+/* Thuyền tăng tốc vượt qua sương mù */
+.ship-accelerating {
+    animation: shipBurst 1.2s ease-out;
+}
+@keyframes shipBurst {
+    0% { transform: translate(180px, 200px); }
+    50% { transform: translate(220px, 195px); }
+    100% { transform: translate(180px, 200px); }
+}
+
+.ship-escaping-fog {
+    animation: shipLeave 2s ease-in forwards;
+}
+@keyframes shipLeave {
+    0% { transform: translate(180px, 200px); }
+    100% { transform: translate(700px, 180px); opacity: 0.2; }
+}
+
+/* Xoáy nước quay tròn */
+.whirlpool-spin {
+    transform-origin: 0 0;
+    animation: spinWhirl 2.5s infinite linear;
+}
+@keyframes spinWhirl {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.whirlpool-spin-reverse {
+    transform-origin: 0 0;
+    animation: spinWhirlRev 1.8s infinite linear;
+}
+@keyframes spinWhirlRev {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+/* Cổ Scylla lắc lư chờ mồi */
+.scylla-neck-idle {
+    animation: snakeSway 3s infinite ease-in-out alternate;
+}
+@keyframes snakeSway {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* Scylla bổ nhào xuống đớp thuyền */
+.scylla-dive-attack {
+    animation: scyllaChomp 0.8s ease-in-out;
+}
+@keyframes scyllaChomp {
+    0% { transform: translate(0, 0); }
+    40% { transform: translate(-140px, 130px) scale(1.2); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Thuyền bị cắn rung lắc mạnh */
+.ship-bitten-shake {
+    animation: shipDamage 0.1s infinite;
+}
+@keyframes shipDamage {
+    0% { transform: translate(340px, 240px) rotate(3deg); }
+    50% { transform: translate(335px, 246px) rotate(-4deg); }
+    100% { transform: translate(345px, 238px) rotate(2deg); }
+}
+
+/* Thủy thủ hoảng sợ nhảy nhót */
+.crew-panic-anim {
+    animation: crewPanic 0.15s infinite;
+}
+@keyframes crewPanic {
+    0% { transform: translate(60px, 60px); }
+    50% { transform: translate(62px, 54px); }
+    100% { transform: translate(58px, 62px); }
+}
+
+/* Nhát chém của Odysseus */
+.sword-slash-anim {
+    animation: heroSwordSlash 0.4s ease-out;
+}
+@keyframes heroSwordSlash {
+    0% { transform: rotate(-30deg, 20, 35); }
+    50% { transform: rotate(60deg, 20, 35) scale(1.3); }
+    100% { transform: rotate(-30deg, 20, 35); }
+}
+
+/* Đầu Scylla bị chém rụt lại */
+.scylla-head-recoil {
+    animation: headRecoil 0.6s ease-out;
+}
+@keyframes headRecoil {
+    0% { transform: translate(0, 0); }
+    30% { transform: translate(60px, -40px) rotate(-15deg); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Thuyền thoát khỏi Scylla */
+.ship-full-escape {
+    animation: escapeStrait 2s ease-in forwards;
+}
+@keyframes escapeStrait {
+    0% { transform: translate(340px, 240px); }
+    100% { transform: translate(850px, 220px); opacity: 0; }
+}
+
+/* Rung màn hình */
+.screen-rumble {
+    animation: rumble 0.1s 8;
+}
+@keyframes rumble {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-4px, 4px); }
+    50% { transform: translate(4px, -4px); }
+    75% { transform: translate(-4px, -2px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Chớp đỏ màn hình */
+.screen-flash-red {
+    box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.8) !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ========================================================
+   RESPONSIVE DESIGN (CHO ĐIỆN THOẠI & TABLET)
+   ======================================================== */
+@media (max-width: 768px) {
+    .game-header {
+        padding: 8px 14px;
+    }
+    .brand-title {
+        font-size: 1rem;
+    }
+    .visual-theater {
+        height: 260px;
+    }
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+    .scroll-container {
+        padding: 24px 20px;
+    }
+    .story-title {
+        font-size: 1.35rem;
+    }
+    .story-content {
+        font-size: 0.92rem;
+    }
+}
+
