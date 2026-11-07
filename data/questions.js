@@ -1,12 +1,12 @@
 * DỮ LIỆU CÂU HỎI VÀ DẪN CHUYỆN - GAME ODYSSEY
 /**
- * Bạn có thể dễ dàng thêm, sửa hoặc xóa các câu hỏi bên dưới.
- * Mỗi câu hỏi có cấu trúc:
- *  - question: Nội dung câu hỏi
- *  - options: Mảng 4 lựa chọn trả lời
- *  - correctIndex: Vị trí của câu trả lời đúng (0, 1, 2, hoặc 3)
- *  - explanation: Lời giải thích ngắn gọn sau khi trả lời
- */
+* Bạn có thể dễ dàng thêm, sửa hoặc xóa các câu hỏi bên dưới.
+* Mỗi câu hỏi có cấu trúc:
+*  - question: Nội dung câu hỏi
+*  - options: Mảng 4 lựa chọn trả lời
+*  - correctIndex: Vị trí của câu trả lời đúng (0, 1, 2, hoặc 3)
+*  - explanation: Lời giải thích ngắn gọn sau khi trả lời
+*/
 
 const ODYSSEY_STORY = {
     // 1. Mở đầu trò chơi

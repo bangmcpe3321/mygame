@@ -176,86 +176,21 @@ class TroyCinematic {
         }
     }
 
-    // 1. CẢNH 1: CON NGỰA GỖ TẠI CỔNG THÀNH TROY
+    // 1. CẢNH 1: CON NGỰA GỖ TẠI CỔNG THÀNH TROY (TRÍCH XUẤT TỪ FIGMA TROY)
     renderTrojanHorseScene() {
         return `
+        <div class="cinematic-slide-backdrop">
+            <img src="assets/troy_night_scene.jpg" alt="Troy — Đêm Tro Tàn" class="cinematic-art-img" />
+            <div class="cinematic-art-vignette"></div>
+        </div>
         <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="cinematic-svg">
             <defs>
-                <radialGradient id="moonSky" cx="70%" cy="20%" r="80%">
-                    <stop offset="0%" stop-color="#152238" />
-                    <stop offset="50%" stop-color="#0a101d" />
-                    <stop offset="100%" stop-color="#030508" />
+                <radialGradient id="moonGlow" cx="65%" cy="25%" r="55%">
+                    <stop offset="0%" stop-color="#fff5cc" stop-opacity="0.25"/>
+                    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
                 </radialGradient>
-                <linearGradient id="fireRim" x1="0" y1="1" x2="0" y2="0">
-                    <stop offset="0%" stop-color="#ff4500" stop-opacity="0.9" />
-                    <stop offset="35%" stop-color="#ff8800" stop-opacity="0.5" />
-                    <stop offset="100%" stop-color="#000000" stop-opacity="0" />
-                </linearGradient>
-                <linearGradient id="horseWood" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#3b2514" />
-                    <stop offset="50%" stop-color="#24170c" />
-                    <stop offset="100%" stop-color="#150d07" />
-                </linearGradient>
             </defs>
-
-            <rect width="1200" height="600" fill="url(#moonSky)" />
-            <circle cx="850" cy="110" r="45" fill="#f4ebd9" opacity="0.6" filter="blur(4px)" />
-            <rect y="350" width="1200" height="250" fill="url(#fireRim)" />
-
-            <!-- BỨC TƯỜNG THÀNH TROY -->
-            <polygon points="700,100 1200,80 1200,600 680,600" fill="#1b1c1e" />
-            <polygon points="700,100 730,70 1200,50 1200,80" fill="#2d2f33" />
-            <rect x="730" y="60" width="25" height="40" fill="#0d0e10" />
-            <rect x="790" y="58" width="25" height="40" fill="#0d0e10" />
-            <rect x="850" y="56" width="25" height="40" fill="#0d0e10" />
-            <rect x="910" y="54" width="25" height="40" fill="#0d0e10" />
-            <rect x="970" y="52" width="25" height="40" fill="#0d0e10" />
-
-            <!-- CỔNG THÀNH SKAIAN ĐANG MỞ TOANG -->
-            <path d="M780,260 Q880,180 980,260 L980,600 L780,600 Z" fill="#0a0a0c" />
-            <polygon points="760,280 780,260 780,600 730,590" fill="#3a2212" stroke="#d4af37" stroke-width="2"/>
-            <polygon points="1000,280 980,260 980,600 1030,590" fill="#3a2212" stroke="#d4af37" stroke-width="2"/>
-
-            <!-- CON NGỰA GỖ KHỔNG LỒ -->
-            <g id="trojan-horse" transform="translate(320, 110)">
-                <circle cx="80" cy="440" r="38" fill="#1f1610" stroke="#543d2b" stroke-width="8"/>
-                <circle cx="80" cy="440" r="14" fill="#0c0906" />
-                <circle cx="280" cy="440" r="38" fill="#1f1610" stroke="#543d2b" stroke-width="8"/>
-                <circle cx="280" cy="440" r="14" fill="#0c0906" />
-                <rect x="30" y="400" width="310" height="28" fill="#2d1c10" rx="4" />
-
-                <polygon points="65,280 100,280 95,400 65,400" fill="url(#horseWood)" />
-                <polygon points="105,280 135,280 130,400 100,400" fill="#150d07" />
-                <polygon points="245,280 275,280 270,400 240,400" fill="#150d07" />
-                <polygon points="275,280 310,280 305,400 275,400" fill="url(#horseWood)" />
-
-                <path d="M50,220 Q80,140 200,150 Q310,160 330,240 Q310,310 180,310 Q80,310 50,220 Z" fill="url(#horseWood)" stroke="#1a110a" stroke-width="3"/>
-                <line x1="120" y1="155" x2="110" y2="305" stroke="#120b06" stroke-width="2" />
-                <line x1="190" y1="152" x2="180" y2="308" stroke="#120b06" stroke-width="2" />
-                <line x1="260" y1="165" x2="250" y2="295" stroke="#120b06" stroke-width="2" />
-
-                <rect x="150" y="290" width="55" height="15" fill="#ffd700" opacity="0.3" filter="blur(2px)"/>
-                <line x1="145" y1="300" x2="205" y2="300" stroke="#000" stroke-width="3" />
-                <line x1="175" y1="305" x2="175" y2="390" stroke="#8b5a2b" stroke-width="2" stroke-dasharray="4 2"/>
-
-                <path d="M50,230 Q20,290 40,360" stroke="#2b1a0d" stroke-width="12" stroke-linecap="round" fill="none"/>
-                <polygon points="290,200 350,110 390,140 330,240" fill="url(#horseWood)" />
-                <polygon points="340,115 420,65 440,105 380,140" fill="#2d1c10" />
-                <polygon points="395,85 410,80 405,95" fill="#ffd700" />
-                <polygon points="350,115 360,65 375,105" fill="#1f140b" />
-            </g>
-
-            <!-- CÁC CHIẾN BINH HY LẠP BƯỚC RA TỪ BÓNG TỐI -->
-            <g id="infiltrators" transform="translate(480, 480)">
-                <ellipse cx="20" cy="50" rx="14" ry="24" fill="#0d0e12" />
-                <circle cx="20" cy="20" r="10" fill="#0d0e12" />
-                <path d="M12,18 Q20,2 28,18 Z" fill="#a63a24" />
-                <line x1="30" y1="35" x2="50" y2="15" stroke="#5c3818" stroke-width="3"/>
-                <circle cx="52" cy="12" r="10" fill="#ff7700" opacity="0.8" filter="blur(2px)"/>
-                <ellipse cx="60" cy="55" rx="12" ry="22" fill="#0a0a0e" />
-                <circle cx="60" cy="25" r="9" fill="#0a0a0e" />
-                <line x1="65" y1="40" x2="110" y2="20" stroke="#d4af37" stroke-width="3"/>
-            </g>
+            <circle cx="820" cy="140" r="240" fill="url(#moonGlow)"/>
         </svg>
         `;
     }
@@ -263,49 +198,19 @@ class TroyCinematic {
     // 2. CẢNH 2: BIỂN LỬA THÀNH TROY
     renderBurningTroyScene() {
         return `
+        <div class="cinematic-slide-backdrop">
+            <img src="assets/troy_night_scene.jpg" alt="Biển lửa thành Troy" class="cinematic-art-img cinematic-inferno-mode" />
+            <div class="cinematic-fire-vignette"></div>
+        </div>
         <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="cinematic-svg">
             <defs>
-                <linearGradient id="infernoSky" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#2a0505" />
-                    <stop offset="40%" stop-color="#6b1708" />
-                    <stop offset="80%" stop-color="#cc3708" />
-                    <stop offset="100%" stop-color="#ff7b00" />
+                <linearGradient id="fireFlare" x1="0" y1="1" x2="0" y2="0">
+                    <stop offset="0%" stop-color="#ff3700" stop-opacity="0.65"/>
+                    <stop offset="45%" stop-color="#ff7b00" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
                 </linearGradient>
-                <radialGradient id="blastFire" cx="50%" cy="80%" r="60%">
-                    <stop offset="0%" stop-color="#ffffff" />
-                    <stop offset="25%" stop-color="#ffea00" />
-                    <stop offset="60%" stop-color="#ff3700" />
-                    <stop offset="100%" stop-color="#1f0202" stop-opacity="0" />
-                </radialGradient>
             </defs>
-
-            <rect width="1200" height="600" fill="url(#infernoSky)" />
-            <circle cx="600" cy="480" r="500" fill="url(#blastFire)" opacity="0.6"/>
-
-            <!-- CUNG ĐIỆN PRIAM SỤP ĐỔ -->
-            <g id="burning-palaces" fill="#140606">
-                <polygon points="120,600 120,240 160,250 160,600" />
-                <polygon points="190,600 200,320 230,330 220,600" />
-                <polygon points="260,600 260,210 300,220 300,600" />
-                <polygon points="80,260 210,130 340,240 310,270 210,180 110,280" />
-
-                <polygon points="450,600 450,180 550,120 650,180 650,600" />
-                <polygon points="680,600 700,240 760,250 750,600" />
-                <polygon points="800,600 820,190 920,150 960,600" />
-            </g>
-
-            <path d="M0,600 Q150,420 250,520 Q350,380 480,480 Q600,340 720,490 Q850,370 980,510 Q1100,400 1200,600 Z" fill="#ff4500" opacity="0.8" />
-            <path d="M50,600 Q200,450 320,550 Q450,420 580,520 Q750,390 880,530 Q1050,440 1200,600 Z" fill="#ffbb00" opacity="0.7" />
-
-            <!-- ODYSSEUS NHÌN LẠI CHIẾN ĐỊA -->
-            <g id="odysseus-troy-gaze" transform="translate(180, 360)">
-                <polygon points="-60,240 40,80 140,240" fill="#080303" />
-                <path d="M20,60 Q-20,90 -40,140 Q0,110 35,90 Z" fill="#800000" />
-                <rect x="25" y="45" width="22" height="42" fill="#d4af37" rx="3"/>
-                <circle cx="36" cy="28" r="14" fill="#cca06e" />
-                <path d="M24,25 Q36,-2 48,25 Z" fill="#ffd700" />
-                <line x1="55" y1="10" x2="55" y2="120" stroke="#f0e68c" stroke-width="4"/>
-            </g>
+            <rect y="220" width="1200" height="380" fill="url(#fireFlare)"/>
         </svg>
         `;
     }
@@ -313,23 +218,13 @@ class TroyCinematic {
     // 3. CẢNH 3: HẠM ĐỘI TIẾN VÀO GIÔNG BÃO
     renderFleetDepartureScene() {
         return `
+        <div class="cinematic-slide-backdrop">
+            <img src="assets/greek_trireme.jpg" alt="Hạm đội xuất phát về Ithaca" class="cinematic-art-img cinematic-storm-mode" />
+            <div class="cinematic-storm-vignette"></div>
+        </div>
         <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" class="cinematic-svg">
-            <!-- TRANH MINH HỌA SỬ THI SOÁI HẠM TRIREME HY LẠP TIẾN VÀO BIỂN SÂU -->
-            <image href="assets/greek_trireme.jpg" x="0" y="0" width="1200" height="600" preserveAspectRatio="xMidYMid slice" />
-            
-            <!-- HIỆU ỨNG ÁNH HOÀNG HÔN RỰC LỬA VÀ BÓNG MÂY GIÔNG BÃO -->
-            <rect width="1200" height="600" fill="url(#stormSea)" opacity="0.25" />
-            
-            <defs>
-                <linearGradient id="stormSea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#07131e" stop-opacity="0.2"/>
-                    <stop offset="60%" stop-color="#0d283d" stop-opacity="0.3"/>
-                    <stop offset="100%" stop-color="#000000" stop-opacity="0.8"/>
-                </linearGradient>
-            </defs>
-
             <!-- TIA CHỚP BÃO TỐ Ở CHÂN TRỜI -->
-            <path d="M920,0 L880,110 L940,140 L890,260" stroke="#77ccff" stroke-width="3" opacity="0.75" fill="none"/>
+            <path d="M920,0 L880,110 L940,140 L890,260" stroke="#77ccff" stroke-width="3" opacity="0.8" fill="none"/>
         </svg>
         `;
     }
