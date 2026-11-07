@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odyssey: The Epic Voyage | Cuộc Hải Trình Sử Thi</title>
+    <title>Aegis Protocol: Starfall | Chiến Dịch Vũ Trụ Đột Kích</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- THANH TIÊU ĐỀ & ĐIỀU KHIỂN (HEADER) -->
+    <!-- THANH TIÊU ĐỀ & ĐIỀU KHIỂN TRUNG TÂM (SCI-FI HEADER) -->
     <header class="game-header">
         <div class="brand-title">
-            <span class="brand-icon">🏛️</span>
-            <span>ODYSSEY: THE EPIC VOYAGE</span>
+            <span class="brand-icon">🤖</span>
+            <span>AEGIS PROTOCOL: STARFALL</span>
         </div>
         <div class="header-controls">
-            <!-- Nút Tùy Chỉnh Tên Người Chơi & Avatar -->
-            <button class="btn-profile" id="player-profile-btn" title="Bấm để đổi tên & avatar của bạn">
-                <span id="header-player-avatar">👑</span>
-                <span id="header-player-name">Odysseus</span>
+            <!-- Nút Tùy Chỉnh Tên Người Chơi & Avatar Robot -->
+            <button class="btn-profile" id="player-profile-btn" title="Bấm để đổi bí danh & avatar Robot">
+                <span id="header-player-avatar">🤖</span>
+                <span id="header-player-name">Unit-07</span>
                 <span class="edit-icon">✏️</span>
             </button>
 
@@ -30,13 +30,13 @@
             <div class="hud-pill" id="score-display">0 ĐIỂM</div>
 
             <!-- Nút mở Leaderboard trực tiếp -->
-            <button class="btn-leaderboard" id="leaderboard-toggle-btn" title="Bảng xếp hạng trực tiếp">
+            <button class="btn-leaderboard" id="leaderboard-toggle-btn" title="Bảng xếp hạng phi đội">
                 <span>🏆</span>
                 <span>BẢNG XẾP HẠNG</span>
             </button>
 
             <!-- Nút mở bảng điều khiển Host -->
-            <button class="btn-host-nav" id="host-control-btn" title="Quản lý phòng chơi">
+            <button class="btn-host-nav" id="host-control-btn" title="Phòng chỉ huy Host">
                 <span>👑</span>
                 <span>PHÒNG HOST</span>
             </button>
@@ -48,27 +48,27 @@
         </div>
     </header>
 
-    <!-- THANH TIẾN TRÌNH CÁC THỬ THÁCH (PROGRESS STRIP) -->
-    <nav class="progress-strip" aria-label="Tiến trình trò chơi">
-        <div class="challenge-step active" id="step-cyclops">
+    <!-- THANH TIẾN TRÌNH CÁC KHU VỰC (SECTOR PROGRESS STRIP) -->
+    <nav class="progress-strip" aria-label="Tiến trình chiến dịch tàu vũ trụ">
+        <div class="challenge-step active" id="step-cargo">
             <div class="step-circle">1</div>
-            <span>Cyclops Polyphemus</span>
+            <span>KHO HÀNG (4 Drones)</span>
         </div>
-        <div class="challenge-step" id="step-sirens">
+        <div class="challenge-step" id="step-reactor">
             <div class="step-circle">2</div>
-            <span>Khúc Ca Sirens</span>
+            <span>LÒ PHẢN ỨNG (2 Drones & 2 Brutes)</span>
         </div>
-        <div class="challenge-step" id="step-scylla">
+        <div class="challenge-step" id="step-bridge">
             <div class="step-circle">3</div>
-            <span>Quái Thú Scylla</span>
+            <span>CẦU TÀU (Alien Queen & Drone)</span>
         </div>
     </nav>
 
-    <!-- KHÔNG GIAN TRÒ CHƠI CHÍNH -->
+    <!-- KHÔNG GIAN ĐẤU TRƯỜNG CHÍNH -->
     <main class="game-viewport">
-        <!-- 1. KHU VỰC ĐỒ HỌA TRỰC QUAN TẢ THỰC -->
-        <section class="visual-theater" id="visual-theater" aria-label="Khung cảnh trực quan">
-            <!-- SVG của từng thử thách sẽ được VisualEngine tạo ở đây -->
+        <!-- 1. KHU VỰC ĐẤU TRƯỜNG TURN-BASED RPG (ANGRY BIRDS EPIC STYLE) -->
+        <section class="visual-theater" id="visual-theater" aria-label="Đấu trường chiến đấu theo lượt">
+            <!-- Đấu trường giữa Robot và Quái vật ngoài hành tinh được tạo tự động bởi VisualEngine -->
         </section>
 
         <!-- POPUP ĐIỂM THƯỞNG TỐC ĐỘ QUIZIZZ (FLOATING SCORE) -->
@@ -78,7 +78,7 @@
         </div>
 
         <!-- 2. BẢNG CÂU HỎI & TIMER QUIZIZZ -->
-        <section class="quiz-panel" id="quiz-panel" aria-label="Bảng câu hỏi">
+        <section class="quiz-panel" id="quiz-panel" aria-label="Bảng câu hỏi nạp đạn súng plasma">
             <!-- THANH ĐẾM NGƯỢC THỜI GIAN QUIZIZZ -->
             <div class="timer-container">
                 <div class="quiz-timer-track">
@@ -88,49 +88,50 @@
             </div>
 
             <div class="quiz-header">
-                <span class="question-counter" id="question-counter">CÂU HỎI 1 / 4</span>
+                <span class="question-counter" id="question-counter">LƯỢT BẮN 1 / 4</span>
                 <div class="question-indicator-dots" id="indicator-dots"></div>
             </div>
 
             <!-- Nội dung câu hỏi -->
-            <h2 class="question-text" id="question-text">Đang chuẩn bị thử thách...</h2>
+            <h2 class="question-text" id="question-text">Đang kết nối hệ thống kiểm soát vũ khí...</h2>
 
             <!-- 4 lựa chọn trả lời (Tự động chuyển câu ngay khi chọn) -->
             <div class="options-grid" id="options-container"></div>
 
+            <!-- Hộp giải thích khoa học sau khi trả lời -->
             <div class="explanation-box" id="explanation-box" style="display: none;"></div>
         </section>
     </main>
 
-    <!-- TRƯỜNG ĐOẠN ĐIỆN ẢNH TẢ THỰC VỀ THÀNH TROY (CINEMATIC OVERLAY) -->
+    <!-- TRƯỜNG ĐOẠN ĐIỆN ẢNH TRUYỆN TRANH (CINEMATIC COMIC OVERLAY) -->
     <section class="cinematic-overlay" id="cinematic-container" style="display: none;"></section>
 
-    <!-- MODAL ĐỔI TÊN NGƯỜI CHƠI & CHỌN AVATAR -->
+    <!-- MODAL ĐỔI TÊN NGƯỜI CHƠI & CHỌN AVATAR ROBOT -->
     <div class="profile-modal-overlay" id="profile-modal" style="display: none;">
         <div class="profile-card">
-            <h3 class="profile-title">⚔️ DANH XƯNG CHIẾN BINH CỦA BẠN</h3>
-            <p class="profile-desc">Nhập tên của bạn để hiển thị trên Bảng xếp hạng trực tiếp cùng các đấu thủ khác:</p>
+            <h3 class="profile-title">🤖 BÍ DANH CHIẾN ĐẤU CỦA BẠN</h3>
+            <p class="profile-desc">Nhập bí danh Robot để hiển thị trên Bảng chỉ huy trực tiếp cùng phi đội:</p>
 
             <div class="profile-input-group">
-                <input type="text" id="custom-name-input" class="custom-name-input" placeholder="Nhập tên của bạn..." maxlength="22" autocomplete="off">
+                <input type="text" id="custom-name-input" class="custom-name-input" placeholder="Ví dụ: Unit-07, Titan-X..." maxlength="22" autocomplete="off">
             </div>
 
-            <div class="avatar-label">CHỌN BIỂU TƯỢNG (AVATAR):</div>
+            <div class="avatar-label">CHỌN BIỂU TƯỢNG ROBOT:</div>
             <div class="avatar-selection-grid" id="avatar-grid">
-                <button class="avatar-btn active" data-avatar="👑">👑</button>
-                <button class="avatar-btn" data-avatar="⚔️">⚔️</button>
-                <button class="avatar-btn" data-avatar="🛡️">🛡️</button>
-                <button class="avatar-btn" data-avatar="🏹">🏹</button>
+                <button class="avatar-btn active" data-avatar="🤖">🤖</button>
                 <button class="avatar-btn" data-avatar="⚡">⚡</button>
-                <button class="avatar-btn" data-avatar="🦅">🦅</button>
-                <button class="avatar-btn" data-avatar="🔱">🔱</button>
-                <button class="avatar-btn" data-avatar="🦁">🦁</button>
-                <button class="avatar-btn" data-avatar="🦉">🦉</button>
-                <button class="avatar-btn" data-avatar="⚓">⚓</button>
+                <button class="avatar-btn" data-avatar="🛡️">🛡️</button>
+                <button class="avatar-btn" data-avatar="🎯">🎯</button>
+                <button class="avatar-btn" data-avatar="🚀">🚀</button>
+                <button class="avatar-btn" data-avatar="🛸">🛸</button>
+                <button class="avatar-btn" data-avatar="🔋">🔋</button>
+                <button class="avatar-btn" data-avatar="🛰️">🛰️</button>
+                <button class="avatar-btn" data-avatar="🔮">🔮</button>
+                <button class="avatar-btn" data-avatar="⚙️">⚙️</button>
             </div>
 
             <div class="profile-actions">
-                <button class="btn-save-profile" id="save-profile-btn">LƯU TÊN & TIẾP TỤC ➔</button>
+                <button class="btn-save-profile" id="save-profile-btn">LƯU BÍ DANH & TIẾP TỤC ➔</button>
                 <button class="btn-cancel-profile" id="cancel-profile-btn">HỦY</button>
             </div>
         </div>
@@ -139,31 +140,31 @@
     <!-- BẢNG ĐIỀU KHIỂN PHÒNG CHƠI HOST (HOST LOBBY MODAL) -->
     <div class="host-modal-overlay" id="host-modal" style="display: none;">
         <div class="host-card">
-            <button class="btn-close-host" id="host-close-btn" title="Đóng sảnh chờ" style="position: absolute; top: 12px; right: 18px; background: none; border: none; color: #d4af37; font-size: 1.8rem; cursor: pointer; line-height: 1;">&times;</button>
-            <h2 class="host-title">🏛️ SẢNH CHỜ PHÒNG CHƠI (HOST LOBBY)</h2>
+            <button class="btn-close-host" id="host-close-btn" title="Đóng sảnh chờ" style="position: absolute; top: 12px; right: 18px; background: none; border: none; color: #00f3ff; font-size: 1.8rem; cursor: pointer; line-height: 1;">&times;</button>
+            <h2 class="host-title">🛰️ TRUNG TÂM CHỈ HUY CHIẾN DỊCH (HOST LOBBY)</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 6px;">
-                Trò chơi sẽ bắt đầu và mở khóa đồng loạt cho mọi người khi bạn nhấn <strong>BẮT ĐẦU</strong>.
+                Tất cả Robot trong phi đội sẽ đồng loạt tham chiến khi Chỉ huy nhấn <strong>BẮT ĐẦU</strong>.
             </p>
 
             <div class="host-pin-box">
-                <div class="pin-label">MÃ PHÒNG THI ĐẤU (ROOM PIN)</div>
-                <div class="pin-code" id="host-room-pin">ODY-8819</div>
+                <div class="pin-label">TẦN SỐ TRUYỀN TIN (ROOM PIN)</div>
+                <div class="pin-code" id="host-room-pin">AEGIS-7</div>
             </div>
 
             <!-- KHU VỰC NHẬP TÊN NGAY TRONG SẢNH CHỜ -->
             <div class="lobby-name-bar">
-                <span class="label">Tên của bạn:</span>
-                <span class="current-player-display" id="lobby-player-display">👑 Odysseus</span>
+                <span class="label">Bí danh của bạn:</span>
+                <span class="current-player-display" id="lobby-player-display">🤖 Unit-07</span>
                 <button class="btn-inline-rename" id="lobby-rename-btn">Đổi tên</button>
             </div>
 
-            <div style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: var(--gold-light); font-weight: 600;">
-                DANH SÁCH CHIẾN BINH ĐÃ VÀO PHÒNG:
+            <div style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: #00f3ff; font-weight: 600;">
+                DANH SÁCH CHIẾN BINH ROBOT ĐÃ KẾT NỐI:
             </div>
             <div class="host-player-grid" id="host-player-list"></div>
 
             <div class="host-actions">
-                <button class="btn-deploy-start" id="host-start-btn">🚀 BẮT ĐẦU / DEPLOY GAME CHO MỌI NGƯỜI</button>
+                <button class="btn-deploy-start" id="host-start-btn">🚀 KÍCH HOẠT CHIẾN DỊCH CHO TOÀN PHI ĐỘI</button>
                 <button class="btn-host-reset" id="host-reset-btn">🔄 RESET BẢNG ĐIỂM</button>
             </div>
         </div>
@@ -172,7 +173,7 @@
     <!-- BẢNG XẾP HẠNG THỜI GIAN THỰC (LEADERBOARD DRAWER) -->
     <aside class="leaderboard-drawer" id="leaderboard-drawer">
         <div class="drawer-header">
-            <h3 class="drawer-title">🏆 BẢNG XẾP HẠNG TRỰC TIẾP</h3>
+            <h3 class="drawer-title">🏆 BẢNG XẾP HẠNG PHI ĐỘI</h3>
             <button class="btn-close-drawer" id="leaderboard-close-btn">&times;</button>
         </div>
         <div class="leaderboard-list" id="leaderboard-body"></div>
@@ -181,11 +182,11 @@
     <!-- MODAL DẪN TRUYỆN MỞ ĐẦU / CHUYỂN MÀN / KẾT THÚC MỞ -->
     <aside class="story-overlay" id="story-overlay" style="display: none;">
         <div class="scroll-container">
-            <div class="greek-border-top"></div>
-            <h1 class="story-title" id="story-title">KHỞI HÀNH TỪ TROY</h1>
-            <div class="story-subtitle" id="story-subtitle">Cuộc hành trình vĩ đại trở về quê hương Ithaca</div>
+            <div class="scifi-holo-border-top"></div>
+            <h1 class="story-title" id="story-title">BÁO ĐỘNG ĐỎ</h1>
+            <div class="story-subtitle" id="story-subtitle">Tàu vận tải Aegis-7 gặp nạn</div>
             <div class="story-content" id="story-body"></div>
-            <div class="greek-border-bottom"></div>
+            <div class="scifi-holo-border-bottom"></div>
             <button class="btn-mythic" id="story-action-btn">TIẾP TỤC</button>
         </div>
     </aside>

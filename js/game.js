@@ -1,27 +1,39 @@
 /**
- * TRÌNH ĐIỀU KHIỂN CHÍNH CỦA GAME ODYSSEY (PHIÊN BẢN SỬ THI QUIZIZZ & MULTIPLAYER)
- * Hỗ trợ đổi tên người chơi, chọn Avatar, Leaderboard trực tiếp và tự động chuyển cảnh
+ * TRÌNH ĐIỀU KHIỂN CHÍNH - AEGIS PROTOCOL: STARFALL
+ * Tựa game Turn-Based RPG Quiz (Angry Birds Epic Style)
+ * - Robot Unit-07 vượt qua 3 khu vực phi thuyền gặp nạn.
+ * - Tiêu diệt quái vật theo lượt: 1 câu đúng diệt 1 quái nhỏ, 2 câu diệt 1 quái lớn, 5 câu diệt Nữ Chúa.
+ * - Mở đầu & Kết thúc bằng hoạt cảnh truyện tranh điện ảnh tự động.
  */
 
-class OdysseyGame {
+class AegisGame {
     constructor() {
         this.visuals = new VisualEngine('visual-theater');
-        this.stages = ['cyclops', 'sirens', 'scylla'];
-        this.currentStageIndex = 0;
+        this.sectors = ['cargo', 'reactor', 'bridge'];
+        this.currentSectorIndex = 0;
         this.currentQuestionIndex = 0;
         this.totalQuestionsAnswered = 0;
-        this.currentStageQuestions = [];
-        this.stageQuestionResults = [];
+        this.totalCorrectAnswers = 0;
         this.hasAnswered = false;
 
-        // Bộ đếm thời gian cho mỗi câu hỏi (Quizizz Timer)
+        // Điểm số & Chuỗi Streak kiểu Quizizz
+        this.score = 0;
+        this.streak = 0;
+        this.robotShield = 100;
+
+        // Bộ đếm thời gian cho mỗi câu hỏi
         this.questionTimeLimit = 15;
         this.timeRemaining = 15;
         this.timerInterval = null;
-        this.autoAdvanceTimeout = null;
 
-        // Quản lý Avatar đang chọn
-        this.selectedAvatar = multiplayer.playerAvatar || "👑";
+        // Danh sách câu hỏi và quái vật cho từng khu vực
+        this.currentSectorQuestions = [];
+        this.aliensState = [];
+
+        // Khởi tạo hệ thống âm thanh
+        if (!window.soundSystem) {
+            window.soundSystem = new SoundSystem();
+        }
 
         this.initDOMElements();
         this.bindEvents();
@@ -54,9 +66,9 @@ class OdysseyGame {
         this.timerText = document.getElementById('quiz-timer-text');
 
         // Progress steps
-        this.stepCyclops = document.getElementById('step-cyclops');
-        this.stepSirens = document.getElementById('step-sirens');
-        this.stepScylla = document.getElementById('step-scylla');
+        this.stepCargo = document.getElementById('step-cargo') || document.getElementById('step-cyclops');
+        this.stepReactor = document.getElementById('step-reactor') || document.getElementById('step-sirens');
+        this.stepBridge = document.getElementById('step-bridge') || document.getElementById('step-scylla');
 
         // Quiz elements
         this.quizPanel = document.getElementById('quiz-panel');
@@ -67,50 +79,82 @@ class OdysseyGame {
         this.explanationBox = document.getElementById('explanation-box');
         this.scoreFloatPopup = document.getElementById('score-float-popup');
 
-        // Story modal elements
+        // Story & Modal elements
         this.storyOverlay = document.getElementById('story-overlay');
         this.storyTitle = document.getElementById('story-title');
         this.storySubtitle = document.getElementById('story-subtitle');
         this.storyBody = document.getElementById('story-body');
         this.storyActionBtn = document.getElementById('story-action-btn');
 
-        // Leaderboard drawer
+        // Host & Leaderboard Drawers
+        this.hostModal = document.getElementById('host-modal');
+        this.hostCloseBtn = document.getElementById('host-close-btn');
+        this.hostStartBtn = document.getElementById('host-start-btn');
+        this.hostResetBtn = document.getElementById('host-reset-btn');
+        this.hostRoomPin = document.getElementById('host-room-pin');
+        this.hostPlayerList = document.getElementById('host-player-list');
         this.leaderboardDrawer = document.getElementById('leaderboard-drawer');
         this.leaderboardCloseBtn = document.getElementById('leaderboard-close-btn');
         this.leaderboardBody = document.getElementById('leaderboard-body');
-
-        // Host Lobby modal
-        this.hostModal = document.getElementById('host-modal');
-        this.hostStartBtn = document.getElementById('host-start-btn');
-        this.hostCloseBtn = document.getElementById('host-close-btn');
-        this.hostResetBtn = document.getElementById('host-reset-btn');
-        this.hostRoomPinText = document.getElementById('host-room-pin');
-        this.hostPlayerList = document.getElementById('host-player-list');
-
-        // Khởi tạo hiển thị tên ban đầu
-        this.updateProfileDisplay();
     }
 
     bindEvents() {
-        // Bật / tắt âm thanh
+        // Âm thanh
         if (this.soundBtn) {
             this.soundBtn.addEventListener('click', () => {
-                const isEnabled = sounds.toggle();
-                this.soundIcon.textContent = isEnabled ? '🔊' : '🔇';
+                const isEnabled = window.soundSystem.toggle();
+                if (this.soundIcon) {
+                    this.soundIcon.textContent = isEnabled ? '🔊' : '🔇';
+                }
             });
         }
 
-        // Bật / tắt bảng xếp hạng Leaderboard
-        if (this.leaderboardBtn) {
-            this.leaderboardBtn.addEventListener('click', () => this.toggleLeaderboard());
+        // Leaderboard Drawer toggle
+        if (this.leaderboardBtn && this.leaderboardDrawer) {
+            this.leaderboardBtn.addEventListener('click', () => {
+                this.leaderboardDrawer.classList.toggle('active');
+                this.renderLeaderboardDrawer();
+            });
         }
-        if (this.leaderboardCloseBtn) {
+        if (this.leaderboardCloseBtn && this.leaderboardDrawer) {
             this.leaderboardCloseBtn.addEventListener('click', () => {
-                this.leaderboardDrawer.classList.remove('open');
+                this.leaderboardDrawer.classList.remove('active');
             });
         }
 
-        // Sự kiện đổi tên & Avatar
+        // Host Modal toggle
+        if (this.hostControlBtn && this.hostModal) {
+            this.hostControlBtn.addEventListener('click', () => {
+                this.hostModal.style.display = 'flex';
+                this.renderHostPlayerList();
+            });
+        }
+        if (this.hostCloseBtn && this.hostModal) {
+            this.hostCloseBtn.addEventListener('click', () => {
+                this.hostModal.style.display = 'none';
+            });
+        }
+
+        // Host Start & Reset buttons
+        if (this.hostStartBtn) {
+            this.hostStartBtn.addEventListener('click', () => {
+                if (window.multiplayer) {
+                    window.multiplayer.startRoomByHost();
+                }
+                this.hostModal.style.display = 'none';
+            });
+        }
+        if (this.hostResetBtn) {
+            this.hostResetBtn.addEventListener('click', () => {
+                if (window.multiplayer) {
+                    window.multiplayer.resetRoomByHost();
+                }
+                this.resetFullGame();
+                this.hostModal.style.display = 'none';
+            });
+        }
+
+        // Đổi tên & Avatar
         if (this.profileBtn) {
             this.profileBtn.addEventListener('click', () => this.openProfileModal());
         }
@@ -119,581 +163,671 @@ class OdysseyGame {
         }
         if (this.cancelProfileBtn) {
             this.cancelProfileBtn.addEventListener('click', () => {
-                this.profileModal.style.display = 'none';
+                if (this.profileModal) this.profileModal.style.display = 'none';
             });
         }
         if (this.saveProfileBtn) {
-            this.saveProfileBtn.addEventListener('click', () => this.handleSaveProfile());
-        }
-        if (this.customNameInput) {
-            this.customNameInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') this.handleSaveProfile();
-            });
+            this.saveProfileBtn.addEventListener('click', () => this.saveProfile());
         }
 
-        // Chọn Avatar emoji
+        // Chọn Avatar trong modal
         if (this.avatarGrid) {
-            const avatarBtns = this.avatarGrid.querySelectorAll('.avatar-btn');
-            avatarBtns.forEach(btn => {
+            this.avatarGrid.querySelectorAll('.avatar-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    avatarBtns.forEach(b => b.classList.remove('active'));
+                    this.avatarGrid.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    this.selectedAvatar = btn.getAttribute('data-avatar');
                 });
-            });
-        }
-
-        // Bảng điều khiển Host
-        if (this.hostControlBtn) {
-            this.hostControlBtn.addEventListener('click', () => this.openHostModal());
-        }
-        if (this.hostStartBtn) {
-            this.hostStartBtn.addEventListener('click', () => {
-                multiplayer.startRoomByHost();
-                this.hostModal.style.display = 'none';
-            });
-        }
-        if (this.hostCloseBtn) {
-            this.hostCloseBtn.addEventListener('click', () => {
-                this.hostModal.style.display = 'none';
-                if (multiplayer.roomState !== 'RUNNING') {
-                    multiplayer.startRoomByHost();
-                }
-            });
-        }
-        if (this.hostResetBtn) {
-            this.hostResetBtn.addEventListener('click', () => {
-                multiplayer.resetRoomByHost();
-                this.updateScoreDisplay();
-                alert("Đã reset phòng chơi và bảng điểm cho phiên mới!");
             });
         }
     }
 
     bindMultiplayerEvents() {
-        multiplayer.onRoomStarted = () => {
-            sounds.playWarHorn();
-            sounds.startAmbient();
-            this.loadStage(0);
+        if (!window.multiplayer) return;
+
+        window.multiplayer.onLeaderboardUpdate = (data) => {
+            this.renderLeaderboardDrawer();
         };
 
-        multiplayer.onLeaderboardUpdate = (sortedList) => {
-            this.renderLeaderboardTable(sortedList);
-        };
-
-        multiplayer.onPlayerListChange = () => {
+        window.multiplayer.onPlayerListChange = () => {
             this.renderHostPlayerList();
-            this.updateProfileDisplay();
+        };
+
+        window.multiplayer.onRoomStarted = () => {
+            if (this.hostModal) this.hostModal.style.display = 'none';
+            this.startSector(0);
         };
     }
 
-    // ==========================================
-    // QUẢN LÝ ĐỔI TÊN NGƯỜI CHƠI & AVATAR
-    // ==========================================
-    openProfileModal() {
-        if (!this.profileModal) return;
-        if (this.customNameInput) {
-            this.customNameInput.value = multiplayer.playerName;
-        }
-
-        // Cập nhật trạng thái active của avatar
-        if (this.avatarGrid) {
-            const avatarBtns = this.avatarGrid.querySelectorAll('.avatar-btn');
-            avatarBtns.forEach(btn => {
-                if (btn.getAttribute('data-avatar') === multiplayer.playerAvatar) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
-
-        this.profileModal.style.display = 'flex';
-        setTimeout(() => {
-            if (this.customNameInput) this.customNameInput.focus();
-        }, 150);
-    }
-
-    handleSaveProfile() {
-        const newName = this.customNameInput.value.trim();
-        if (newName === "") {
-            alert("Vui lòng nhập tên người chơi của bạn!");
-            return;
-        }
-
-        multiplayer.setPlayerProfile(newName, this.selectedAvatar);
-        this.updateProfileDisplay();
-        this.renderHostPlayerList();
-        this.profileModal.style.display = 'none';
-    }
-
-    updateProfileDisplay() {
-        if (this.headerPlayerName) this.headerPlayerName.textContent = multiplayer.playerName;
-        if (this.headerPlayerAvatar) this.headerPlayerAvatar.textContent = multiplayer.playerAvatar;
-        if (this.lobbyPlayerDisplay) {
-            this.lobbyPlayerDisplay.textContent = `${multiplayer.playerAvatar} ${multiplayer.playerName}`;
-        }
-    }
-
+    /**
+     * Bắt đầu trò chơi
+     */
     start() {
-        multiplayer.setAsHost(true);
-        if (this.hostRoomPinText) {
-            this.hostRoomPinText.textContent = multiplayer.roomCode;
+        // Cập nhật tên người chơi trên header
+        if (window.multiplayer) {
+            if (this.headerPlayerName) this.headerPlayerName.textContent = window.multiplayer.playerName;
+            if (this.headerPlayerAvatar) this.headerPlayerAvatar.textContent = window.multiplayer.playerAvatar;
+            if (this.lobbyPlayerDisplay) this.lobbyPlayerDisplay.textContent = `${window.multiplayer.playerAvatar} ${window.multiplayer.playerName}`;
         }
 
-        // BẮT ĐẦU TRÒ CHƠI BẰNG TRƯỜNG ĐOẠN ĐIỆN ẢNH THÀNH TROY
-        this.startCinematicIntro();
+        // Khởi động hoạt cảnh mở đầu kiểu truyện tranh (Intro Comic Cutscene)
+        this.playIntroCinematic();
     }
 
-    openHostModal() {
-        if (!this.hostModal) return;
-        if (this.hostRoomPinText) this.hostRoomPinText.textContent = multiplayer.roomCode;
-        this.renderHostPlayerList();
-        this.updateProfileDisplay();
-        this.hostModal.style.display = 'flex';
+    /**
+     * PHÂN CẢNH MỞ ĐẦU KIỂU TRUYỆN TRANH (INTRO CINEMATIC)
+     */
+    playIntroCinematic() {
+        if (typeof AEGIS_STORY !== 'undefined' && AEGIS_STORY.intro && AEGIS_STORY.intro.scenes) {
+            const cinematic = new SciFiCinematic('cinematic-container', AEGIS_STORY.intro.scenes, () => {
+                // Khi xem xong hoặc ấn Bỏ qua -> Bắt đầu Sector 1
+                this.startSector(0);
+            });
+            cinematic.start();
+        } else {
+            this.startSector(0);
+        }
     }
 
-    renderHostPlayerList() {
-        if (!this.hostPlayerList) return;
-        const players = Object.values(multiplayer.players);
-        this.hostPlayerList.innerHTML = players.map(p => `
-            <div class="lobby-player-chip">
-                <span class="player-avatar">${p.avatar || '⚔️'}</span>
-                <span class="player-name">${p.name} ${p.isSelf ? '(Bạn)' : ''}</span>
-                ${p.isBot ? '<span class="chip-badge">Chiến binh</span>' : '<span class="chip-badge chip-online">Online</span>'}
-            </div>
-        `).join('');
+    /**
+     * Khởi tạo quái vật cho từng khu vực theo yêu cầu:
+     * - Phòng 1: 4 quái nhỏ (1 HP mỗi con)
+     * - Phòng 2: 2 quái nhỏ (1 HP mỗi con) + 2 quái lớn (2 HP mỗi con)
+     * - Phòng 3: 1 Nữ chúa lớn nhất (5 HP) + 1 quái nhỏ (1 HP)
+     */
+    createMonstersForSector(sectorIndex) {
+        if (sectorIndex === 0) {
+            // Phòng 1: 4 con nhỏ (1 HP mỗi con)
+            return [
+                { id: 's1_drone1', name: 'Bọ Drone α', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+                { id: 's1_drone2', name: 'Bọ Drone β', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+                { id: 's1_drone3', name: 'Bọ Drone γ', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+                { id: 's1_drone4', name: 'Bọ Drone δ', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' }
+            ];
+        } else if (sectorIndex === 1) {
+            // Phòng 2: 2 con nhỏ (1 HP) + 2 con lớn (2 HP)
+            return [
+                { id: 's2_drone1', name: 'Bọ Swarmer A', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+                { id: 's2_drone2', name: 'Bọ Swarmer B', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+                { id: 's2_brute1', name: 'Chiến Binh Chitin I', type: 'large', hp: 2, maxHp: 2, image: 'assets/alien_large.jpg' },
+                { id: 's2_brute2', name: 'Chiến Binh Chitin II', type: 'large', hp: 2, maxHp: 2, image: 'assets/alien_large.jpg' }
+            ];
+        } else {
+            // Phòng 3: 1 Nữ chúa lớn nhất (5 HP) + 1 con nhỏ (1 HP)
+            return [
+                { id: 's3_guard', name: 'Hộ Vệ Hoàng Gia', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+                { id: 's3_queen', name: 'NỮ CHÚA XENOMORPH', type: 'queen', hp: 5, maxHp: 5, image: 'assets/alien_queen.jpg' }
+            ];
+        }
     }
 
-    startCinematicIntro() {
-        sounds.init();
-        sounds.startAmbient();
-        const cinematic = new TroyCinematic('cinematic-container', () => {
-            this.loadStage(0);
-        });
-        cinematic.start();
-    }
-
-    loadStage(stageIndex) {
-        this.currentStageIndex = stageIndex;
+    /**
+     * Bắt đầu một Khu vực (Sector)
+     */
+    startSector(sectorIndex) {
+        this.currentSectorIndex = sectorIndex;
         this.currentQuestionIndex = 0;
-        const stageName = this.stages[stageIndex];
-        this.currentStageQuestions = ODYSSEY_QUESTIONS[stageName] || [];
-        this.stageQuestionResults = [];
+        this.robotShield = 100;
 
-        this.updateProgressStrip();
+        // Cập nhật thanh tiến trình phía trên
+        this.updateProgressStrip(sectorIndex);
 
-        if (stageName === 'cyclops') {
-            this.visuals.renderCyclopsStage();
-        } else if (stageName === 'sirens') {
-            this.visuals.renderSirensStage();
-        } else if (stageName === 'scylla') {
-            this.visuals.renderScyllaStage();
+        // Khởi tạo quái vật
+        this.aliensState = this.createMonstersForSector(sectorIndex);
+
+        // Lấy bộ câu hỏi của khu vực này
+        const sectorKey = `sector${sectorIndex + 1}`;
+        if (typeof AEGIS_QUESTIONS !== 'undefined' && AEGIS_QUESTIONS[sectorKey]) {
+            this.currentSectorQuestions = [...AEGIS_QUESTIONS[sectorKey]];
+        } else {
+            this.currentSectorQuestions = [];
         }
 
+        // Vẽ Đấu Trường Turn-based RPG
+        this.visuals.renderArena(sectorIndex, this.aliensState, this.robotShield, (selectedTargetIdx) => {
+            console.log("Target locked on:", selectedTargetIdx);
+        });
+
+        // Bật nhạc nền nhẹ
+        if (window.soundSystem) {
+            window.soundSystem.startAmbient();
+        }
+
+        // Tải câu hỏi đầu tiên
         this.loadQuestion();
     }
 
-    updateProgressStrip() {
-        const steps = [this.stepCyclops, this.stepSirens, this.stepScylla];
+    /**
+     * Cập nhật thanh tiến trình các Sector
+     */
+    updateProgressStrip(sectorIndex) {
+        const steps = [this.stepCargo, this.stepReactor, this.stepBridge];
         steps.forEach((step, idx) => {
+            if (!step) return;
             step.classList.remove('active', 'completed');
-            if (idx < this.currentStageIndex) {
-                step.classList.add('completed');
-            } else if (idx === this.currentStageIndex) {
+            if (idx === sectorIndex) {
                 step.classList.add('active');
+            } else if (idx < sectorIndex) {
+                step.classList.add('completed');
             }
         });
     }
 
+    /**
+     * Tải và hiển thị câu hỏi hiện tại
+     */
     loadQuestion() {
+        this.clearTimer();
         this.hasAnswered = false;
-        clearInterval(this.timerInterval);
-        clearTimeout(this.autoAdvanceTimeout);
 
-        if (!this.currentStageQuestions || this.currentStageQuestions.length === 0) {
-            const stageName = this.stages[this.currentStageIndex] || 'cyclops';
-            this.currentStageQuestions = ODYSSEY_QUESTIONS[stageName] || [];
+        if (this.explanationBox) {
+            this.explanationBox.style.display = 'none';
+            this.explanationBox.innerHTML = '';
         }
 
-        const currentQ = this.currentStageQuestions[this.currentQuestionIndex];
-        if (!currentQ) {
-            this.finishCurrentStage();
+        // Kiểm tra xem quái vật đã chết hết chưa
+        const allDead = this.aliensState.every(a => a.hp <= 0);
+        if (allDead) {
+            this.handleSectorCleared();
             return;
         }
 
-        const totalQ = this.currentStageQuestions.length;
+        // Nếu hết câu hỏi trong danh sách, quay vòng lại
+        if (this.currentQuestionIndex >= this.currentSectorQuestions.length) {
+            this.currentQuestionIndex = 0;
+        }
 
-        if (this.questionCounter) this.questionCounter.textContent = `CÂU HỎI ${this.currentQuestionIndex + 1} / ${totalQ}`;
-        this.renderDots(totalQ);
-        if (this.questionText) this.questionText.textContent = currentQ.question;
-        if (this.explanationBox) this.explanationBox.style.display = 'none';
+        const q = this.currentSectorQuestions[this.currentQuestionIndex];
+        if (!q) {
+            console.error("No question found for index:", this.currentQuestionIndex);
+            return;
+        }
 
+        // Đếm số câu và vẽ dots
+        const totalQ = this.currentSectorQuestions.length;
+        if (this.questionCounter) {
+            this.questionCounter.textContent = `LƯỢT BẮN ${this.currentQuestionIndex + 1} / ${totalQ}`;
+        }
+        this.renderIndicatorDots(this.currentQuestionIndex, totalQ);
+
+        // Hiển thị nội dung câu hỏi
+        if (this.questionText) {
+            this.questionText.textContent = q.question;
+        }
+
+        // Hiển thị 4 phương án trả lời
         if (this.optionsContainer) {
             this.optionsContainer.innerHTML = '';
-            const letters = ['A', 'B', 'C', 'D'];
-            currentQ.options.forEach((optText, optIdx) => {
+            const labels = ['A', 'B', 'C', 'D'];
+            
+            q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = 'option-btn';
+                btn.className = 'quiz-option-btn';
                 btn.innerHTML = `
-                    <span class="option-letter">${letters[optIdx]}</span>
-                    <span class="option-label">${optText}</span>
+                    <span class="option-key">${labels[idx]}</span>
+                    <span class="option-text">${opt}</span>
                 `;
                 btn.addEventListener('click', () => {
-                    this.handleAnswer(optIdx, currentQ.correctIndex, currentQ.explanation);
+                    if (!this.hasAnswered) {
+                        this.handleAnswer(idx);
+                    }
                 });
                 this.optionsContainer.appendChild(btn);
             });
         }
 
-        this.startQuestionTimer();
+        // Bắt đầu đếm ngược thời gian
+        this.startTimer();
     }
 
-    startQuestionTimer() {
-        clearInterval(this.timerInterval);
+    /**
+     * Đếm ngược thời gian làm bài (Quizizz Timer)
+     */
+    startTimer() {
         this.timeRemaining = this.questionTimeLimit;
-        this.updateTimerUI(1.0);
+        this.updateTimerDisplay();
 
         this.timerInterval = setInterval(() => {
             this.timeRemaining -= 0.1;
-            const ratio = Math.max(0, this.timeRemaining / this.questionTimeLimit);
-            this.updateTimerUI(ratio);
-
-            if (this.timeRemaining <= 4.0 && this.timeRemaining > 0 && Math.abs(this.timeRemaining % 1) < 0.15) {
-                try {
-                    sounds.playTick();
-                } catch (e) {}
-            }
-
             if (this.timeRemaining <= 0) {
-                clearInterval(this.timerInterval);
-                const currentQ = this.currentStageQuestions ? this.currentStageQuestions[this.currentQuestionIndex] : null;
-                const correctIdx = currentQ ? currentQ.correctIndex : 0;
-                this.handleAnswer(-1, correctIdx, "Hết thời gian trả lời!");
+                this.timeRemaining = 0;
+                this.updateTimerDisplay();
+                this.clearTimer();
+                this.handleTimeout();
+            } else {
+                this.updateTimerDisplay();
             }
         }, 100);
     }
 
-    updateTimerUI(ratio) {
-        if (this.timerBar) {
-            this.timerBar.style.width = `${ratio * 100}%`;
-            if (ratio < 0.25) {
-                this.timerBar.className = "quiz-timer-fill timer-danger";
-            } else if (ratio < 0.5) {
-                this.timerBar.className = "quiz-timer-fill timer-warning";
-            } else {
-                this.timerBar.className = "quiz-timer-fill timer-normal";
-            }
-        }
-        if (this.timerText) {
-            this.timerText.textContent = `${Math.ceil(Math.max(0, this.timeRemaining))}s`;
+    clearTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
         }
     }
 
-    renderDots(total) {
-        if (!this.indicatorDots) return;
-        this.indicatorDots.innerHTML = '';
-        for (let i = 0; i < total; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'dot';
-            if (i < this.stageQuestionResults.length) {
-                dot.classList.add(this.stageQuestionResults[i] ? 'correct' : 'wrong');
-            } else if (i === this.currentQuestionIndex) {
-                dot.classList.add('active');
-            }
-            this.indicatorDots.appendChild(dot);
+    updateTimerDisplay() {
+        if (!this.timerBar || !this.timerText) return;
+        const percent = (this.timeRemaining / this.questionTimeLimit) * 100;
+        this.timerBar.style.width = `${percent}%`;
+        this.timerText.textContent = `${Math.ceil(this.timeRemaining)}s`;
+
+        this.timerBar.className = 'quiz-timer-fill';
+        if (percent > 50) {
+            this.timerBar.classList.add('timer-normal');
+        } else if (percent > 20) {
+            this.timerBar.classList.add('timer-warning');
+        } else {
+            this.timerBar.classList.add('timer-danger');
         }
     }
 
-    handleAnswer(selectedIndex, correctIndex, explanation) {
+    /**
+     * XỬ LÝ KHI NGƯỜI CHƠI CHỌN ĐÁP ÁN
+     */
+    handleAnswer(selectedIndex) {
         if (this.hasAnswered) return;
         this.hasAnswered = true;
-        clearInterval(this.timerInterval);
+        this.clearTimer();
 
-        try {
-            const isCorrect = selectedIndex === correctIndex;
-            this.stageQuestionResults.push(isCorrect);
-            this.totalQuestionsAnswered++;
+        this.totalQuestionsAnswered++;
+        const q = this.currentSectorQuestions[this.currentQuestionIndex];
+        const isCorrect = (selectedIndex === q.correct);
 
-            if (this.optionsContainer) {
-                const buttons = this.optionsContainer.querySelectorAll('.option-btn');
-                buttons.forEach((btn, idx) => {
-                    btn.disabled = true;
-                    if (idx === correctIndex) {
-                        btn.classList.add('selected-correct');
-                    } else if (idx === selectedIndex && !isCorrect) {
-                        btn.classList.add('selected-wrong');
+        // Khóa các nút trả lời và đổi màu đáp án
+        const buttons = this.optionsContainer.querySelectorAll('.quiz-option-btn');
+        buttons.forEach((btn, idx) => {
+            btn.disabled = true;
+            if (idx === q.correct) {
+                btn.classList.add('option-correct');
+            } else if (idx === selectedIndex) {
+                btn.classList.add('option-incorrect');
+            }
+        });
+
+        // Hiện phần giải thích ngắn
+        if (q.explanation && this.explanationBox) {
+            this.explanationBox.innerHTML = `<strong>💡 PHÂN TÍCH DỮ LIỆU:</strong> ${q.explanation}`;
+            this.explanationBox.style.display = 'block';
+        }
+
+        if (isCorrect) {
+            // === TRẢ LỜI ĐÚNG: ROBOT BẮN TIÊU DIỆT / SÁT THƯƠNG QUÁI VẬT ===
+            this.totalCorrectAnswers++;
+            this.streak++;
+
+            // Tính điểm Quizizz
+            const speedBonus = Math.round(this.timeRemaining * 40);
+            const streakBonus = (this.streak - 1) * 100;
+            const roundScore = 1000 + speedBonus + streakBonus;
+            this.score += roundScore;
+
+            this.updateHUD();
+            this.showScorePopup(roundScore, speedBonus, this.streak);
+
+            if (window.soundSystem) {
+                window.soundSystem.playStreakChime();
+            }
+
+            if (window.multiplayer) {
+                window.multiplayer.recordAnswer(true, this.questionTimeLimit - this.timeRemaining, roundScore);
+            }
+
+            // Tìm mục tiêu đang chọn hoặc mục tiêu còn sống đầu tiên
+            let targetIdx = this.visuals.currentTargetIndex;
+            if (!this.aliensState[targetIdx] || this.aliensState[targetIdx].hp <= 0) {
+                targetIdx = this.aliensState.findIndex(a => a.hp > 0);
+            }
+
+            if (targetIdx !== -1) {
+                const target = this.aliensState[targetIdx];
+                const newHp = Math.max(0, target.hp - 1);
+                target.hp = newHp;
+                const isDead = (newHp <= 0);
+
+                // Kích hoạt hoạt ảnh bắn đạn Plasma của Robot
+                this.visuals.playRobotAttack(targetIdx, newHp, isDead, () => {
+                    // Kiểm tra xem đã dọn sạch phòng chưa
+                    const allDead = this.aliensState.every(a => a.hp <= 0);
+                    if (allDead) {
+                        setTimeout(() => this.handleSectorCleared(), 600);
+                    } else {
+                        // Chuyển sang câu hỏi tiếp theo sau 1.2 giây
+                        setTimeout(() => {
+                            this.currentQuestionIndex++;
+                            this.loadQuestion();
+                        }, 1200);
                     }
                 });
             }
+        } else {
+            // === TRẢ LỜI SAI: QUÁI VẬT PHẢN KÍCH BẬC NẢY CẮN XÉ ROBOT ===
+            this.streak = 0;
+            this.updateHUD();
 
-            let scoreResult = { totalPoints: 0, speedBonus: 0, streak: 0 };
-            try {
-                if (window.multiplayer && typeof multiplayer.calculateQuizizzScore === 'function') {
-                    scoreResult = multiplayer.calculateQuizizzScore(isCorrect, this.timeRemaining, this.questionTimeLimit);
-                }
-            } catch (e) {
-                console.warn("calculateQuizizzScore notice:", e);
+            if (window.soundSystem) {
+                window.soundSystem.playWrongBuzzer();
             }
 
-            try {
-                this.updateScoreDisplay();
-            } catch (e) {}
+            if (window.multiplayer) {
+                window.multiplayer.recordAnswer(false, this.questionTimeLimit - this.timeRemaining, 0);
+            }
 
-            try {
-                if (isCorrect) {
-                    sounds.playStreakChime(scoreResult.streak || 1);
-                    this.showScorePopup(`+${(scoreResult.totalPoints || 1000).toLocaleString()} ĐIỂM`, `⚡ Tốc độ: +${scoreResult.speedBonus || 0} ${scoreResult.streak > 1 ? `| 🔥 Chuỗi x${scoreResult.streak}` : ''}`, 'score-positive');
+            // Quái vật còn sống đầu tiên phản kích
+            const attackerIdx = this.aliensState.findIndex(a => a.hp > 0);
+            this.robotShield = Math.max(0, this.robotShield - 15);
+
+            this.visuals.playAlienRetaliation(attackerIdx, this.robotShield, 15, () => {
+                if (this.robotShield <= 0) {
+                    // Khiên Robot cạn kiệt: Khởi động lại Sector
+                    setTimeout(() => this.handleShieldDepleted(), 600);
                 } else {
-                    this.showScorePopup("0 ĐIỂM", selectedIndex === -1 ? "⏱️ Hết thời gian!" : "❌ Trả lời chưa chính xác", 'score-zero');
+                    // Chuyển sang câu hỏi tiếp theo sau 1.2 giây
+                    setTimeout(() => {
+                        this.currentQuestionIndex++;
+                        this.loadQuestion();
+                    }, 1200);
                 }
-            } catch (e) {
-                console.warn("Score popup notice:", e);
-            }
-
-            try {
-                const stageName = this.stages[this.currentStageIndex];
-                if (stageName === 'cyclops') {
-                    if (isCorrect) {
-                        sounds.playArrowHit();
-                        if (this.visuals) this.visuals.triggerCyclopsCorrect();
-                    } else {
-                        sounds.playCyclopsRoar();
-                        if (this.visuals) this.visuals.triggerCyclopsWrong();
-                    }
-                } else if (stageName === 'sirens') {
-                    if (isCorrect) {
-                        sounds.playSirenFurious();
-                        if (this.visuals) this.visuals.triggerSirensCorrect();
-                    } else {
-                        sounds.playScreamAndSplash();
-                        if (this.visuals) this.visuals.triggerSirensWrong();
-                    }
-                } else if (stageName === 'scylla') {
-                    if (isCorrect) {
-                        sounds.playSwordSlash();
-                        if (this.visuals) this.visuals.triggerScyllaCorrect();
-                    } else {
-                        sounds.playScyllaBite();
-                        if (this.visuals) this.visuals.triggerScyllaWrong();
-                    }
-                }
-            } catch (e) {
-                console.warn("Visuals action notice:", e);
-            }
-        } catch (err) {
-            console.error("General error in handleAnswer:", err);
-        } finally {
-            // TỰ ĐỘNG CHUYỂN CÂU SAU 1.8 GIÂY - BẢO ĐẢM 100% LUÔN CHẠY
-            clearTimeout(this.autoAdvanceTimeout);
-            this.autoAdvanceTimeout = setTimeout(() => {
-                this.handleAutoNext();
-            }, 1800);
+            });
         }
     }
 
-    showScorePopup(title, subtitle, typeClass) {
-        if (!this.scoreFloatPopup) return;
-        this.scoreFloatPopup.innerHTML = `
-            <div class="popup-title">${title}</div>
-            <div class="popup-sub">${subtitle}</div>
-        `;
-        this.scoreFloatPopup.className = `score-float-box show ${typeClass}`;
-        setTimeout(() => {
-            this.scoreFloatPopup.classList.remove('show');
-        }, 1600);
+    /**
+     * Hết giờ -> coi như trả lời sai
+     */
+    handleTimeout() {
+        if (this.hasAnswered) return;
+        this.handleAnswer(-1);
     }
 
-    updateScoreDisplay() {
-        const myData = multiplayer && multiplayer.players ? multiplayer.players[multiplayer.playerId] : null;
-        const currentScore = myData ? myData.score : 0;
-        const currentStreak = myData ? myData.streak : 0;
+    /**
+     * DỌN SẠCH MỘT KHU VỰC (SECTOR CLEARED)
+     */
+    handleSectorCleared() {
+        this.clearTimer();
 
+        if (this.currentSectorIndex === 0) {
+            // Hoàn thành Phòng 1 -> Hiển thị Modal chuyển màn 1
+            this.showTransitionModal(AEGIS_STORY.transition1, () => {
+                this.startSector(1);
+            });
+        } else if (this.currentSectorIndex === 1) {
+            // Hoàn thành Phòng 2 -> Hiển thị Modal chuyển màn 2
+            this.showTransitionModal(AEGIS_STORY.transition2, () => {
+                this.startSector(2);
+            });
+        } else {
+            // Hoàn thành Phòng 3: TIÊU DIỆT NỮ CHÚA XENOMORPH! CHIẾN THẮNG!
+            this.playVictoryOutro();
+        }
+    }
+
+    /**
+     * HIỂN THỊ MODAL CHUYỂN MÀN
+     */
+    showTransitionModal(data, onProceed) {
+        if (!this.storyOverlay) {
+            onProceed();
+            return;
+        }
+
+        if (this.storyTitle) this.storyTitle.textContent = data.title;
+        if (this.storySubtitle) this.storySubtitle.textContent = data.subtitle;
+        if (this.storyBody) {
+            this.storyBody.innerHTML = (data.paragraphs || []).map(p => `<p class="story-p">${p}</p>`).join('');
+        }
+        if (this.storyActionBtn) {
+            this.storyActionBtn.textContent = data.buttonText || 'TIẾP TỤC ➔';
+            this.storyActionBtn.onclick = () => {
+                this.storyOverlay.style.display = 'none';
+                onProceed();
+            };
+        }
+
+        this.storyOverlay.style.display = 'flex';
+    }
+
+    /**
+     * HOẠT CẢNH ĐIỆN ẢNH CHIẾN THẮNG (VICTORY OUTRO CINEMATIC)
+     * Nữ chúa gục ngã -> Unit-07 kích hoạt cột hải đăng cứu hộ S.O.S xuyên thấu bầu trời
+     */
+    playVictoryOutro() {
+        if (window.soundSystem) {
+            window.soundSystem.playBeaconActivated();
+        }
+
+        if (typeof AEGIS_STORY !== 'undefined' && AEGIS_STORY.epilogue && AEGIS_STORY.epilogue.scenes) {
+            const cinematic = new SciFiCinematic('cinematic-container', AEGIS_STORY.epilogue.scenes, () => {
+                this.showVictorySummaryCard();
+            });
+            cinematic.start();
+        } else {
+            this.showVictorySummaryCard();
+        }
+    }
+
+    /**
+     * BẢNG KẾT QUẢ TỔNG KẾT CHIẾN DỊCH
+     */
+    showVictorySummaryCard() {
+        const accuracy = this.totalQuestionsAnswered > 0
+            ? Math.round((this.totalCorrectAnswers / this.totalQuestionsAnswered) * 100)
+            : 100;
+
+        let rank = 'S';
+        if (accuracy < 70) rank = 'B';
+        else if (accuracy < 85) rank = 'A';
+
+        const summaryHtml = `
+            <div class="victory-card-container">
+                <div class="victory-holo-badge">MISSION ACCOMPLISHED</div>
+                <h1 class="victory-main-title">TÍN HIỆU CỨU HỘ ĐÃ PHÁT ĐI THÀNH CÔNG!</h1>
+                <p class="victory-desc">Unit-07 đã kích hoạt cột hải đăng cứu hộ khẩn cấp S.O.S từ Cầu tàu. Hạm đội cứu hộ Liên minh Vũ trụ đang trên đường tiếp cận!</p>
+
+                <div class="victory-stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-num">${this.score.toLocaleString()}</span>
+                        <span class="stat-label">TỔNG ĐIỂM CHIẾN ĐẤU</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-num">${accuracy}%</span>
+                        <span class="stat-label">ĐỘ CHÍNH XÁC NẠP ĐẠN</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-num rank-num">HẠNG ${rank}</span>
+                        <span class="stat-label">XẾP HẠNG SINH TỒN</span>
+                    </div>
+                </div>
+
+                <div class="victory-actions">
+                    <button class="btn-victory-restart" id="btn-replay-campaign">🔄 CHƠI LẠI TỪ ĐẦU</button>
+                    <button class="btn-victory-leaderboard" id="btn-view-final-rank">🏆 XEM BẢNG XẾP HẠNG</button>
+                </div>
+            </div>
+        `;
+
+        if (this.storyOverlay) {
+            if (this.storyTitle) this.storyTitle.textContent = "SỨ MỆNH HOÀN THÀNH";
+            if (this.storySubtitle) this.storySubtitle.textContent = "AEGIS PROTOCOL: KÍCH HOẠT HẢI ĐĂNG CỨU HỘ";
+            if (this.storyBody) this.storyBody.innerHTML = summaryHtml;
+            if (this.storyActionBtn) this.storyActionBtn.style.display = 'none';
+
+            this.storyOverlay.style.display = 'flex';
+
+            const replayBtn = document.getElementById('btn-replay-campaign');
+            if (replayBtn) {
+                replayBtn.onclick = () => {
+                    this.storyOverlay.style.display = 'none';
+                    this.resetFullGame();
+                };
+            }
+            const rankBtn = document.getElementById('btn-view-final-rank');
+            if (rankBtn) {
+                rankBtn.onclick = () => {
+                    if (this.leaderboardDrawer) {
+                        this.leaderboardDrawer.classList.add('active');
+                        this.renderLeaderboardDrawer();
+                    }
+                };
+            }
+        }
+    }
+
+    /**
+     * KHI KHIÊN ROBOT HẾT MÁU
+     */
+    handleShieldDepleted() {
+        this.clearTimer();
+
+        if (this.storyOverlay) {
+            if (this.storyTitle) this.storyTitle.textContent = "KHIÊN NĂNG LƯỢNG SỤP ĐỔ";
+            if (this.storySubtitle) this.storySubtitle.textContent = "Hệ thống bảo an Unit-07 chuyển sang chế độ khẩn cấp";
+            if (this.storyBody) {
+                this.storyBody.innerHTML = `
+                    <p class="story-p" style="color: #ff5555;">Dị vật ngoài hành tinh đã xuyên thủng lá chắn của Robot Unit-07!</p>
+                    <p class="story-p">Hệ thống pin dự phòng tự động tái nạp khiên về 100%. Hãy nhanh chóng ngắm bắn chính xác để tiêu diệt các cá thể dị vật còn lại!</p>
+                `;
+            }
+            if (this.storyActionBtn) {
+                this.storyActionBtn.style.display = 'inline-block';
+                this.storyActionBtn.textContent = '🔄 TÁI KHỞI ĐỘNG KHU VỰC NÀY';
+                this.storyActionBtn.onclick = () => {
+                    this.storyOverlay.style.display = 'none';
+                    this.startSector(this.currentSectorIndex);
+                };
+            }
+            this.storyOverlay.style.display = 'flex';
+        }
+    }
+
+    /**
+     * RESET LẠI TOÀN BỘ GAME
+     */
+    resetFullGame() {
+        this.score = 0;
+        this.streak = 0;
+        this.totalQuestionsAnswered = 0;
+        this.totalCorrectAnswers = 0;
+        this.updateHUD();
+        this.startSector(0);
+    }
+
+    /**
+     * Cập nhật điểm và chuỗi Streak trên thanh HUD
+     */
+    updateHUD() {
         if (this.scoreBadge) {
-            this.scoreBadge.textContent = `${currentScore.toLocaleString()} ĐIỂM`;
+            this.scoreBadge.textContent = `${this.score.toLocaleString()} ĐIỂM`;
         }
         if (this.streakBadge) {
-            if (currentStreak > 1) {
-                this.streakBadge.style.display = 'inline-flex';
-                this.streakBadge.textContent = `🔥 Chuỗi x${currentStreak}`;
+            if (this.streak >= 2) {
+                this.streakBadge.style.display = 'inline-block';
+                this.streakBadge.textContent = `🔥 Chuỗi x${this.streak}`;
             } else {
                 this.streakBadge.style.display = 'none';
             }
         }
     }
 
-    handleAutoNext() {
-        const isLastQuestionOfStage = this.currentQuestionIndex >= this.currentStageQuestions.length - 1;
+    /**
+     * Hiện popup điểm nhảy số kiểu Quizizz
+     */
+    showScorePopup(score, speedBonus, streak) {
+        if (!this.scoreFloatPopup) return;
+        const title = this.scoreFloatPopup.querySelector('.popup-title');
+        const sub = this.scoreFloatPopup.querySelector('.popup-sub');
+        if (title) title.textContent = `+${score.toLocaleString()} ĐIỂM`;
+        if (sub) sub.textContent = `⚡ Tốc độ: +${speedBonus} | 🔥 Chuỗi x${streak}`;
 
-        if (isLastQuestionOfStage) {
-            this.finishCurrentStage();
-        } else {
-            this.currentQuestionIndex++;
-            this.loadQuestion();
+        this.scoreFloatPopup.classList.remove('show-popup');
+        void this.scoreFloatPopup.offsetWidth; // trigger reflow
+        this.scoreFloatPopup.classList.add('show-popup');
+    }
+
+    renderIndicatorDots(current, total) {
+        if (!this.indicatorDots) return;
+        this.indicatorDots.innerHTML = '';
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('span');
+            dot.className = `indicator-dot ${i === current ? 'active' : (i < current ? 'passed' : '')}`;
+            this.indicatorDots.appendChild(dot);
         }
     }
 
-    finishCurrentStage() {
-        const stageName = this.stages[this.currentStageIndex];
+    // ========================================================
+    // QUẢN LÝ PROFILE, HOST & LEADERBOARD
+    // ========================================================
 
-        let hasAdvanced = false;
-        const safeAdvance = (callback) => {
-            if (hasAdvanced) return;
-            hasAdvanced = true;
-            callback();
-        };
-
-        if (stageName === 'cyclops') {
-            try { sounds.playBlindImpact(); } catch (e) {}
-            const fallbackTimer = setTimeout(() => {
-                safeAdvance(() => {
-                    this.showStoryModal(
-                        ODYSSEY_STORY.transition1.title,
-                        ODYSSEY_STORY.transition1.subtitle,
-                        ODYSSEY_STORY.transition1.paragraphs,
-                        ODYSSEY_STORY.transition1.buttonText,
-                        () => this.loadStage(1)
-                    );
-                });
-            }, 2600);
-
-            try {
-                this.visuals.triggerCyclopsFinalBlind(() => {
-                    clearTimeout(fallbackTimer);
-                    try { sounds.playStageVictory(); } catch (e) {}
-                    safeAdvance(() => {
-                        this.showStoryModal(
-                            ODYSSEY_STORY.transition1.title,
-                            ODYSSEY_STORY.transition1.subtitle,
-                            ODYSSEY_STORY.transition1.paragraphs,
-                            ODYSSEY_STORY.transition1.buttonText,
-                            () => this.loadStage(1)
-                        );
-                    });
-                });
-            } catch (e) {
-                clearTimeout(fallbackTimer);
-                this.loadStage(1);
-            }
-        } else if (stageName === 'sirens') {
-            try { sounds.playStageVictory(); } catch (e) {}
-            const fallbackTimer = setTimeout(() => {
-                safeAdvance(() => {
-                    this.showStoryModal(
-                        ODYSSEY_STORY.transition2.title,
-                        ODYSSEY_STORY.transition2.subtitle,
-                        ODYSSEY_STORY.transition2.paragraphs,
-                        ODYSSEY_STORY.transition2.buttonText,
-                        () => this.loadStage(2)
-                    );
-                });
-            }, 2600);
-
-            try {
-                this.visuals.triggerSirensPassThrough(() => {
-                    clearTimeout(fallbackTimer);
-                    safeAdvance(() => {
-                        this.showStoryModal(
-                            ODYSSEY_STORY.transition2.title,
-                            ODYSSEY_STORY.transition2.subtitle,
-                            ODYSSEY_STORY.transition2.paragraphs,
-                            ODYSSEY_STORY.transition2.buttonText,
-                            () => this.loadStage(2)
-                        );
-                    });
-                });
-            } catch (e) {
-                clearTimeout(fallbackTimer);
-                this.loadStage(2);
-            }
-        } else if (stageName === 'scylla') {
-            try { sounds.playStageVictory(); } catch (e) {}
-            const fallbackTimer = setTimeout(() => {
-                safeAdvance(() => this.showEpilogue());
-            }, 2600);
-
-            try {
-                this.visuals.triggerScyllaEscape(() => {
-                    clearTimeout(fallbackTimer);
-                    safeAdvance(() => this.showEpilogue());
-                });
-            } catch (e) {
-                clearTimeout(fallbackTimer);
-                this.showEpilogue();
-            }
+    openProfileModal() {
+        if (!this.profileModal) return;
+        if (this.customNameInput && window.multiplayer) {
+            this.customNameInput.value = window.multiplayer.playerName;
         }
+        if (this.avatarGrid && window.multiplayer) {
+            const curAvatar = window.multiplayer.playerAvatar;
+            this.avatarGrid.querySelectorAll('.avatar-btn').forEach(btn => {
+                if (btn.getAttribute('data-avatar') === curAvatar) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        this.profileModal.style.display = 'flex';
     }
 
-    showStoryModal(title, subtitle, paragraphs, buttonText, onConfirm) {
-        this.storyTitle.textContent = title;
-        this.storySubtitle.textContent = subtitle;
-        this.storyBody.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
-        this.storyActionBtn.textContent = buttonText;
+    saveProfile() {
+        if (!window.multiplayer) return;
+        const newName = (this.customNameInput.value || '').trim() || "Unit-07";
+        let newAvatar = "🤖";
+        const activeBtn = this.avatarGrid ? this.avatarGrid.querySelector('.avatar-btn.active') : null;
+        if (activeBtn) {
+            newAvatar = activeBtn.getAttribute('data-avatar');
+        }
 
-        this.storyActionBtn.onclick = () => {
-            this.storyOverlay.style.display = 'none';
-            if (onConfirm) onConfirm();
-        };
+        window.multiplayer.updatePlayerProfile(newName, newAvatar);
 
-        this.storyOverlay.style.display = 'flex';
+        if (this.headerPlayerName) this.headerPlayerName.textContent = newName;
+        if (this.headerPlayerAvatar) this.headerPlayerAvatar.textContent = newAvatar;
+        if (this.lobbyPlayerDisplay) this.lobbyPlayerDisplay.textContent = `${newAvatar} ${newName}`;
+        if (this.profileModal) this.profileModal.style.display = 'none';
+
+        this.renderHostPlayerList();
+        this.renderLeaderboardDrawer();
     }
 
-    showEpilogue() {
-        [this.stepCyclops, this.stepSirens, this.stepScylla].forEach(s => s.classList.add('completed'));
-
-        const sorted = multiplayer.getSortedLeaderboard();
-        const myRank = sorted.findIndex(p => p.id === multiplayer.playerId) + 1;
-        const myScore = multiplayer.players[multiplayer.playerId].score;
-
-        const epilogueParagraphs = [
-            `Bạn đã hoàn thành trọn vẹn 3 thử thách tử thần! Thứ hạng chung cuộc của bạn trong phòng: <strong>HẠNG #${myRank}</strong> với <strong>${myScore.toLocaleString()} điểm</strong>.`,
-            ...ODYSSEY_STORY.epilogue.paragraphs
-        ];
-
-        this.showStoryModal(
-            ODYSSEY_STORY.epilogue.title,
-            ODYSSEY_STORY.epilogue.subtitle,
-            epilogueParagraphs,
-            "XEM BẢNG XẾP HẠNG & CHƠI LẠI",
-            () => {
-                this.toggleLeaderboard();
-            }
-        );
+    renderHostPlayerList() {
+        if (!this.hostPlayerList || !window.multiplayer) return;
+        const players = window.multiplayer.getPlayerList();
+        this.hostPlayerList.innerHTML = players.map(p => `
+            <div class="host-player-pill ${p.isSelf ? 'is-self' : ''}">
+                <span class="player-avatar">${p.avatar}</span>
+                <span class="player-name">${p.name} ${p.isSelf ? '(Bạn)' : ''}</span>
+            </div>
+        `).join('');
     }
 
-    toggleLeaderboard() {
-        if (!this.leaderboardDrawer) return;
-        this.leaderboardDrawer.classList.toggle('open');
-        this.renderLeaderboardTable(multiplayer.getSortedLeaderboard());
-    }
+    renderLeaderboardDrawer() {
+        if (!this.leaderboardBody || !window.multiplayer) return;
+        const ranked = window.multiplayer.getRankedPlayers();
+        const medals = ['🥇', '🥈', '🥉'];
 
-    renderLeaderboardTable(sortedList) {
-        if (!this.leaderboardBody) return;
-        this.leaderboardBody.innerHTML = sortedList.map((p, idx) => {
-            let rankBadge = `${idx + 1}`;
-            let rowClass = "";
-            if (idx === 0) { rankBadge = "🥇 1"; rowClass = "rank-gold"; }
-            else if (idx === 1) { rankBadge = "🥈 2"; rowClass = "rank-silver"; }
-            else if (idx === 2) { rankBadge = "🥉 3"; rowClass = "rank-bronze"; }
-
-            if (p.isSelf) rowClass += " is-self";
-
-            return `
-                <div class="leaderboard-row ${rowClass}">
-                    <div class="cell-rank">${rankBadge}</div>
-                    <div class="cell-name">
-                        <span class="cell-avatar">${p.avatar || '⚔️'}</span>
-                        <span class="name-text">${p.name} ${p.isSelf ? '(Bạn)' : ''}</span>
-                        ${p.streak > 1 ? `<span class="streak-mini">🔥x${p.streak}</span>` : ''}
-                    </div>
-                    <div class="cell-score">${p.score.toLocaleString()}</div>
+        this.leaderboardBody.innerHTML = ranked.map((p, idx) => `
+            <div class="leaderboard-item ${p.isSelf ? 'item-self' : ''}">
+                <div class="item-rank">${idx < 3 ? medals[idx] : `#${idx + 1}`}</div>
+                <div class="item-avatar">${p.avatar}</div>
+                <div class="item-info">
+                    <div class="item-name">${p.name} ${p.isSelf ? '<span class="tag-you">(BẠN)</span>' : ''}</div>
+                    <div class="item-streak">${p.streak >= 2 ? `🔥 Chuỗi x${p.streak}` : 'Đang thi đấu'}</div>
                 </div>
-            `;
-        }).join('');
+                <div class="item-score">${p.score.toLocaleString()}</div>
+            </div>
+        `).join('');
     }
 }
 
+// Khởi chạy khi tài liệu tải xong
 document.addEventListener('DOMContentLoaded', () => {
-    const game = new OdysseyGame();
-    game.start();
+    window.game = new AegisGame();
+    window.game.start();
 });

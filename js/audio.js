@@ -1,7 +1,7 @@
 /**
- * BỘ TẠO HIỆU ỨNG ÂM THANH SỬ THI BẰNG WEB AUDIO API
- * Hỗ trợ âm thanh chiến trận, đồng hồ đếm ngược Quizizz và chuỗi Combo Streak
- * Bảo đảm 100% không bao giờ chặn hay gây lỗi (fault-tolerant Web Audio)
+ * BỘ TẠO HIỆU ỨNG ÂM THANH KHOA HỌC VIỄN TƯỞNG (SCI-FI AUDIO ENGINE)
+ * Sử dụng Web Audio API thuần túy, an toàn 100% không bao giờ gây crash.
+ * Hiệu ứng: Súng Plasma, Nổ Acid, Gầm thét Xenomorph, Báo động Đỏ và Hải đăng SOS.
  */
 
 class SoundSystem {
@@ -47,8 +47,115 @@ class SoundSystem {
         return this.enabled;
     }
 
-    // 1. Tiếng còi chiến trận Hy Lạp (War Horn) khi bắt đầu game
-    playWarHorn() {
+    // 1. Tiếng súng Plasma Blaster của Robot Unit-07
+    playLaserShot() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(880, now);
+            osc.frequency.exponentialRampToValueAtTime(120, now + 0.18);
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1200, now);
+            filter.Q.setValueAtTime(3, now);
+
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.2);
+        } catch (e) {
+            console.warn("Audio playLaserShot:", e);
+        }
+    }
+
+    // 2. Tiếng đạn trúng quái vật (Acid Sizzle & Energy Impact)
+    playAlienHit() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(60, now + 0.22);
+
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        } catch (e) {
+            console.warn("Audio playAlienHit:", e);
+        }
+    }
+
+    // 3. Tiếng quái vật bị tiêu diệt / phát nổ acid
+    playAlienDeath() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            // Tiếng gầm vỡ vụn
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(240, now);
+            osc.frequency.exponentialRampToValueAtTime(45, now + 0.4);
+
+            gain.gain.setValueAtTime(0.6, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.45);
+        } catch (e) {
+            console.warn("Audio playAlienDeath:", e);
+        }
+    }
+
+    // 4. Tiếng quái vật phản công / lao tới cào xé khi trả lời sai
+    playAlienAttack() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            const hiss = ctx.createOscillator();
+            const hissGain = ctx.createGain();
+            hiss.type = 'sawtooth';
+            hiss.frequency.setValueAtTime(650, now);
+            hiss.frequency.linearRampToValueAtTime(950, now + 0.15);
+            hiss.frequency.linearRampToValueAtTime(300, now + 0.4);
+
+            hissGain.gain.setValueAtTime(0.4, now);
+            hissGain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+
+            hiss.connect(hissGain);
+            hissGain.connect(ctx.destination);
+            hiss.start(now);
+            hiss.stop(now + 0.45);
+        } catch (e) {
+            console.warn("Audio playAlienAttack:", e);
+        }
+    }
+
+    // 5. Tiếng gầm thét kinh hoàng của Nữ Chúa Alien Queen
+    playQueenRoar() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
@@ -56,29 +163,56 @@ class SoundSystem {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(160, now);
-            osc.frequency.exponentialRampToValueAtTime(240, now + 0.6);
-            osc.frequency.exponentialRampToValueAtTime(220, now + 1.4);
+            osc.frequency.setValueAtTime(95, now);
+            osc.frequency.linearRampToValueAtTime(160, now + 0.5);
+            osc.frequency.linearRampToValueAtTime(55, now + 1.2);
 
             const filter = ctx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(450, now);
+            filter.frequency.setValueAtTime(400, now);
+            filter.frequency.linearRampToValueAtTime(220, now + 1.2);
 
-            gain.gain.setValueAtTime(0.4, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+            gain.gain.setValueAtTime(0.7, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.3);
 
             osc.connect(filter);
             filter.connect(gain);
             gain.connect(ctx.destination);
 
             osc.start(now);
-            osc.stop(now + 1.5);
+            osc.stop(now + 1.3);
         } catch (e) {
-            console.warn("Audio playWarHorn:", e);
+            console.warn("Audio playQueenRoar:", e);
         }
     }
 
-    // 2. Tiếng đồng hồ đếm ngược Quizizz (Tick-Tock)
+    // 6. Tiếng chuông combo streak tăng điểm
+    playStreakChime(streakCount = 1) {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            const baseFreq = 523.25 + Math.min(streakCount * 120, 720);
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(baseFreq, now);
+            osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.15);
+
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        } catch (e) {
+            console.warn("Audio playStreakChime:", e);
+        }
+    }
+
+    // 7. Tiếng đồng hồ đếm ngược Quizizz (Tick Tock điện tử)
     playTick() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
@@ -87,307 +221,49 @@ class SoundSystem {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(900, now);
+            osc.frequency.setValueAtTime(1050, now);
             gain.gain.setValueAtTime(0.12, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
 
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.05);
+            osc.stop(now + 0.04);
         } catch (e) {
             console.warn("Audio playTick:", e);
         }
     }
 
-    // 3. Tiếng chuỗi Combo Streak tăng điểm kiểu Quizizz (Cao dần theo streak)
-    playStreakChime(streakCount = 1) {
+    // 8. Tiếng còi báo động đỏ khẩn cấp (Red Alert Klaxon)
+    playAlarmKlaxon() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
             const now = ctx.currentTime;
-            const baseFreq = 440 + Math.min(streakCount * 110, 660);
-
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(baseFreq, now);
-            osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.2);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.linearRampToValueAtTime(620, now + 0.4);
 
             gain.gain.setValueAtTime(0.35, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.75);
 
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.4);
+            osc.stop(now + 0.75);
         } catch (e) {
-            console.warn("Audio playStreakChime:", e);
+            console.warn("Audio playAlarmKlaxon:", e);
         }
     }
 
-    // 4. Tiếng tên bắn trúng mục tiêu (Cyclops bị trúng tên)
-    playArrowHit() {
+    // 9. Tiếng kích hoạt hải đăng cứu hộ S.O.S chiến thắng
+    playBeaconActivated() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
-            const now = ctx.currentTime;
-            const whoosh = ctx.createOscillator();
-            const whooshGain = ctx.createGain();
-            whoosh.type = 'sine';
-            whoosh.frequency.setValueAtTime(600, now);
-            whoosh.frequency.exponentialRampToValueAtTime(200, now + 0.15);
-            whooshGain.gain.setValueAtTime(0.3, now);
-            whooshGain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-            whoosh.connect(whooshGain);
-            whooshGain.connect(ctx.destination);
-            whoosh.start(now);
-            whoosh.stop(now + 0.15);
-
-            setTimeout(() => {
-                try {
-                    const c = this.getSafeCtx();
-                    if (!c) return;
-                    const t = c.currentTime;
-                    const hit = c.createOscillator();
-                    const hitGain = c.createGain();
-                    hit.type = 'triangle';
-                    hit.frequency.setValueAtTime(140, t);
-                    hit.frequency.exponentialRampToValueAtTime(40, t + 0.2);
-                    hitGain.gain.setValueAtTime(0.6, t);
-                    hitGain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
-                    hit.connect(hitGain);
-                    hitGain.connect(c.destination);
-                    hit.start(t);
-                    hit.stop(t + 0.25);
-                } catch (e) {}
-            }, 120);
-        } catch (e) {
-            console.warn("Audio playArrowHit:", e);
-        }
-    }
-
-    // 5. Tiếng Cyclops gầm đe dọa (Khi trả lời sai)
-    playCyclopsRoar() {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const now = ctx.currentTime;
-            const osc = ctx.createOscillator();
-            const oscGain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(110, now);
-            osc.frequency.linearRampToValueAtTime(65, now + 0.6);
-            osc.frequency.linearRampToValueAtTime(45, now + 1.1);
-
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(350, now);
-            filter.frequency.linearRampToValueAtTime(180, now + 1.1);
-
-            oscGain.gain.setValueAtTime(0.5, now);
-            oscGain.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
-
-            osc.connect(filter);
-            filter.connect(oscGain);
-            oscGain.connect(ctx.destination);
-
-            osc.start(now);
-            osc.stop(now + 1.2);
-        } catch (e) {
-            console.warn("Audio playCyclopsRoar:", e);
-        }
-    }
-
-    // 6. Tiếng chọc mù mắt Cyclops (Kết thúc thử thách 1)
-    playBlindImpact() {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const now = ctx.currentTime;
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(80, now + 0.8);
-            gain.gain.setValueAtTime(0.8, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now);
-            osc.stop(now + 1.5);
-        } catch (e) {
-            console.warn("Audio playBlindImpact:", e);
-        }
-    }
-
-    // 7. Tiếng gào thét của Odysseus & tiếng người lính nhảy xuống biển (Thử thách 2)
-    playScreamAndSplash() {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const now = ctx.currentTime;
-            const scream = ctx.createOscillator();
-            const screamGain = ctx.createGain();
-            scream.type = 'sine';
-            scream.frequency.setValueAtTime(400, now);
-            scream.frequency.linearRampToValueAtTime(650, now + 0.3);
-            scream.frequency.linearRampToValueAtTime(320, now + 0.6);
-            screamGain.gain.setValueAtTime(0.4, now);
-            screamGain.gain.exponentialRampToValueAtTime(0.01, now + 0.7);
-
-            scream.connect(screamGain);
-            screamGain.connect(ctx.destination);
-            scream.start(now);
-            scream.stop(now + 0.7);
-
-            setTimeout(() => {
-                try {
-                    const c = this.getSafeCtx();
-                    if (!c) return;
-                    const t = c.currentTime;
-                    const splash = c.createOscillator();
-                    const splashGain = c.createGain();
-                    splash.type = 'triangle';
-                    splash.frequency.setValueAtTime(260, t);
-                    splash.frequency.exponentialRampToValueAtTime(50, t + 0.4);
-                    splashGain.gain.setValueAtTime(0.5, t);
-                    splashGain.gain.exponentialRampToValueAtTime(0.01, t + 0.45);
-
-                    splash.connect(splashGain);
-                    splashGain.connect(c.destination);
-                    splash.start(t);
-                    splash.stop(t + 0.45);
-                } catch (e) {}
-            }, 350);
-        } catch (e) {
-            console.warn("Audio playScreamAndSplash:", e);
-        }
-    }
-
-    // 8. Tiếng Sirens gào rít giận dữ (Thử thách 2)
-    playSirenFurious() {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const now = ctx.currentTime;
-            const hiss = ctx.createOscillator();
-            const hissGain = ctx.createGain();
-            hiss.type = 'sawtooth';
-            hiss.frequency.setValueAtTime(800, now);
-            hiss.frequency.linearRampToValueAtTime(1100, now + 0.3);
-            hiss.frequency.linearRampToValueAtTime(450, now + 0.8);
-            hissGain.gain.setValueAtTime(0.25, now);
-            hissGain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
-
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'highpass';
-            filter.frequency.setValueAtTime(600, now);
-
-            hiss.connect(filter);
-            filter.connect(hissGain);
-            hissGain.connect(ctx.destination);
-
-            hiss.start(now);
-            hiss.stop(now + 0.8);
-        } catch (e) {
-            console.warn("Audio playSirenFurious:", e);
-        }
-    }
-
-    // 9. Tiếng chém kiếm của Odysseus (Thử thách 3)
-    playSwordSlash() {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const now = ctx.currentTime;
-            const slash = ctx.createOscillator();
-            const slashGain = ctx.createGain();
-            slash.type = 'sine';
-            slash.frequency.setValueAtTime(1200, now);
-            slash.frequency.exponentialRampToValueAtTime(300, now + 0.2);
-            slashGain.gain.setValueAtTime(0.4, now);
-            slashGain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
-
-            slash.connect(slashGain);
-            slashGain.connect(ctx.destination);
-            slash.start(now);
-            slash.stop(now + 0.22);
-
-            setTimeout(() => {
-                try {
-                    const c = this.getSafeCtx();
-                    if (!c) return;
-                    const t = c.currentTime;
-                    const squeal = c.createOscillator();
-                    const sqGain = c.createGain();
-                    squeal.type = 'sawtooth';
-                    squeal.frequency.setValueAtTime(450, t);
-                    squeal.frequency.exponentialRampToValueAtTime(120, t + 0.4);
-                    sqGain.gain.setValueAtTime(0.45, t);
-                    sqGain.gain.exponentialRampToValueAtTime(0.01, t + 0.45);
-
-                    squeal.connect(sqGain);
-                    sqGain.connect(c.destination);
-                    squeal.start(t);
-                    squeal.stop(t + 0.45);
-                } catch (e) {}
-            }, 100);
-        } catch (e) {
-            console.warn("Audio playSwordSlash:", e);
-        }
-    }
-
-    // 10. Tiếng Scylla cắn vào thuyền (Thử thách 3)
-    playScyllaBite() {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const now = ctx.currentTime;
-            const snap = ctx.createOscillator();
-            const snapGain = ctx.createGain();
-            snap.type = 'triangle';
-            snap.frequency.setValueAtTime(280, now);
-            snap.frequency.exponentialRampToValueAtTime(50, now + 0.2);
-            snapGain.gain.setValueAtTime(0.7, now);
-            snapGain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
-
-            snap.connect(snapGain);
-            snapGain.connect(ctx.destination);
-            snap.start(now);
-            snap.stop(now + 0.22);
-
-            setTimeout(() => {
-                try {
-                    const c = this.getSafeCtx();
-                    if (!c) return;
-                    const t = c.currentTime;
-                    const wood = c.createOscillator();
-                    const woodGain = c.createGain();
-                    wood.type = 'square';
-                    wood.frequency.setValueAtTime(160, t);
-                    wood.frequency.exponentialRampToValueAtTime(70, t + 0.35);
-                    woodGain.gain.setValueAtTime(0.35, t);
-                    woodGain.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
-
-                    wood.connect(woodGain);
-                    woodGain.connect(c.destination);
-                    wood.start(t);
-                    wood.stop(t + 0.4);
-                } catch (e) {}
-            }, 120);
-        } catch (e) {
-            console.warn("Audio playScyllaBite:", e);
-        }
-    }
-
-    // 11. Tiếng chuông khải hoàn / Hoàn thành màn
-    playStageVictory() {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const notes = [261.63, 329.63, 392.00, 523.25];
+            const notes = [440, 554.37, 659.25, 880, 1108.73];
             notes.forEach((freq, idx) => {
                 setTimeout(() => {
                     try {
@@ -396,52 +272,40 @@ class SoundSystem {
                         const now = c.currentTime;
                         const osc = c.createOscillator();
                         const gain = c.createGain();
-                        osc.type = 'triangle';
+                        osc.type = 'sine';
                         osc.frequency.setValueAtTime(freq, now);
                         gain.gain.setValueAtTime(0.3, now);
-                        gain.gain.exponentialRampToValueAtTime(0.005, now + 0.7);
+                        gain.gain.exponentialRampToValueAtTime(0.005, now + 0.6);
                         osc.connect(gain);
                         gain.connect(c.destination);
                         osc.start(now);
-                        osc.stop(now + 0.7);
+                        osc.stop(now + 0.6);
                     } catch (e) {}
-                }, idx * 160);
+                }, idx * 140);
             });
         } catch (e) {
-            console.warn("Audio playStageVictory:", e);
+            console.warn("Audio playBeaconActivated:", e);
         }
     }
 
-    // 12. Âm thanh sóng biển & gió nền
+    // 10. Âm thanh buồng máy phi thuyền (Deep Space Engine Hum)
     startAmbient() {
         const ctx = this.getSafeCtx();
         if (!ctx || this.ambientPlaying) return;
         try {
-            const bufferSize = ctx.sampleRate * 2;
-            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1;
-            }
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(55, ctx.currentTime);
 
-            const whiteNoise = ctx.createBufferSource();
-            whiteNoise.buffer = noiseBuffer;
-            whiteNoise.loop = true;
+            gain.gain.setValueAtTime(0.06, ctx.currentTime);
 
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(240, ctx.currentTime);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
 
-            this.ambientGain = ctx.createGain();
-            this.ambientGain.gain.setValueAtTime(0.04, ctx.currentTime);
-
-            whiteNoise.connect(filter);
-            filter.connect(this.ambientGain);
-            this.ambientGain.connect(ctx.destination);
-
-            whiteNoise.start();
+            this.ambientSource = osc;
             this.ambientPlaying = true;
-            this.ambientSource = whiteNoise;
         } catch (e) {
             console.warn("Ambient sound init:", e);
         }

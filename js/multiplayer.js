@@ -1,24 +1,24 @@
 /**
  * HỆ THỐNG PHÒNG CHƠI (HOST/PLAYER), BẢNG XẾP HẠNG TRỰC TIẾP & TÍNH ĐIỂM QUIZIZZ
- * Hỗ trợ người chơi tùy chỉnh tên, đổi Avatar và đồng bộ thời gian thực
+ * Phiên bản Sci-Fi: Aegis Protocol: Starfall
  */
 
 class OdysseyMultiplayer {
     constructor() {
-        this.channelName = "odyssey_game_room_channel";
-        this.storageKey = "odyssey_multiplayer_state_v1";
+        this.channelName = "aegis_game_room_channel";
+        this.storageKey = "aegis_multiplayer_state_v1";
         this.channel = null;
 
         // Trạng thái phiên chơi
         this.isHost = false;
-        this.roomCode = "ODY-8819";
+        this.roomCode = "AEGIS-7";
         this.roomState = "LOBBY"; // LOBBY, RUNNING, ENDED
 
-        // Tên & Avatar tùy chỉnh của người chơi (Lấy từ localStorage nếu có)
-        const savedName = localStorage.getItem("odyssey_player_name");
-        const savedAvatar = localStorage.getItem("odyssey_player_avatar");
-        this.playerName = savedName || "Odysseus";
-        this.playerAvatar = savedAvatar || "👑";
+        // Tên & Avatar tùy chỉnh của người chơi
+        const savedName = localStorage.getItem("aegis_player_name") || localStorage.getItem("odyssey_player_name");
+        const savedAvatar = localStorage.getItem("aegis_player_avatar") || localStorage.getItem("odyssey_player_avatar");
+        this.playerName = savedName || "Unit-07";
+        this.playerAvatar = savedAvatar || "🤖";
         this.playerId = "p_" + Math.random().toString(36).substring(2, 9);
         
         // Dữ liệu người chơi & điểm
@@ -182,17 +182,17 @@ class OdysseyMultiplayer {
             isSelf: true
         };
 
-        // Các chiến binh Hy Lạp mô phỏng thi đấu
+        // Các chiến binh người máy mô phỏng thi đấu
         if (this.enableBots) {
-            const greekWarriors = [
-                { id: "bot_1", name: "Achilles", avatar: "🛡️", baseSpeed: 0.85, accuracy: 0.9 },
-                { id: "bot_2", name: "Diomedes", avatar: "⚔️", baseSpeed: 0.75, accuracy: 0.8 },
-                { id: "bot_3", name: "Ajax Đại Đế", avatar: "🗡️", baseSpeed: 0.65, accuracy: 0.75 },
-                { id: "bot_4", name: "Telemachus", avatar: "🏹", baseSpeed: 0.7, accuracy: 0.8 },
-                { id: "bot_5", name: "Penelope", avatar: "🧵", baseSpeed: 0.8, accuracy: 0.85 }
+            const sciFiBots = [
+                { id: "bot_1", name: "Titan-Prime", avatar: "🤖", baseSpeed: 0.85, accuracy: 0.9 },
+                { id: "bot_2", name: "Nova-Valkyrie", avatar: "⚡", baseSpeed: 0.75, accuracy: 0.8 },
+                { id: "bot_3", name: "Cyber-Aegis", avatar: "🛡️", baseSpeed: 0.65, accuracy: 0.75 },
+                { id: "bot_4", name: "Specter-9", avatar: "🎯", baseSpeed: 0.7, accuracy: 0.8 },
+                { id: "bot_5", name: "Vortex-Core", avatar: "🔮", baseSpeed: 0.8, accuracy: 0.85 }
             ];
 
-            greekWarriors.forEach(w => {
+            sciFiBots.forEach(w => {
                 this.players[w.id] = {
                     id: w.id,
                     name: w.name,

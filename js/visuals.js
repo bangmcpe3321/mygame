@@ -1,15 +1,18 @@
 /**
- * HỆ THỐNG ĐỒ HỌA SỬ THI HY LẠP: TRANH DÃ SỬ AI ĐA KHUNG HÌNH (2-3 ACTION FRAMES)
- * - Sử dụng tranh minh họa AI sắc nét, phân chia thành 2-3 khung hình (Comic Action Panels) độc lập.
- * - Khung hình không bị đè hay chèn vào nhau, hoàn toàn tách biệt khỏi khung câu hỏi.
- * - Hiệu ứng tương tác hành động giữa các khung hình: Mũi giáo lửa đâm xuyên, khiên sáp ong phản đòn, nhát chém sấm sét.
- * - Màn 3 hoàn toàn không có xoáy nước: Chiến thuyền Hy Lạp đối đầu trực tiếp Quái vật 6 đầu Scylla.
+ * HỆ THỐNG ĐỒ HỌA CHIẾN ĐẤU THEO LƯỢT (TURN-BASED ARENA ENGINE - ANGRY BIRDS EPIC STYLE)
+ * - Sử dụng hoàn toàn đồ họa tranh AI chất lượng cao (Robot cầm súng, quái vật ngoài hành tinh, bối cảnh tàu không gian).
+ * - Hoàn toàn KHÔNG dùng đồ thị SVG cơ bản.
+ * - Hiệu ứng chiến đấu theo lượt: Tia Plasma Blaster phóng vút, đòn cắn xé phản kích, nổ acid tan biến.
  */
 
 class VisualEngine {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
-        this.currentStage = null;
+        this.currentSector = 0;
+        this.aliens = [];
+        this.currentTargetIndex = 0;
+        this.onTargetSelect = null;
+        this.isAnimating = false;
     }
 
     clear() {
@@ -18,452 +21,552 @@ class VisualEngine {
         }
     }
 
-    // ========================================================
-    // 1. THỬ THÁCH 1: HANG ĐÁ CYCLOPS (2 KHUNG HÌNH HÀNH ĐỘNG)
-    // ========================================================
-    renderCyclopsStage() {
-        this.currentStage = 'cyclops';
+    /**
+     * Khởi tạo đấu trường theo từng Khu vực (Sector)
+     * @param {number} sectorIndex 0: Cargo Bay, 1: Reactor Core, 2: Command Bridge
+     * @param {Array} aliensState Mảng trạng thái của quái vật
+     * @param {number} robotShield Điểm giáp/khiên của Robot
+     * @param {Function} onTargetSelect Callback khi người chơi chọn mục tiêu
+     */
+    renderArena(sectorIndex, aliensState, robotShield = 100, onTargetSelect = null) {
+        this.currentSector = sectorIndex;
+        this.aliens = aliensState || [];
+        this.onTargetSelect = onTargetSelect;
         this.clear();
 
-        const html = `
-        <div class="stage-view stage-panels-view" id="stage-cyclops">
-            <!-- 2 KHUNG HÌNH TRANH AI TÁCH BIỆT RÕ RÀNG -->
-            <div class="stage-frame-grid">
-                <!-- FRAME 1 (TRÁI): ANH HÙNG ODYSSEUS & LIÊN QUÂN HY LẠP -->
-                <div class="action-frame frame-left" id="frame-hero">
-                    <div class="frame-media-wrap">
-                        <img src="assets/odysseus_hero.jpg" alt="Vua Odysseus" class="frame-art-img" />
-                        <div class="frame-vignette"></div>
-                        <div class="frame-aura-fx" id="aura-frame-hero"></div>
+        const sectorConfigs = [
+            {
+                id: 'cargo',
+                name: 'KHU VỰC 1: KHO HÀNG (CARGO BAY)',
+                sub: 'Cảnh báo: 4 Dị vật nhỏ (Swarm Drones) đang xâm nhập!',
+                bg: 'assets/bg_cargobay.jpg'
+            },
+            {
+                id: 'reactor',
+                name: 'KHU VỰC 2: LÒ PHẢN ỨNG (REACTOR CORE)',
+                sub: 'Nguy cấp: 2 Dị vật nhỏ & 2 Dị vật bọc giáp (Xeno Brutes)!',
+                bg: 'assets/bg_reactor.jpg'
+            },
+            {
+                id: 'bridge',
+                name: 'KHU VỰC 3: CẦU TÀU TRUNG TÂM (COMMAND BRIDGE)',
+                sub: 'Báo động Tối Cao: NỮ CHÚA XENOMORPH (HIVE QUEEN) ĐÃ XUẤT HIỆN!',
+                bg: 'assets/bg_bridge.jpg'
+            }
+        ];
+
+        const config = sectorConfigs[sectorIndex] || sectorConfigs[0];
+
+        // Tìm mục tiêu mặc định còn sống đầu tiên
+        this.autoSelectFirstAliveTarget();
+
+        const arenaHtml = `
+            <div class="scifi-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(5, 10, 24, 0.45), rgba(5, 10, 24, 0.75)), url('${config.bg}');">
+                <!-- Header thông tin chiến trường -->
+                <div class="arena-header-banner">
+                    <div class="sector-code-badge">SECTOR 0${sectorIndex + 1} // ALERT</div>
+                    <div class="sector-titles-wrap">
+                        <h2 class="sector-title">${config.name}</h2>
+                        <span class="sector-subtitle">${config.sub}</span>
                     </div>
-                    <div class="frame-header-tag">
-                        <span class="tag-icon">⚔️</span>
-                        <span class="tag-text">ODYSSEUS & CHIẾN BINH</span>
+                    <div class="combat-mode-badge">TURN-BASED RPG COMBAT</div>
+                </div>
+
+                <!-- Đấu trường chính: Bên trái Robot - Bên phải Đội quân Dị vật -->
+                <div class="arena-battlefield">
+                    <!-- 1. BÊN TRÁI: ROBOT CHIẾN ĐẤU UNIT-07 (PLAYER HERO) -->
+                    <div class="hero-combatant-zone" id="robot-hero-zone">
+                        <div class="combatant-card hero-card" id="robot-card">
+                            <div class="hero-target-aura"></div>
+                            <div class="hero-sprite-wrapper">
+                                <img src="assets/robot_hero.jpg" alt="Unit-07 Combat Robot" class="combatant-img hero-img" id="robot-sprite-img" />
+                                <div class="muzzle-flash-anchor" id="robot-muzzle"></div>
+                                <div class="shield-energy-bubble" id="robot-shield-bubble"></div>
+                            </div>
+                            
+                            <!-- Bảng chỉ số Robot -->
+                            <div class="hero-stats-panel">
+                                <div class="hero-name-tag">
+                                    <span class="bot-status-icon">🤖</span>
+                                    <span class="bot-callsign">UNIT-07 [AEGIS]</span>
+                                </div>
+                                <div class="shield-bar-container">
+                                    <div class="shield-label-row">
+                                        <span>KHIÊN NĂNG LƯỢNG (SHIELD)</span>
+                                        <span id="robot-shield-text">${robotShield}/100</span>
+                                    </div>
+                                    <div class="shield-track">
+                                        <div class="shield-fill" id="robot-shield-bar" style="width: ${Math.max(0, robotShield)}%;"></div>
+                                    </div>
+                                </div>
+                                <div class="hero-weapon-tag">
+                                    <span>🔫 SÚNG PLASMA BLUSTER: SẴN SÀNG</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VÙNG CHIẾN ĐẤU GIỮA: HIỆU ỨNG TIA LASER & ĐẠN ĐẠO -->
+                    <div class="combat-crossfire-zone" id="crossfire-zone">
+                        <!-- Đạn laser plasma được sinh động bằng code -->
+                    </div>
+
+                    <!-- 2. BÊN PHẢI: ĐỘI QUÂN DỊ VẬT NGOÀI HÀNH TINH (ALIEN SQUAD) -->
+                    <div class="aliens-combatant-zone" id="aliens-squad-zone">
+                        <div class="aliens-formation-grid ${sectorIndex === 2 ? 'boss-formation' : ''}" id="aliens-grid">
+                            ${this.generateAliensHTML()}
+                        </div>
                     </div>
                 </div>
 
-                <!-- KHU VỰC GIAO TRANH / ĐỐI ĐẦU Ở GIỮA -->
-                <div class="frame-clash-divider" id="frame-clash-divider">
-                    <div class="clash-icon">⚡</div>
-                </div>
-
-                <!-- FRAME 2 (PHẢI): GÃ KHỔNG LỒ CYCLOPS POLYPHEMUS -->
-                <div class="action-frame frame-right" id="frame-monster">
-                    <div class="frame-media-wrap">
-                        <img src="assets/cyclops_polyphemus.jpg" alt="Cyclops Polyphemus" class="frame-art-img" />
-                        <div class="frame-vignette"></div>
-                        <div class="cyclops-eye-glow-point" id="cyclops-eye-glow"></div>
-                        <div class="frame-aura-fx" id="aura-frame-monster"></div>
-                    </div>
-                    <div class="frame-header-tag">
-                        <span class="tag-icon">👁️</span>
-                        <span class="tag-text">KHỔNG LỒ POLYPHEMUS</span>
-                    </div>
+                <!-- Bảng nhắc chiến thuật -->
+                <div class="arena-footer-tip" id="arena-tip">
+                    <span>💡 Gợi ý: Trả lời đúng để nạp đạn súng Plasma và bắn tiêu diệt mục tiêu! Bấm vào quái vật để chọn mục tiêu.</span>
                 </div>
             </div>
-
-            <!-- LỚP TƯƠNG TÁC SVG NỐI GIỮA 2 KHUNG HÌNH (MŨI GIÁO LỬA LAO QUA & TIA LỬA) -->
-            <svg class="frame-interactive-svg" viewBox="0 0 1000 480" preserveAspectRatio="none">
-                <defs>
-                    <linearGradient id="spearLaser" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#ffd700" stop-opacity="0.2"/>
-                        <stop offset="60%" stop-color="#ff7b00" stop-opacity="0.9"/>
-                        <stop offset="90%" stop-color="#ff2200"/>
-                        <stop offset="100%" stop-color="#ffffff"/>
-                    </linearGradient>
-                    <radialGradient id="bloodSparks" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="30%" stop-color="#ffff00"/>
-                        <stop offset="60%" stop-color="#ff0000"/>
-                        <stop offset="100%" stop-color="#000" stop-opacity="0"/>
-                    </radialGradient>
-                </defs>
-
-                <!-- ĐƯỜNG PHÓNG CỌC GỖ NUNG ĐỎ XUYÊN QUA 2 KHUNG HÌNH -->
-                <g id="cyclops-spear-beam" opacity="0">
-                    <line x1="220" y1="230" x2="780" y2="180" stroke="url(#spearLaser)" stroke-width="8" stroke-linecap="round"/>
-                    <line x1="220" y1="230" x2="780" y2="180" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="780" cy="180" r="18" fill="#ffffaa" filter="drop-shadow(0 0 15px #ffaa00)"/>
-                </g>
-
-                <!-- VẾT ĐÂM & CHỚP NỔ MẮT TRÊN FRAME 2 -->
-                <g id="cyclops-hit-burst" opacity="0">
-                    <circle cx="780" cy="180" r="60" fill="url(#bloodSparks)" />
-                    <line x1="720" y1="180" x2="840" y2="180" stroke="#fff" stroke-width="5"/>
-                    <line x1="780" y1="120" x2="780" y2="240" stroke="#fff" stroke-width="5"/>
-                    <line x1="740" y1="140" x2="820" y2="220" stroke="#ffeb3b" stroke-width="4"/>
-                    <line x1="740" y1="220" x2="820" y2="140" stroke="#ffeb3b" stroke-width="4"/>
-                </g>
-
-                <!-- SÓNG CHẤN ĐỘNG KHI CYCLOPS ĐẬP CHÙY XUỐNG -->
-                <g id="cyclops-ground-shock" opacity="0">
-                    <circle cx="780" cy="300" r="70" fill="none" stroke="#ff4500" stroke-width="6" class="wave-pulse"/>
-                    <circle cx="780" cy="300" r="140" fill="none" stroke="#ffaa00" stroke-width="4" class="wave-pulse"/>
-                </g>
-            </svg>
-
-            <!-- THANH TRẠNG THÁI HÀNH ĐỘNG -->
-            <div class="stage-status-overlay">
-                <span class="badge badge-cave">CỬA HANG NÚI ĐÁ ETNA</span>
-                <span id="stage-action-text-1" class="action-caption">Polyphemus đang chặn lối ra! Odysseus cùng các chiến binh giương cọc gỗ nung đỏ sẵn sàng tấn công!</span>
-            </div>
-        </div>
         `;
 
-        this.container.innerHTML = html;
+        this.container.innerHTML = arenaHtml;
+        this.bindAlienClickEvents();
     }
 
-    triggerCyclopsCorrect() {
-        const frameHero = document.getElementById('frame-hero');
-        const frameMonster = document.getElementById('frame-monster');
-        const beam = document.getElementById('cyclops-spear-beam');
-        const burst = document.getElementById('cyclops-hit-burst');
-        const text = document.getElementById('stage-action-text-1');
+    /**
+     * Sinh mã HTML cho danh sách quái vật trong phòng
+     */
+    generateAliensHTML() {
+        return this.aliens.map((alien, index) => {
+            const isDead = alien.hp <= 0;
+            const isTargeted = index === this.currentTargetIndex && !isDead;
+            const isQueen = alien.type === 'queen';
+            const isLarge = alien.type === 'large';
+            
+            let cardClass = `alien-card alien-${alien.type}`;
+            if (isDead) cardClass += ' is-destroyed';
+            if (isTargeted) cardClass += ' is-target-locked';
 
-        if (text) {
-            text.innerHTML = "🎯 <strong>CHÍNH XÁC!</strong> Cọc gỗ nung đỏ đâm trúng mắt Cyclops! Polyphemus quằn quại gầm thét trong đau đớn!";
-            text.className = "action-caption text-success";
-        }
+            // Tạo các chấm / thanh máu theo Angry Birds Epic
+            let hpIndicatorsHtml = '';
+            if (isQueen) {
+                // Nữ chúa có 5 ô máu
+                const hpPercent = (alien.hp / alien.maxHp) * 100;
+                hpIndicatorsHtml = `
+                    <div class="queen-boss-hp-box">
+                        <div class="boss-hp-header">
+                            <span class="boss-crown">👑 NỮ CHÚA XENOMORPH</span>
+                            <span class="boss-hp-val">${alien.hp} / ${alien.maxHp} HP</span>
+                        </div>
+                        <div class="queen-hp-track">
+                            <div class="queen-hp-fill" id="alien-hp-bar-${index}" style="width: ${hpPercent}%;"></div>
+                        </div>
+                        <div class="queen-hp-pips">
+                            ${Array.from({ length: alien.maxHp }).map((_, i) => `
+                                <span class="hp-pip ${i < alien.hp ? 'pip-full' : 'pip-empty'}"></span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (isLarge) {
+                // Quái lớn có 2 ô máu
+                hpIndicatorsHtml = `
+                    <div class="alien-hp-row">
+                        <div class="hp-pips-group">
+                            ${Array.from({ length: alien.maxHp }).map((_, i) => `
+                                <span class="hp-heart ${i < alien.hp ? 'heart-full' : 'heart-empty'}">🩸</span>
+                            `).join('')}
+                        </div>
+                        <span class="hp-number">${alien.hp}/2 HP</span>
+                    </div>
+                `;
+            } else {
+                // Quái nhỏ có 1 ô máu
+                hpIndicatorsHtml = `
+                    <div class="alien-hp-row">
+                        <div class="hp-pips-group">
+                            <span class="hp-heart ${alien.hp > 0 ? 'heart-full' : 'heart-empty'}">🩸</span>
+                        </div>
+                        <span class="hp-number">${alien.hp}/1 HP</span>
+                    </div>
+                `;
+            }
 
-        if (frameHero) frameHero.classList.add('frame-active-strike');
-        if (beam) beam.style.opacity = '1';
+            return `
+                <div class="${cardClass}" id="alien-card-${index}" data-alien-index="${index}" title="Bấm để chọn mục tiêu này">
+                    <!-- Tâm ngắm khóa mục tiêu -->
+                    <div class="target-crosshair-lock">
+                        <span class="crosshair-bracket top-left"></span>
+                        <span class="crosshair-bracket top-right"></span>
+                        <span class="crosshair-bracket bottom-left"></span>
+                        <span class="crosshair-bracket bottom-right"></span>
+                        <span class="target-locked-text">TARGET LOCKED</span>
+                    </div>
 
-        setTimeout(() => {
-            if (burst) burst.style.opacity = '1';
-            if (frameMonster) frameMonster.classList.add('frame-damaged');
-        }, 150);
+                    <!-- Khung ảnh tranh AI sinh vật -->
+                    <div class="alien-portrait-wrapper">
+                        <img src="${alien.image}" alt="${alien.name}" class="combatant-img alien-img" id="alien-img-${index}" />
+                        <div class="alien-hit-overlay" id="alien-hit-overlay-${index}"></div>
+                        <div class="alien-acid-splash" id="alien-acid-${index}"></div>
+                        ${isDead ? '<div class="destroyed-stamp">ĐÃ TIÊU DIỆT</div>' : ''}
+                    </div>
 
-        setTimeout(() => {
-            if (beam) beam.style.opacity = '0';
-            if (burst) burst.style.opacity = '0';
-            if (frameHero) frameHero.classList.remove('frame-active-strike');
-            if (frameMonster) frameMonster.classList.remove('frame-damaged');
-        }, 1400);
+                    <!-- Tên & Thanh máu -->
+                    <div class="alien-info-panel">
+                        <div class="alien-name-tag">${alien.name}</div>
+                        ${hpIndicatorsHtml}
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
-    triggerCyclopsWrong() {
-        const frameHero = document.getElementById('frame-hero');
-        const frameMonster = document.getElementById('frame-monster');
-        const shock = document.getElementById('cyclops-ground-shock');
-        const text = document.getElementById('stage-action-text-1');
-
-        if (text) {
-            text.innerHTML = "💥 <strong>SAI RỒI!</strong> Polyphemus gầm lên long trời lở đất, vung chùy gỗ sồi quất mạnh làm rung chuyển cả hang!";
-            text.className = "action-caption text-danger";
-        }
-
-        if (frameMonster) frameMonster.classList.add('frame-active-strike');
-        if (shock) shock.style.opacity = '1';
-        this.container.classList.add('screen-rumble');
-
-        setTimeout(() => {
-            if (frameHero) frameHero.classList.add('frame-damaged');
-        }, 200);
-
-        setTimeout(() => {
-            if (frameMonster) frameMonster.classList.remove('frame-active-strike');
-            if (frameHero) frameHero.classList.remove('frame-damaged');
-            if (shock) shock.style.opacity = '0';
-            this.container.classList.remove('screen-rumble');
-        }, 1500);
+    /**
+     * Bắt sự kiện khi người chơi click vào một con quái vật để chọn mục tiêu
+     */
+    bindAlienClickEvents() {
+        const cards = this.container.querySelectorAll('.alien-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                if (this.isAnimating) return;
+                const idx = parseInt(card.getAttribute('data-alien-index'), 10);
+                if (this.aliens[idx] && this.aliens[idx].hp > 0) {
+                    this.selectTarget(idx);
+                }
+            });
+        });
     }
 
-    triggerCyclopsFinalBlind(callback) {
-        const frameMonster = document.getElementById('frame-monster');
-        const frameHero = document.getElementById('frame-hero');
-        const beam = document.getElementById('cyclops-spear-beam');
-        const burst = document.getElementById('cyclops-hit-burst');
-        const text = document.getElementById('stage-action-text-1');
+    /**
+     * Tự động chọn mục tiêu còn sống đầu tiên
+     */
+    autoSelectFirstAliveTarget() {
+        const firstAlive = this.aliens.findIndex(a => a.hp > 0);
+        if (firstAlive !== -1) {
+            this.currentTargetIndex = firstAlive;
+        }
+    }
 
-        if (text) {
-            text.innerHTML = "🏆 <strong>ĐẠI THẮNG!</strong> Cọc gỗ nung đỏ đâm mù mắt quái thú! Đoàn người Odysseus an toàn trốn thoát!";
-            text.className = "action-caption text-gold";
+    /**
+     * Chọn mục tiêu bắn
+     */
+    selectTarget(targetIndex) {
+        if (!this.aliens[targetIndex] || this.aliens[targetIndex].hp <= 0) {
+            this.autoSelectFirstAliveTarget();
+            targetIndex = this.currentTargetIndex;
         }
 
-        if (beam) beam.style.opacity = '1';
-        if (burst) burst.style.opacity = '1';
-        if (frameHero) frameHero.classList.add('frame-active-strike');
-        if (frameMonster) frameMonster.classList.add('frame-defeated');
-        this.container.classList.add('screen-rumble');
+        this.currentTargetIndex = targetIndex;
 
-        setTimeout(() => {
-            this.container.classList.remove('screen-rumble');
+        // Cập nhật class hiển thị tâm ngắm
+        const cards = this.container.querySelectorAll('.alien-card');
+        cards.forEach((card, idx) => {
+            if (idx === targetIndex && this.aliens[idx].hp > 0) {
+                card.classList.add('is-target-locked');
+            } else {
+                card.classList.remove('is-target-locked');
+            }
+        });
+
+        if (this.onTargetSelect) {
+            this.onTargetSelect(targetIndex);
+        }
+    }
+
+    /**
+     * Lấy vị trí tâm của một phần tử DOM để tính toán quỹ đạo bắn đạn
+     */
+    getElementCenter(elem) {
+        if (!elem) return { x: 0, y: 0 };
+        const rect = elem.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+        };
+    }
+
+    /**
+     * HOẠT ẢNH TẤN CÔNG CỦA ROBOT KHI NGƯỜI CHƠI TRẢ LỜI ĐÚNG
+     * Robot giật súng, tia đạn Plasma bay xé gió qua màn hình, va chạm bùng nổ vào quái vật
+     */
+    playRobotAttack(targetIndex, newHp, isDead, callback) {
+        this.isAnimating = true;
+
+        const robotCard = document.getElementById('robot-card');
+        const robotImg = document.getElementById('robot-sprite-img');
+        const muzzle = document.getElementById('robot-muzzle');
+        const targetCard = document.getElementById(`alien-card-${targetIndex}`);
+        const targetImg = document.getElementById(`alien-img-${targetIndex}`);
+        const crossfireZone = document.getElementById('crossfire-zone');
+
+        if (!targetCard) {
+            this.isAnimating = false;
             if (callback) callback();
-        }, 2200);
-    }
-
-    // ========================================================
-    // 2. THỬ THÁCH 2: ĐẢO ĐÁ SIRENS (2 KHUNG HÌNH HÀNH ĐỘNG)
-    // ========================================================
-    renderSirensStage() {
-        this.currentStage = 'sirens';
-        this.clear();
-
-        const html = `
-        <div class="stage-view stage-panels-view" id="stage-sirens">
-            <div class="stage-frame-grid">
-                <!-- FRAME 1 (TRÁI): CHIẾN THUYỀN GREEK TRIREME & ODYSSEUS -->
-                <div class="action-frame frame-left" id="frame-hero">
-                    <div class="frame-media-wrap">
-                        <img src="assets/greek_trireme.jpg" alt="Chiến thuyền Hy Lạp" class="frame-art-img" />
-                        <div class="frame-vignette"></div>
-                        <div class="wax-shield-bubble" id="wax-shield-overlay"></div>
-                    </div>
-                    <div class="frame-header-tag">
-                        <span class="tag-icon">⛵</span>
-                        <span class="tag-text">CHIẾN THUYỀN TRIREME</span>
-                    </div>
-                </div>
-
-                <div class="frame-clash-divider">
-                    <div class="clash-icon">🌊</div>
-                </div>
-
-                <!-- FRAME 2 (PHẢI): RẠN ĐÁ MA MỊ CỦA NÀNG TIÊN CÁ SIRENS -->
-                <div class="action-frame frame-right" id="frame-monster">
-                    <div class="frame-media-wrap">
-                        <img src="assets/sirens_reef.jpg" alt="Rạn đá Sirens" class="frame-art-img" />
-                        <div class="frame-vignette"></div>
-                        <div class="sirens-purple-mist" id="sirens-mist-overlay"></div>
-                    </div>
-                    <div class="frame-header-tag">
-                        <span class="tag-icon">🧜‍♀️</span>
-                        <span class="tag-text">RẠN ĐÁ MA MỊ SIRENS</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HIỆU ỨNG NỐT NHẠC TÍM VÀ LÁ CHẮN SÁP ONG XUYÊN KHUNG HÌNH -->
-            <svg class="frame-interactive-svg" viewBox="0 0 1000 480" preserveAspectRatio="none">
-                <!-- DÒNG NỐT NHẠC MA MỊ TỪ FRAME 2 BAY SANG FRAME 1 -->
-                <g id="siren-sound-waves" class="siren-notes-stream">
-                    <text x="750" y="160" font-size="28" fill="#e056fd" font-family="Cinzel, serif" opacity="0.85">♪</text>
-                    <text x="620" y="210" font-size="34" fill="#be2edd" font-family="Cinzel, serif" opacity="0.9">♫</text>
-                    <text x="490" y="170" font-size="30" fill="#f368e0" font-family="Cinzel, serif" opacity="0.8">♬</text>
-                    <text x="360" y="220" font-size="38" fill="#e056fd" font-family="Cinzel, serif" opacity="0.85">𝄞</text>
-                </g>
-
-                <!-- LÁ CHẮN SÁP ONG VÀNG RỰC TRÊN FRAME 1 (KHI ĐÚNG) -->
-                <g id="wax-shield-barrier" opacity="0">
-                    <ellipse cx="260" cy="240" rx="200" ry="160" fill="none" stroke="#f1c40f" stroke-width="6" filter="drop-shadow(0 0 20px #f39c12)"/>
-                    <ellipse cx="260" cy="240" rx="190" ry="150" fill="rgba(241, 196, 15, 0.15)"/>
-                </g>
-
-                <!-- TIA NƯỚC THỦY THỦ LAO XUỐNG BIỂN (KHI SAI) -->
-                <g id="sailor-splash" opacity="0" transform="translate(320, 340)">
-                    <path d="M-25,0 Q-15,-40 0,-10 Q15,-50 30,-5 Q45,-35 60,0 Z" fill="#ffffff" opacity="0.9"/>
-                    <circle cx="-15" cy="-25" r="4" fill="#81ecec"/>
-                    <circle cx="20" cy="-35" r="5" fill="#81ecec"/>
-                </g>
-            </svg>
-
-            <div class="stage-status-overlay">
-                <span class="badge badge-sirens">VÙNG BIỂN TỬ THẦN SIRENS</span>
-                <span id="stage-action-text-2" class="action-caption">Khúc ca ma quái đang vang vọng! Thủy thủ đoàn dùng sáp ong bịt tai, con thuyền quyết vượt qua rạn đá!</span>
-            </div>
-        </div>
-        `;
-
-        this.container.innerHTML = html;
-    }
-
-    triggerSirensCorrect() {
-        const frameHero = document.getElementById('frame-hero');
-        const barrier = document.getElementById('wax-shield-barrier');
-        const text = document.getElementById('stage-action-text-2');
-
-        if (text) {
-            text.innerHTML = "🎯 <strong>CHÍNH XÁC!</strong> Sáp ong bảo vệ đôi tai thủy thủ! Lá chắn hoàng kim đẩy lùi khúc ca mê hoặc!";
-            text.className = "action-caption text-success";
+            return;
         }
 
-        if (frameHero) frameHero.classList.add('frame-active-strike');
-        if (barrier) {
-            barrier.style.opacity = '1';
-            barrier.classList.add('wax-shield-anim');
+        // 1. Robot giật súng lùi lại & chớp sáng nòng súng
+        if (robotCard) robotCard.classList.add('robot-fire-recoil');
+        if (muzzle) muzzle.classList.add('muzzle-active');
+
+        // Âm thanh bắn súng
+        if (window.soundSystem) {
+            window.soundSystem.playLaserShot();
+        }
+
+        // 2. Tính toán góc và khoảng cách từ nòng súng đến quái vật
+        const startPos = this.getElementCenter(muzzle || robotImg);
+        const endPos = this.getElementCenter(targetImg || targetCard);
+
+        const deltaX = endPos.x - startPos.x;
+        const deltaY = endPos.y - startPos.y;
+        const distance = Math.hypot(deltaX, deltaY);
+        const angleDeg = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+        // Tạo đạn Plasma bay qua màn hình
+        const bolt = document.createElement('div');
+        bolt.className = 'plasma-projectile-bolt';
+        bolt.style.left = `${startPos.x}px`;
+        bolt.style.top = `${startPos.y}px`;
+        bolt.style.transform = `rotate(${angleDeg}deg)`;
+        document.body.appendChild(bolt);
+
+        // Đạn bay trong 250ms
+        bolt.animate([
+            { transform: `translate(0, 0) rotate(${angleDeg}deg)`, opacity: 1 },
+            { transform: `translate(${deltaX}px, ${deltaY}px) rotate(${angleDeg}deg)`, opacity: 1 }
+        ], {
+            duration: 260,
+            easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+        });
+
+        setTimeout(() => {
+            // Đạn trúng mục tiêu! Xóa đạn
+            if (bolt.parentNode) bolt.parentNode.removeChild(bolt);
+            if (muzzle) muzzle.classList.remove('muzzle-active');
+            if (robotCard) robotCard.classList.remove('robot-fire-recoil');
+
+            // 3. Hiệu ứng nổ va chạm tại quái vật
+            this.createImpactBlast(endPos.x, endPos.y);
+
+            // Âm thanh trúng đòn
+            if (window.soundSystem) {
+                if (this.aliens[targetIndex] && this.aliens[targetIndex].type === 'queen') {
+                    window.soundSystem.playQueenRoar();
+                } else {
+                    window.soundSystem.playAlienHit();
+                }
+            }
+
+            // Quái vật giật mình nảy lên và chớp đỏ
+            if (targetCard) {
+                targetCard.classList.add('alien-hit-recoil');
+                setTimeout(() => targetCard.classList.remove('alien-hit-recoil'), 400);
+            }
+
+            // Hiện số sát thương nhảy lên (-1 HP)
+            this.showFloatingCombatText(endPos.x, endPos.y - 30, '-1 HP!', 'damage-text');
+
+            // Cập nhật lại HP trong dữ liệu nội bộ
+            if (this.aliens[targetIndex]) {
+                this.aliens[targetIndex].hp = newHp;
+            }
+            this.updateAlienHpDisplay(targetIndex, newHp, isDead);
+
+            // 4. Nếu quái vật chết (isDead = true)
+            if (isDead) {
+                setTimeout(() => {
+                    if (window.soundSystem) {
+                        window.soundSystem.playAlienDeath();
+                    }
+                    if (targetCard) {
+                        targetCard.classList.remove('is-target-locked');
+                        targetCard.classList.add('is-destroyed');
+                    }
+                    this.createAcidDeathBurst(endPos.x, endPos.y);
+
+                    // Tự động chuyển mục tiêu sang con tiếp theo
+                    this.autoSelectFirstAliveTarget();
+                    this.selectTarget(this.currentTargetIndex);
+
+                    this.isAnimating = false;
+                    if (callback) callback();
+                }, 350);
+            } else {
+                this.isAnimating = false;
+                if (callback) callback();
+            }
+        }, 260);
+    }
+
+    /**
+     * HOẠT ẢNH DỊ VẬT NGOÀI HÀNH TINH PHẢN KÍCH KHI TRẢ LỜI SAI HOẶC HẾT GIỜ
+     */
+    playAlienRetaliation(attackerIndex, robotRemainingShield, damage = 15, callback) {
+        this.isAnimating = true;
+
+        const attackerCard = document.getElementById(`alien-card-${attackerIndex}`) || this.container.querySelector('.alien-card:not(.is-destroyed)');
+        const robotCard = document.getElementById('robot-card');
+        const robotImg = document.getElementById('robot-sprite-img');
+        const shieldBubble = document.getElementById('robot-shield-bubble');
+
+        if (attackerCard) {
+            attackerCard.classList.add('alien-lunge-attack');
+            setTimeout(() => attackerCard.classList.remove('alien-lunge-attack'), 500);
+        }
+
+        // Âm thanh quái vật tấn công
+        if (window.soundSystem) {
+            window.soundSystem.playAlienAttack();
         }
 
         setTimeout(() => {
-            if (barrier) barrier.style.opacity = '0';
-            if (frameHero) frameHero.classList.remove('frame-active-strike');
-        }, 1500);
-    }
+            // Khiên Robot chớp đỏ và rung giật
+            if (robotCard) {
+                robotCard.classList.add('hero-shield-crack');
+                setTimeout(() => robotCard.classList.remove('hero-shield-crack'), 600);
+            }
+            if (shieldBubble) {
+                shieldBubble.classList.add('bubble-flash-impact');
+                setTimeout(() => shieldBubble.classList.remove('bubble-flash-impact'), 500);
+            }
 
-    triggerSirensWrong() {
-        const frameHero = document.getElementById('frame-hero');
-        const frameMonster = document.getElementById('frame-monster');
-        const splash = document.getElementById('sailor-splash');
-        const text = document.getElementById('stage-action-text-2');
+            // Rung lắc toàn màn hình
+            const arena = document.getElementById('scifi-arena');
+            if (arena) {
+                arena.classList.add('screen-shake-anim');
+                setTimeout(() => arena.classList.remove('screen-shake-anim'), 400);
+            }
 
-        if (text) {
-            text.innerHTML = "❌ <strong>SAI RỒI!</strong> Tiếng hát mê hồn len lỏi vào tâm trí, một thủy thủ lao mình xuống làn sóng dữ!";
-            text.className = "action-caption text-danger";
-        }
+            // Âm thanh cảnh báo
+            if (window.soundSystem) {
+                window.soundSystem.playAlarmKlaxon();
+            }
 
-        if (frameMonster) frameMonster.classList.add('frame-active-strike');
-        if (frameHero) frameHero.classList.add('frame-damaged');
+            // Hiện chữ sát thương mất khiên
+            const robotPos = this.getElementCenter(robotImg || robotCard);
+            this.showFloatingCombatText(robotPos.x, robotPos.y - 40, `-${damage} SHIELD!`, 'hero-damage-text');
 
-        setTimeout(() => {
-            if (splash) splash.style.opacity = '1';
+            // Cập nhật thanh giáp của Robot
+            this.updateRobotShieldDisplay(robotRemainingShield);
+
+            this.isAnimating = false;
+            if (callback) callback();
         }, 300);
-
-        setTimeout(() => {
-            if (frameMonster) frameMonster.classList.remove('frame-active-strike');
-            if (frameHero) frameHero.classList.remove('frame-damaged');
-            if (splash) splash.style.opacity = '0';
-        }, 1500);
     }
 
-    triggerSirensPassThrough(callback) {
-        const frameHero = document.getElementById('frame-hero');
-        const text = document.getElementById('stage-action-text-2');
+    /**
+     * Cập nhật hiển thị HP của quái vật trên giao diện
+     */
+    updateAlienHpDisplay(index, newHp, isDead) {
+        const alien = this.aliens[index];
+        if (!alien) return;
 
-        if (text) {
-            text.innerHTML = "🏆 <strong>VƯỢT QUA HIỂM NGUY!</strong> Tiếng hát Sirens xa dần sau làn sương, con thuyền vững vàng vượt qua bẫy đá!";
-            text.className = "action-caption text-gold";
+        const card = document.getElementById(`alien-card-${index}`);
+        if (!card) return;
+
+        if (alien.type === 'queen') {
+            const bar = document.getElementById(`alien-hp-bar-${index}`);
+            const text = card.querySelector('.boss-hp-val');
+            const pips = card.querySelectorAll('.queen-hp-pips .hp-pip');
+            const hpPercent = Math.max(0, (newHp / alien.maxHp) * 100);
+            if (bar) bar.style.width = `${hpPercent}%`;
+            if (text) text.textContent = `${newHp} / ${alien.maxHp} HP`;
+            if (pips) {
+                pips.forEach((pip, i) => {
+                    if (i < newHp) {
+                        pip.className = 'hp-pip pip-full';
+                    } else {
+                        pip.className = 'hp-pip pip-empty';
+                    }
+                });
+            }
+        } else if (alien.type === 'large') {
+            const hpText = card.querySelector('.hp-number');
+            const hearts = card.querySelectorAll('.hp-heart');
+            if (hpText) hpText.textContent = `${newHp}/2 HP`;
+            if (hearts) {
+                hearts.forEach((h, i) => {
+                    h.className = `hp-heart ${i < newHp ? 'heart-full' : 'heart-empty'}`;
+                });
+            }
+        } else {
+            const hpText = card.querySelector('.hp-number');
+            const hearts = card.querySelectorAll('.hp-heart');
+            if (hpText) hpText.textContent = `${newHp}/1 HP`;
+            if (hearts && hearts[0]) {
+                hearts[0].className = `hp-heart ${newHp > 0 ? 'heart-full' : 'heart-empty'}`;
+            }
         }
 
-        if (frameHero) frameHero.classList.add('frame-active-strike');
-
-        setTimeout(() => {
-            if (callback) callback();
-        }, 2000);
-    }
-
-    // ========================================================
-    // 3. THỬ THÁCH 3: EO BIỂN SCYLLA (HOÀN TOÀN KHÔNG CÓ XOÁY NƯỚC)
-    // ========================================================
-    renderScyllaStage() {
-        this.currentStage = 'scylla';
-        this.clear();
-
-        const html = `
-        <div class="stage-view stage-panels-view" id="stage-scylla">
-            <div class="stage-frame-grid">
-                <!-- FRAME 1 (TRÁI): CHIẾN THUYỀN VÀ ODYSSEUS TUỐT GƯƠM -->
-                <div class="action-frame frame-left" id="frame-hero">
-                    <div class="frame-media-wrap">
-                        <img src="assets/greek_trireme.jpg" alt="Con tàu Odysseus" class="frame-art-img" />
-                        <div class="frame-vignette"></div>
-                    </div>
-                    <div class="frame-header-tag">
-                        <span class="tag-icon">🛡️</span>
-                        <span class="tag-text">CON TÀU ODYSSEUS</span>
-                    </div>
-                </div>
-
-                <div class="frame-clash-divider">
-                    <div class="clash-icon">⚔️</div>
-                </div>
-
-                <!-- FRAME 2 (PHẢI): QUÁI VẬT SÁU ĐẦU SCYLLA TỪ HANG NÚI - KHÔNG XOÁY NƯỚC -->
-                <div class="action-frame frame-right" id="frame-monster">
-                    <div class="frame-media-wrap">
-                        <img src="assets/scylla_monster.jpg" alt="Quái vật Scylla" class="frame-art-img" />
-                        <div class="frame-vignette"></div>
-                    </div>
-                    <div class="frame-header-tag">
-                        <span class="tag-icon">🐉</span>
-                        <span class="tag-text">QUÁI VẬT SÁU ĐẦU SCYLLA</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HIỆU ỨNG NHÁT CHÉM SẤM SÉT VÀ ĐÒN TẤN CÔNG -->
-            <svg class="frame-interactive-svg" viewBox="0 0 1000 480" preserveAspectRatio="none">
-                <!-- NHÁT CHÉM SÁNG RỰC CỦA ODYSSEUS TỪ FRAME 1 CHÉM SANG FRAME 2 -->
-                <g id="scylla-sword-slash" opacity="0">
-                    <path d="M420,280 Q560,170 720,130" stroke="#00d2d3" stroke-width="9" stroke-linecap="round" fill="none" filter="drop-shadow(0 0 20px #54a0ff)"/>
-                    <path d="M420,280 Q560,170 720,130" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"/>
-                    <!-- Chớp sáng khi chém trúng đầu rồng -->
-                    <circle cx="720" cy="130" r="45" fill="#ffffff" opacity="0.9" filter="drop-shadow(0 0 25px #00d2d3)"/>
-                </g>
-
-                <!-- ĐÒN ĐỚP MẠNH CỦA SCYLLA (KHI TRẢ LỜI SAI) -->
-                <g id="scylla-bite-fx" opacity="0">
-                    <circle cx="380" cy="240" r="50" fill="#e74c3c" opacity="0.85"/>
-                    <line x1="330" y1="190" x2="430" y2="290" stroke="#fff" stroke-width="6"/>
-                    <line x1="430" y1="190" x2="330" y2="290" stroke="#fff" stroke-width="6"/>
-                </g>
-            </svg>
-
-            <div class="stage-status-overlay">
-                <span class="badge badge-scylla">EO BIỂN SCYLLA TỬ ĐỊA</span>
-                <span id="stage-action-text-3" class="action-caption">Quái vật sáu đầu Scylla rình rập trên vách đá tăm tối! Odysseus tuốt gươm thép bảo vệ con thuyền!</span>
-            </div>
-        </div>
-        `;
-
-        this.container.innerHTML = html;
-    }
-
-    triggerScyllaCorrect() {
-        const frameHero = document.getElementById('frame-hero');
-        const frameMonster = document.getElementById('frame-monster');
-        const slash = document.getElementById('scylla-sword-slash');
-        const text = document.getElementById('stage-action-text-3');
-
-        if (text) {
-            text.innerHTML = "🎯 <strong>CHÍNH XÁC!</strong> Nhát kiếm thép sấm sét của Odysseus chém bật nhát cắn Scylla! Quái thú rụt đầu thét gào!";
-            text.className = "action-caption text-success";
+        if (isDead) {
+            const portrait = card.querySelector('.alien-portrait-wrapper');
+            if (portrait && !portrait.querySelector('.destroyed-stamp')) {
+                const stamp = document.createElement('div');
+                stamp.className = 'destroyed-stamp';
+                stamp.textContent = 'ĐÃ TIÊU DIỆT';
+                portrait.appendChild(stamp);
+            }
         }
-
-        if (frameHero) frameHero.classList.add('frame-active-strike');
-        if (slash) slash.style.opacity = '1';
-
-        setTimeout(() => {
-            if (frameMonster) frameMonster.classList.add('frame-damaged');
-        }, 120);
-
-        setTimeout(() => {
-            if (slash) slash.style.opacity = '0';
-            if (frameHero) frameHero.classList.remove('frame-active-strike');
-            if (frameMonster) frameMonster.classList.remove('frame-damaged');
-        }, 1300);
     }
 
-    triggerScyllaWrong() {
-        const frameHero = document.getElementById('frame-hero');
-        const frameMonster = document.getElementById('frame-monster');
-        const bite = document.getElementById('scylla-bite-fx');
-        const text = document.getElementById('stage-action-text-3');
-
-        if (text) {
-            text.innerHTML = "❌ <strong>SAI RỒI!</strong> Scylla bổ nhào xuống ngoạm nát mạn thuyền, rình rập thủy thủ đoàn!";
-            text.className = "action-caption text-danger";
+    /**
+     * Cập nhật thanh giáp/khiên của Robot
+     */
+    updateRobotShieldDisplay(shieldVal) {
+        const text = document.getElementById('robot-shield-text');
+        const bar = document.getElementById('robot-shield-bar');
+        const safeVal = Math.max(0, shieldVal);
+        if (text) text.textContent = `${safeVal}/100`;
+        if (bar) {
+            bar.style.width = `${safeVal}%`;
+            if (safeVal < 30) {
+                bar.style.backgroundColor = '#ff2056';
+            } else if (safeVal < 60) {
+                bar.style.backgroundColor = '#ffb703';
+            } else {
+                bar.style.backgroundColor = '#00f3ff';
+            }
         }
-
-        if (frameMonster) frameMonster.classList.add('frame-active-strike');
-        if (bite) bite.style.opacity = '1';
-        this.container.classList.add('screen-rumble');
-
-        setTimeout(() => {
-            if (frameHero) frameHero.classList.add('frame-damaged');
-        }, 150);
-
-        setTimeout(() => {
-            if (bite) bite.style.opacity = '0';
-            if (frameMonster) frameMonster.classList.remove('frame-active-strike');
-            if (frameHero) frameHero.classList.remove('frame-damaged');
-            this.container.classList.remove('screen-rumble');
-        }, 1400);
     }
 
-    triggerScyllaEscape(callback) {
-        const frameHero = document.getElementById('frame-hero');
-        const frameMonster = document.getElementById('frame-monster');
-        const text = document.getElementById('stage-action-text-3');
-
-        if (text) {
-            text.innerHTML = "🏆 <strong>VƯỢT THOÁT NGOẠN MỤC!</strong> Con tàu anh dũng xé sóng thoát khỏi Scylla, vươn mình ra biển lớn bình minh!";
-            text.className = "action-caption text-gold";
-        }
-
-        if (frameHero) frameHero.classList.add('frame-active-strike');
-        if (frameMonster) frameMonster.classList.add('frame-defeated');
-
+    /**
+     * Vụ nổ va chạm plasma
+     */
+    createImpactBlast(x, y) {
+        const blast = document.createElement('div');
+        blast.className = 'plasma-impact-burst';
+        blast.style.left = `${x}px`;
+        blast.style.top = `${y}px`;
+        document.body.appendChild(blast);
         setTimeout(() => {
-            if (callback) callback();
-        }, 2200);
+            if (blast.parentNode) blast.parentNode.removeChild(blast);
+        }, 500);
+    }
+
+    /**
+     * Vụ nổ acid khi quái vật tan biến
+     */
+    createAcidDeathBurst(x, y) {
+        const deathFx = document.createElement('div');
+        deathFx.className = 'alien-acid-death-burst';
+        deathFx.style.left = `${x}px`;
+        deathFx.style.top = `${y}px`;
+        document.body.appendChild(deathFx);
+        setTimeout(() => {
+            if (deathFx.parentNode) deathFx.parentNode.removeChild(deathFx);
+        }, 700);
+    }
+
+    /**
+     * Chữ sát thương nhảy lên (Floating Damage Text)
+     */
+    showFloatingCombatText(x, y, text, cssClass) {
+        const popup = document.createElement('div');
+        popup.className = `combat-float-number ${cssClass}`;
+        popup.textContent = text;
+        popup.style.left = `${x}px`;
+        popup.style.top = `${y}px`;
+        document.body.appendChild(popup);
+        setTimeout(() => {
+            if (popup.parentNode) popup.parentNode.removeChild(popup);
+        }, 900);
     }
 }
