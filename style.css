@@ -938,6 +938,12 @@ body {
     text-shadow: 0 0 14px var(--tech-green), 0 0 25px var(--tech-green);
 }
 
+.kill-damage-text {
+    color: #ffffff !important;
+    text-shadow: 0 0 15px var(--warning-red), 0 0 25px var(--tech-green), 0 0 35px var(--tech-green) !important;
+    font-size: 1.85rem !important;
+}
+
 .hero-damage-text {
     color: #ffffff;
     text-shadow: 0 0 14px var(--warning-red), 0 0 25px var(--warning-red);

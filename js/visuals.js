@@ -25,7 +25,7 @@ class VisualEngine {
     /**
      * Khởi tạo đấu trường theo từng Khu vực (Sector)
      */
-    renderArena(sectorIndex, aliensState, robotShield = 100, onTargetSelect = null) {
+    renderArena(sectorIndex, aliensState, robotShield = 200, onTargetSelect = null) {
         this.currentSector = sectorIndex;
         this.aliens = aliensState || [];
         this.onTargetSelect = onTargetSelect;
@@ -97,14 +97,14 @@ class VisualEngine {
                             <div class="card-stats-panel">
                                 <div class="card-name-title">ROBOT BẢO AN [AEGIS]</div>
                                 
-                                <!-- Thanh Khiên Năng Lượng -->
+                                <!-- Thanh Khiên & Máu Năng Lượng 200 HP -->
                                 <div class="shield-bar-container">
                                     <div class="shield-label-row">
-                                        <span>🛡️ KHIÊN NĂNG LƯỢNG</span>
-                                        <span id="robot-shield-text">${robotShield}/100</span>
+                                        <span>🛡️ MÁU / KHIÊN BẢO VỆ</span>
+                                        <span id="robot-shield-text">${robotShield}/200 HP</span>
                                     </div>
                                     <div class="shield-track">
-                                        <div class="shield-fill" id="robot-shield-bar" style="width: ${Math.max(0, robotShield)}%;"></div>
+                                        <div class="shield-fill" id="robot-shield-bar" style="width: ${Math.min(100, (Math.max(0, robotShield) / 200) * 100)}%;"></div>
                                     </div>
                                 </div>
 
@@ -388,9 +388,6 @@ class VisualEngine {
                 setTimeout(() => targetCard.classList.remove('alien-hit-recoil'), 400);
             }
 
-            // Hiện số sát thương nhảy lên (-1 HP)
-            this.showFloatingCombatText(endPos.x, endPos.y - 30, '-1 HP!', 'damage-text');
-
             // Cập nhật lại HP
             if (this.aliens[targetIndex]) {
                 this.aliens[targetIndex].hp = newHp;
@@ -399,18 +396,22 @@ class VisualEngine {
 
             // 4. Nếu quái vật chết
             if (isDead) {
+                // Hiện số sát thương nổ kèm thông báo tiêu diệt
+                this.showFloatingCombatText(endPos.x, endPos.y - 30, '💥 TIÊU DIỆT!', 'combat-float-number kill-damage-text');
+
+                if (targetCard) {
+                    targetCard.classList.remove('is-target-locked');
+                    targetCard.classList.add('is-destroyed');
+                }
+
                 setTimeout(() => {
                     try {
                         if (window.soundSystem) window.soundSystem.playAlienDeath();
                     } catch (e) {}
 
-                    if (targetCard) {
-                        targetCard.classList.remove('is-target-locked');
-                        targetCard.classList.add('is-destroyed');
-                    }
                     this.createAcidDeathBurst(endPos.x, endPos.y);
 
-                    // Tự động chuyển mục tiêu sang con tiếp theo
+                    // Tự động chuyển mục tiêu sang con còn sống tiếp theo
                     this.autoSelectFirstAliveTarget();
                     this.selectTarget(this.currentTargetIndex);
 
@@ -418,6 +419,8 @@ class VisualEngine {
                     if (callback) callback();
                 }, 350);
             } else {
+                // Hiện số sát thương nhảy lên (-1 HP)
+                this.showFloatingCombatText(endPos.x, endPos.y - 30, '-1 HP!', 'damage-text');
                 this.isAnimating = false;
                 if (callback) callback();
             }
@@ -531,18 +534,19 @@ class VisualEngine {
     }
 
     /**
-     * Cập nhật thanh giáp của Robot
+     * Cập nhật thanh giáp và lượng máu của Robot (200 HP)
      */
     updateRobotShieldDisplay(shieldVal) {
         const text = document.getElementById('robot-shield-text');
         const bar = document.getElementById('robot-shield-bar');
         const safeVal = Math.max(0, shieldVal);
-        if (text) text.textContent = `${safeVal}/100`;
+        if (text) text.textContent = `${safeVal}/200 HP`;
         if (bar) {
-            bar.style.width = `${safeVal}%`;
-            if (safeVal < 30) {
+            const pct = Math.min(100, (safeVal / 200) * 100);
+            bar.style.width = `${pct}%`;
+            if (safeVal < 60) {
                 bar.style.backgroundColor = '#ff2056';
-            } else if (safeVal < 60) {
+            } else if (safeVal < 120) {
                 bar.style.backgroundColor = '#ffb703';
             } else {
                 bar.style.backgroundColor = '#00ff88';

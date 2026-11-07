@@ -19,7 +19,8 @@ class AegisGame {
         // Điểm số & Chuỗi Streak kiểu Quizizz
         this.score = 0;
         this.streak = 0;
-        this.robotShield = 100;
+        this.robotMaxShield = 200;
+        this.robotShield = 200;
 
         // Bộ đếm thời gian cho mỗi câu hỏi
         this.questionTimeLimit = 15;
@@ -266,7 +267,7 @@ class AegisGame {
     startSector(sectorIndex) {
         this.currentSectorIndex = sectorIndex;
         this.currentQuestionIndex = 0;
-        this.robotShield = 100;
+        this.robotShield = 200;
 
         // Cập nhật thanh tiến trình phía trên
         this.updateProgressStrip(sectorIndex);
@@ -432,13 +433,14 @@ class AegisGame {
 
         this.totalQuestionsAnswered++;
         const q = this.currentSectorQuestions[this.currentQuestionIndex];
-        const isCorrect = (selectedIndex === q.correct);
+        const correctAns = (q && q.correctIndex !== undefined) ? q.correctIndex : (q ? q.correct : 0);
+        const isCorrect = (selectedIndex === correctAns);
 
         // Khóa các nút trả lời và đổi màu đáp án
         const buttons = this.optionsContainer.querySelectorAll('.quiz-option-btn');
         buttons.forEach((btn, idx) => {
             btn.disabled = true;
-            if (idx === q.correct) {
+            if (idx === correctAns) {
                 btn.classList.add('option-correct');
             } else if (idx === selectedIndex) {
                 btn.classList.add('option-incorrect');
@@ -696,7 +698,7 @@ class AegisGame {
             if (this.storyBody) {
                 this.storyBody.innerHTML = `
                     <p class="story-p" style="color: #ff5555;">Dị vật ngoài hành tinh đã xuyên thủng lá chắn của Robot Unit-07!</p>
-                    <p class="story-p">Hệ thống pin dự phòng tự động tái nạp khiên về 100%. Hãy nhanh chóng ngắm bắn chính xác để tiêu diệt các cá thể dị vật còn lại!</p>
+                    <p class="story-p">Hệ thống pin dự phòng tự động tái nạp khiên về 200 HP. Hãy nhanh chóng ngắm bắn chính xác để tiêu diệt các cá thể dị vật còn lại!</p>
                 `;
             }
             if (this.storyActionBtn) {
