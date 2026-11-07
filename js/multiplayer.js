@@ -135,12 +135,18 @@ class OdysseyMultiplayer {
     // THAY ĐỔI TÊN NGƯỜI CHƠI & AVATAR
     // ==========================================
     setPlayerProfile(name, avatar) {
+        this.updatePlayerProfile(name, avatar);
+    }
+
+    updatePlayerProfile(name, avatar) {
         if (!name || name.trim() === "") return;
         this.playerName = name.trim();
         if (avatar) this.playerAvatar = avatar;
 
-        localStorage.setItem("odyssey_player_name", this.playerName);
-        if (avatar) localStorage.setItem("odyssey_player_avatar", this.playerAvatar);
+        try {
+            localStorage.setItem("aegis_player_name", this.playerName);
+            if (avatar) localStorage.setItem("aegis_player_avatar", this.playerAvatar);
+        } catch (e) {}
 
         if (this.players[this.playerId]) {
             this.players[this.playerId].name = this.playerName;
@@ -342,6 +348,24 @@ class OdysseyMultiplayer {
         const list = Object.values(this.players);
         list.sort((a, b) => b.score - a.score);
         return list;
+    }
+
+    getRankedPlayers() {
+        return this.getSortedLeaderboard();
+    }
+
+    getPlayerList() {
+        return Object.values(this.players);
+    }
+
+    recordAnswer(isCorrect, timeTaken, scoreAwarded) {
+        if (!isCorrect) {
+            this.currentStreak = 0;
+            this.updatePlayerScore(0, 0, 0);
+        } else {
+            this.currentStreak++;
+            this.updatePlayerScore(scoreAwarded || 1000, 0, this.currentStreak);
+        }
     }
 
     triggerLeaderboardUpdate() {

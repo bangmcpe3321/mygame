@@ -212,6 +212,30 @@ class SoundSystem {
         }
     }
 
+    // 6b. Tiếng còi báo lỗi / Trả lời sai (Buzzer hạ nốt)
+    playWrongBuzzer() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.linearRampToValueAtTime(110, now + 0.35);
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.4);
+        } catch (e) {
+            console.warn("Audio playWrongBuzzer:", e);
+        }
+    }
+
     // 7. Tiếng đồng hồ đếm ngược Quizizz (Tick Tock điện tử)
     playTick() {
         const ctx = this.getSafeCtx();

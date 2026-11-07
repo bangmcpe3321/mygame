@@ -1,8 +1,9 @@
 /**
- * HỆ THỐNG ĐỒ HỌA CHIẾN ĐẤU THEO LƯỢT (TURN-BASED ARENA ENGINE - ANGRY BIRDS EPIC STYLE)
- * - Sử dụng hoàn toàn đồ họa tranh AI chất lượng cao (Robot cầm súng, quái vật ngoài hành tinh, bối cảnh tàu không gian).
- * - Hoàn toàn KHÔNG dùng đồ thị SVG cơ bản.
- * - Hiệu ứng chiến đấu theo lượt: Tia Plasma Blaster phóng vút, đòn cắn xé phản kích, nổ acid tan biến.
+ * HỆ THỐNG ĐỒ HỌA THẺ BÀI CHIẾN ĐẤU THEO LƯỢT (TACTICAL SCI-FI CARD BATTLE ENGINE)
+ * - Tông màu chủ đạo: XANH LÁ CÂY CÔNG NGHỆ (High-Tech Green / Matrix Emerald Neon).
+ * - Biến nhân vật và quái vật thành các THẺ BÀI CHIẾN THUẬT (Tactical Battle Cards).
+ * - Sử dụng hoàn toàn tranh AI nghệ thuật kỹ thuật số (không dùng SVG cơ bản).
+ * - Hoạt ảnh chiến đấu: Đạn Plasma xanh lá chớp lóe, đòn cào xé phản kích, nổ acid tan biến.
  */
 
 class VisualEngine {
@@ -23,10 +24,6 @@ class VisualEngine {
 
     /**
      * Khởi tạo đấu trường theo từng Khu vực (Sector)
-     * @param {number} sectorIndex 0: Cargo Bay, 1: Reactor Core, 2: Command Bridge
-     * @param {Array} aliensState Mảng trạng thái của quái vật
-     * @param {number} robotShield Điểm giáp/khiên của Robot
-     * @param {Function} onTargetSelect Callback khi người chơi chọn mục tiêu
      */
     renderArena(sectorIndex, aliensState, robotShield = 100, onTargetSelect = null) {
         this.currentSector = sectorIndex;
@@ -37,81 +34,91 @@ class VisualEngine {
         const sectorConfigs = [
             {
                 id: 'cargo',
-                name: 'KHU VỰC 1: KHO HÀNG (CARGO BAY)',
-                sub: 'Cảnh báo: 4 Dị vật nhỏ (Swarm Drones) đang xâm nhập!',
+                name: 'SECTOR 01: KHO HÀNG (CARGO BAY)',
+                sub: 'Cảnh báo: 4 Dị vật nhỏ (Swarm Drones) đang cắn phá vỏ tàu!',
                 bg: 'assets/bg_cargobay.jpg'
             },
             {
                 id: 'reactor',
-                name: 'KHU VỰC 2: LÒ PHẢN ỨNG (REACTOR CORE)',
-                sub: 'Nguy cấp: 2 Dị vật nhỏ & 2 Dị vật bọc giáp (Xeno Brutes)!',
+                name: 'SECTOR 02: LÒ PHẢN ỨNG (REACTOR CORE)',
+                sub: 'Báo động: 2 Dị vật nhỏ & 2 Chiến binh bọc giáp gai (Xeno Brutes)!',
                 bg: 'assets/bg_reactor.jpg'
             },
             {
                 id: 'bridge',
-                name: 'KHU VỰC 3: CẦU TÀU TRUNG TÂM (COMMAND BRIDGE)',
-                sub: 'Báo động Tối Cao: NỮ CHÚA XENOMORPH (HIVE QUEEN) ĐÃ XUẤT HIỆN!',
+                name: 'SECTOR 03: CẦU TÀU CHỈ HUY (COMMAND BRIDGE)',
+                sub: 'Khẩn cấp Tối Cao: NỮ CHÚA XENOMORPH (HIVE QUEEN BOSS) ĐÃ XUẤT HIỆN!',
                 bg: 'assets/bg_bridge.jpg'
             }
         ];
 
         const config = sectorConfigs[sectorIndex] || sectorConfigs[0];
 
-        // Tìm mục tiêu mặc định còn sống đầu tiên
+        // Tự động tìm mục tiêu còn sống đầu tiên
         this.autoSelectFirstAliveTarget();
 
         const arenaHtml = `
-            <div class="scifi-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(5, 10, 24, 0.45), rgba(5, 10, 24, 0.75)), url('${config.bg}');">
+            <div class="scifi-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(3, 10, 6, 0.65), rgba(3, 10, 6, 0.82)), url('${config.bg}');">
                 <!-- Header thông tin chiến trường -->
                 <div class="arena-header-banner">
-                    <div class="sector-code-badge">SECTOR 0${sectorIndex + 1} // ALERT</div>
+                    <div class="sector-code-badge">SECTOR 0${sectorIndex + 1} // ACTIVE</div>
                     <div class="sector-titles-wrap">
                         <h2 class="sector-title">${config.name}</h2>
                         <span class="sector-subtitle">${config.sub}</span>
                     </div>
-                    <div class="combat-mode-badge">TURN-BASED RPG COMBAT</div>
+                    <div class="combat-mode-badge">TURN-BASED CARD RPG</div>
                 </div>
 
-                <!-- Đấu trường chính: Bên trái Robot - Bên phải Đội quân Dị vật -->
+                <!-- Đấu trường Thẻ bài: Bên trái Robot - Bên phải Đội quân Dị vật -->
                 <div class="arena-battlefield">
-                    <!-- 1. BÊN TRÁI: ROBOT CHIẾN ĐẤU UNIT-07 (PLAYER HERO) -->
+                    <!-- 1. BÊN TRÁI: THẺ BÀI ROBOT CHIẾN ĐẤU UNIT-07 (PLAYER HERO CARD) -->
                     <div class="hero-combatant-zone" id="robot-hero-zone">
-                        <div class="combatant-card hero-card" id="robot-card">
-                            <div class="hero-target-aura"></div>
-                            <div class="hero-sprite-wrapper">
-                                <img src="assets/robot_hero.jpg" alt="Unit-07 Combat Robot" class="combatant-img hero-img" id="robot-sprite-img" />
+                        <div class="tactical-card hero-battle-card" id="robot-card">
+                            <!-- Header thẻ bài -->
+                            <div class="card-top-bar">
+                                <span class="card-type-tag hero-tag">UNIT-07 // HERO</span>
+                                <span class="card-rarity">SSR ★★★★★</span>
+                            </div>
+
+                            <!-- Khung tranh AI Robot -->
+                            <div class="card-portrait-frame">
+                                <div class="card-corner-bracket top-left"></div>
+                                <div class="card-corner-bracket top-right"></div>
+                                <div class="card-corner-bracket bottom-left"></div>
+                                <div class="card-corner-bracket bottom-right"></div>
+                                
+                                <img src="assets/robot_hero.jpg" alt="Unit-07 Combat Robot" class="card-art-img" id="robot-sprite-img" />
+                                <div class="card-scanline"></div>
                                 <div class="muzzle-flash-anchor" id="robot-muzzle"></div>
                                 <div class="shield-energy-bubble" id="robot-shield-bubble"></div>
                             </div>
                             
-                            <!-- Bảng chỉ số Robot -->
-                            <div class="hero-stats-panel">
-                                <div class="hero-name-tag">
-                                    <span class="bot-status-icon">🤖</span>
-                                    <span class="bot-callsign">UNIT-07 [AEGIS]</span>
-                                </div>
+                            <!-- Bảng chỉ số thẻ bài Robot -->
+                            <div class="card-stats-panel">
+                                <div class="card-name-title">ROBOT BẢO AN [AEGIS]</div>
+                                
+                                <!-- Thanh Khiên Năng Lượng -->
                                 <div class="shield-bar-container">
                                     <div class="shield-label-row">
-                                        <span>KHIÊN NĂNG LƯỢNG (SHIELD)</span>
+                                        <span>🛡️ KHIÊN NĂNG LƯỢNG</span>
                                         <span id="robot-shield-text">${robotShield}/100</span>
                                     </div>
                                     <div class="shield-track">
                                         <div class="shield-fill" id="robot-shield-bar" style="width: ${Math.max(0, robotShield)}%;"></div>
                                     </div>
                                 </div>
-                                <div class="hero-weapon-tag">
-                                    <span>🔫 SÚNG PLASMA BLUSTER: SẴN SÀNG</span>
+
+                                <div class="card-footer-stats">
+                                    <span class="stat-pill atk-pill">⚡ SÚNG PLASMA: 1 DMG</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- VÙNG CHIẾN ĐẤU GIỮA: HIỆU ỨNG TIA LASER & ĐẠN ĐẠO -->
-                    <div class="combat-crossfire-zone" id="crossfire-zone">
-                        <!-- Đạn laser plasma được sinh động bằng code -->
-                    </div>
+                    <div class="combat-crossfire-zone" id="crossfire-zone"></div>
 
-                    <!-- 2. BÊN PHẢI: ĐỘI QUÂN DỊ VẬT NGOÀI HÀNH TINH (ALIEN SQUAD) -->
+                    <!-- 2. BÊN PHẢI: ĐỘI QUÂN THẺ BÀI DỊ VẬT NGOÀI HÀNH TINH (ALIEN SQUAD CARDS) -->
                     <div class="aliens-combatant-zone" id="aliens-squad-zone">
                         <div class="aliens-formation-grid ${sectorIndex === 2 ? 'boss-formation' : ''}" id="aliens-grid">
                             ${this.generateAliensHTML()}
@@ -121,7 +128,7 @@ class VisualEngine {
 
                 <!-- Bảng nhắc chiến thuật -->
                 <div class="arena-footer-tip" id="arena-tip">
-                    <span>💡 Gợi ý: Trả lời đúng để nạp đạn súng Plasma và bắn tiêu diệt mục tiêu! Bấm vào quái vật để chọn mục tiêu.</span>
+                    <span>💡 Gợi ý: Bấm vào một Thẻ bài Quái vật để khóa mục tiêu (Target Lock). Trả lời đúng để nạp đạn Plasma tiêu diệt mục tiêu!</span>
                 </div>
             </div>
         `;
@@ -131,7 +138,7 @@ class VisualEngine {
     }
 
     /**
-     * Sinh mã HTML cho danh sách quái vật trong phòng
+     * Sinh mã HTML cho danh sách Thẻ bài Quái vật
      */
     generateAliensHTML() {
         return this.aliens.map((alien, index) => {
@@ -140,19 +147,33 @@ class VisualEngine {
             const isQueen = alien.type === 'queen';
             const isLarge = alien.type === 'large';
             
-            let cardClass = `alien-card alien-${alien.type}`;
+            let cardClass = `tactical-card alien-battle-card card-${alien.type}`;
             if (isDead) cardClass += ' is-destroyed';
             if (isTargeted) cardClass += ' is-target-locked';
 
-            // Tạo các chấm / thanh máu theo Angry Birds Epic
+            // Thông tin vai trò & Rarity
+            let typeTag = 'TIỂU DỊ VẬT // DRONE';
+            let rarity = 'COMMON ★';
+            let atkText = '⚔️ CÀO CẮN: 15 DMG';
+
+            if (isLarge) {
+                typeTag = 'CHIẾN BINH GAI // BRUTE';
+                rarity = 'ELITE ★★★';
+                atkText = '⚔️ ĐUÔI GAI: 15 DMG';
+            } else if (isQueen) {
+                typeTag = 'NỮ CHÚA XENOMORPH // BOSS';
+                rarity = 'LEGENDARY ★★★★★';
+                atkText = '☣️ PHUN ACID: 15 DMG';
+            }
+
+            // Thanh máu của thẻ bài
             let hpIndicatorsHtml = '';
             if (isQueen) {
-                // Nữ chúa có 5 ô máu
                 const hpPercent = (alien.hp / alien.maxHp) * 100;
                 hpIndicatorsHtml = `
                     <div class="queen-boss-hp-box">
                         <div class="boss-hp-header">
-                            <span class="boss-crown">👑 NỮ CHÚA XENOMORPH</span>
+                            <span class="boss-crown">👑 MÁU NỮ CHÚA</span>
                             <span class="boss-hp-val">${alien.hp} / ${alien.maxHp} HP</span>
                         </div>
                         <div class="queen-hp-track">
@@ -166,7 +187,6 @@ class VisualEngine {
                     </div>
                 `;
             } else if (isLarge) {
-                // Quái lớn có 2 ô máu
                 hpIndicatorsHtml = `
                     <div class="alien-hp-row">
                         <div class="hp-pips-group">
@@ -178,7 +198,6 @@ class VisualEngine {
                     </div>
                 `;
             } else {
-                // Quái nhỏ có 1 ô máu
                 hpIndicatorsHtml = `
                     <div class="alien-hp-row">
                         <div class="hp-pips-group">
@@ -191,7 +210,7 @@ class VisualEngine {
 
             return `
                 <div class="${cardClass}" id="alien-card-${index}" data-alien-index="${index}" title="Bấm để chọn mục tiêu này">
-                    <!-- Tâm ngắm khóa mục tiêu -->
+                    <!-- Tâm ngắm khóa mục tiêu công nghệ xanh lá -->
                     <div class="target-crosshair-lock">
                         <span class="crosshair-bracket top-left"></span>
                         <span class="crosshair-bracket top-right"></span>
@@ -200,18 +219,31 @@ class VisualEngine {
                         <span class="target-locked-text">TARGET LOCKED</span>
                     </div>
 
+                    <!-- Header thẻ bài -->
+                    <div class="card-top-bar">
+                        <span class="card-type-tag">${typeTag}</span>
+                        <span class="card-rarity">${rarity}</span>
+                    </div>
+
                     <!-- Khung ảnh tranh AI sinh vật -->
-                    <div class="alien-portrait-wrapper">
-                        <img src="${alien.image}" alt="${alien.name}" class="combatant-img alien-img" id="alien-img-${index}" />
-                        <div class="alien-hit-overlay" id="alien-hit-overlay-${index}"></div>
-                        <div class="alien-acid-splash" id="alien-acid-${index}"></div>
+                    <div class="card-portrait-frame">
+                        <div class="card-corner-bracket top-left"></div>
+                        <div class="card-corner-bracket top-right"></div>
+                        <div class="card-corner-bracket bottom-left"></div>
+                        <div class="card-corner-bracket bottom-right"></div>
+
+                        <img src="${alien.image}" alt="${alien.name}" class="card-art-img" id="alien-img-${index}" />
+                        <div class="card-scanline"></div>
                         ${isDead ? '<div class="destroyed-stamp">ĐÃ TIÊU DIỆT</div>' : ''}
                     </div>
 
-                    <!-- Tên & Thanh máu -->
-                    <div class="alien-info-panel">
-                        <div class="alien-name-tag">${alien.name}</div>
+                    <!-- Tên & Chỉ số Thẻ bài -->
+                    <div class="card-stats-panel">
+                        <div class="card-name-title">${alien.name}</div>
                         ${hpIndicatorsHtml}
+                        <div class="card-footer-stats">
+                            <span class="stat-pill monster-atk-pill">${atkText}</span>
+                        </div>
                     </div>
                 </div>
             `;
@@ -219,10 +251,10 @@ class VisualEngine {
     }
 
     /**
-     * Bắt sự kiện khi người chơi click vào một con quái vật để chọn mục tiêu
+     * Bắt sự kiện khi click thẻ bài để chọn mục tiêu
      */
     bindAlienClickEvents() {
-        const cards = this.container.querySelectorAll('.alien-card');
+        const cards = this.container.querySelectorAll('.alien-battle-card');
         cards.forEach(card => {
             card.addEventListener('click', () => {
                 if (this.isAnimating) return;
@@ -235,7 +267,7 @@ class VisualEngine {
     }
 
     /**
-     * Tự động chọn mục tiêu còn sống đầu tiên
+     * Tự động chọn thẻ bài còn sống đầu tiên
      */
     autoSelectFirstAliveTarget() {
         const firstAlive = this.aliens.findIndex(a => a.hp > 0);
@@ -255,8 +287,7 @@ class VisualEngine {
 
         this.currentTargetIndex = targetIndex;
 
-        // Cập nhật class hiển thị tâm ngắm
-        const cards = this.container.querySelectorAll('.alien-card');
+        const cards = this.container.querySelectorAll('.alien-battle-card');
         cards.forEach((card, idx) => {
             if (idx === targetIndex && this.aliens[idx].hp > 0) {
                 card.classList.add('is-target-locked');
@@ -270,9 +301,6 @@ class VisualEngine {
         }
     }
 
-    /**
-     * Lấy vị trí tâm của một phần tử DOM để tính toán quỹ đạo bắn đạn
-     */
     getElementCenter(elem) {
         if (!elem) return { x: 0, y: 0 };
         const rect = elem.getBoundingClientRect();
@@ -283,8 +311,7 @@ class VisualEngine {
     }
 
     /**
-     * HOẠT ẢNH TẤN CÔNG CỦA ROBOT KHI NGƯỜI CHƠI TRẢ LỜI ĐÚNG
-     * Robot giật súng, tia đạn Plasma bay xé gió qua màn hình, va chạm bùng nổ vào quái vật
+     * HOẠT ẢNH TẤN CÔNG BẰNG ĐẠN PLASMA XANH LÁ KHI TRẢ LỜI ĐÚNG
      */
     playRobotAttack(targetIndex, newHp, isDead, callback) {
         this.isAnimating = true;
@@ -294,7 +321,6 @@ class VisualEngine {
         const muzzle = document.getElementById('robot-muzzle');
         const targetCard = document.getElementById(`alien-card-${targetIndex}`);
         const targetImg = document.getElementById(`alien-img-${targetIndex}`);
-        const crossfireZone = document.getElementById('crossfire-zone');
 
         if (!targetCard) {
             this.isAnimating = false;
@@ -302,25 +328,24 @@ class VisualEngine {
             return;
         }
 
-        // 1. Robot giật súng lùi lại & chớp sáng nòng súng
+        // 1. Robot giật súng lùi lại & chớp sáng nòng súng xanh lá
         if (robotCard) robotCard.classList.add('robot-fire-recoil');
         if (muzzle) muzzle.classList.add('muzzle-active');
 
         // Âm thanh bắn súng
-        if (window.soundSystem) {
-            window.soundSystem.playLaserShot();
-        }
+        try {
+            if (window.soundSystem) window.soundSystem.playLaserShot();
+        } catch (e) {}
 
-        // 2. Tính toán góc và khoảng cách từ nòng súng đến quái vật
+        // 2. Tính toán quỹ đạo đạn plasma
         const startPos = this.getElementCenter(muzzle || robotImg);
         const endPos = this.getElementCenter(targetImg || targetCard);
 
         const deltaX = endPos.x - startPos.x;
         const deltaY = endPos.y - startPos.y;
-        const distance = Math.hypot(deltaX, deltaY);
         const angleDeg = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
-        // Tạo đạn Plasma bay qua màn hình
+        // Tạo đạn Plasma xanh lá công nghệ bay qua màn hình
         const bolt = document.createElement('div');
         bolt.className = 'plasma-projectile-bolt';
         bolt.style.left = `${startPos.x}px`;
@@ -328,34 +353,36 @@ class VisualEngine {
         bolt.style.transform = `rotate(${angleDeg}deg)`;
         document.body.appendChild(bolt);
 
-        // Đạn bay trong 250ms
-        bolt.animate([
-            { transform: `translate(0, 0) rotate(${angleDeg}deg)`, opacity: 1 },
-            { transform: `translate(${deltaX}px, ${deltaY}px) rotate(${angleDeg}deg)`, opacity: 1 }
-        ], {
-            duration: 260,
-            easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
-        });
+        if (bolt.animate) {
+            bolt.animate([
+                { transform: `translate(0, 0) rotate(${angleDeg}deg)`, opacity: 1 },
+                { transform: `translate(${deltaX}px, ${deltaY}px) rotate(${angleDeg}deg)`, opacity: 1 }
+            ], {
+                duration: 250,
+                easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+            });
+        }
 
         setTimeout(() => {
-            // Đạn trúng mục tiêu! Xóa đạn
+            // Đạn trúng mục tiêu!
             if (bolt.parentNode) bolt.parentNode.removeChild(bolt);
             if (muzzle) muzzle.classList.remove('muzzle-active');
             if (robotCard) robotCard.classList.remove('robot-fire-recoil');
 
-            // 3. Hiệu ứng nổ va chạm tại quái vật
+            // 3. Hiệu ứng nổ va chạm tại thẻ bài quái vật
             this.createImpactBlast(endPos.x, endPos.y);
 
-            // Âm thanh trúng đòn
-            if (window.soundSystem) {
-                if (this.aliens[targetIndex] && this.aliens[targetIndex].type === 'queen') {
-                    window.soundSystem.playQueenRoar();
-                } else {
-                    window.soundSystem.playAlienHit();
+            try {
+                if (window.soundSystem) {
+                    if (this.aliens[targetIndex] && this.aliens[targetIndex].type === 'queen') {
+                        window.soundSystem.playQueenRoar();
+                    } else {
+                        window.soundSystem.playAlienHit();
+                    }
                 }
-            }
+            } catch (e) {}
 
-            // Quái vật giật mình nảy lên và chớp đỏ
+            // Thẻ bài quái vật giật mình nảy lên và chớp đỏ
             if (targetCard) {
                 targetCard.classList.add('alien-hit-recoil');
                 setTimeout(() => targetCard.classList.remove('alien-hit-recoil'), 400);
@@ -364,18 +391,19 @@ class VisualEngine {
             // Hiện số sát thương nhảy lên (-1 HP)
             this.showFloatingCombatText(endPos.x, endPos.y - 30, '-1 HP!', 'damage-text');
 
-            // Cập nhật lại HP trong dữ liệu nội bộ
+            // Cập nhật lại HP
             if (this.aliens[targetIndex]) {
                 this.aliens[targetIndex].hp = newHp;
             }
             this.updateAlienHpDisplay(targetIndex, newHp, isDead);
 
-            // 4. Nếu quái vật chết (isDead = true)
+            // 4. Nếu quái vật chết
             if (isDead) {
                 setTimeout(() => {
-                    if (window.soundSystem) {
-                        window.soundSystem.playAlienDeath();
-                    }
+                    try {
+                        if (window.soundSystem) window.soundSystem.playAlienDeath();
+                    } catch (e) {}
+
                     if (targetCard) {
                         targetCard.classList.remove('is-target-locked');
                         targetCard.classList.add('is-destroyed');
@@ -393,7 +421,7 @@ class VisualEngine {
                 this.isAnimating = false;
                 if (callback) callback();
             }
-        }, 260);
+        }, 250);
     }
 
     /**
@@ -402,7 +430,8 @@ class VisualEngine {
     playAlienRetaliation(attackerIndex, robotRemainingShield, damage = 15, callback) {
         this.isAnimating = true;
 
-        const attackerCard = document.getElementById(`alien-card-${attackerIndex}`) || this.container.querySelector('.alien-card:not(.is-destroyed)');
+        const safeIndex = attackerIndex >= 0 ? attackerIndex : 0;
+        const attackerCard = document.getElementById(`alien-card-${safeIndex}`) || this.container.querySelector('.alien-battle-card:not(.is-destroyed)');
         const robotCard = document.getElementById('robot-card');
         const robotImg = document.getElementById('robot-sprite-img');
         const shieldBubble = document.getElementById('robot-shield-bubble');
@@ -412,13 +441,12 @@ class VisualEngine {
             setTimeout(() => attackerCard.classList.remove('alien-lunge-attack'), 500);
         }
 
-        // Âm thanh quái vật tấn công
-        if (window.soundSystem) {
-            window.soundSystem.playAlienAttack();
-        }
+        try {
+            if (window.soundSystem) window.soundSystem.playAlienAttack();
+        } catch (e) {}
 
         setTimeout(() => {
-            // Khiên Robot chớp đỏ và rung giật
+            // Khiên Robot chớp đỏ
             if (robotCard) {
                 robotCard.classList.add('hero-shield-crack');
                 setTimeout(() => robotCard.classList.remove('hero-shield-crack'), 600);
@@ -435,12 +463,11 @@ class VisualEngine {
                 setTimeout(() => arena.classList.remove('screen-shake-anim'), 400);
             }
 
-            // Âm thanh cảnh báo
-            if (window.soundSystem) {
-                window.soundSystem.playAlarmKlaxon();
-            }
+            try {
+                if (window.soundSystem) window.soundSystem.playAlarmKlaxon();
+            } catch (e) {}
 
-            // Hiện chữ sát thương mất khiên
+            // Hiện chữ mất khiên
             const robotPos = this.getElementCenter(robotImg || robotCard);
             this.showFloatingCombatText(robotPos.x, robotPos.y - 40, `-${damage} SHIELD!`, 'hero-damage-text');
 
@@ -453,7 +480,7 @@ class VisualEngine {
     }
 
     /**
-     * Cập nhật hiển thị HP của quái vật trên giao diện
+     * Cập nhật hiển thị HP trên thẻ bài
      */
     updateAlienHpDisplay(index, newHp, isDead) {
         const alien = this.aliens[index];
@@ -471,11 +498,7 @@ class VisualEngine {
             if (text) text.textContent = `${newHp} / ${alien.maxHp} HP`;
             if (pips) {
                 pips.forEach((pip, i) => {
-                    if (i < newHp) {
-                        pip.className = 'hp-pip pip-full';
-                    } else {
-                        pip.className = 'hp-pip pip-empty';
-                    }
+                    pip.className = `hp-pip ${i < newHp ? 'pip-full' : 'pip-empty'}`;
                 });
             }
         } else if (alien.type === 'large') {
@@ -497,7 +520,7 @@ class VisualEngine {
         }
 
         if (isDead) {
-            const portrait = card.querySelector('.alien-portrait-wrapper');
+            const portrait = card.querySelector('.card-portrait-frame');
             if (portrait && !portrait.querySelector('.destroyed-stamp')) {
                 const stamp = document.createElement('div');
                 stamp.className = 'destroyed-stamp';
@@ -508,7 +531,7 @@ class VisualEngine {
     }
 
     /**
-     * Cập nhật thanh giáp/khiên của Robot
+     * Cập nhật thanh giáp của Robot
      */
     updateRobotShieldDisplay(shieldVal) {
         const text = document.getElementById('robot-shield-text');
@@ -522,14 +545,11 @@ class VisualEngine {
             } else if (safeVal < 60) {
                 bar.style.backgroundColor = '#ffb703';
             } else {
-                bar.style.backgroundColor = '#00f3ff';
+                bar.style.backgroundColor = '#00ff88';
             }
         }
     }
 
-    /**
-     * Vụ nổ va chạm plasma
-     */
     createImpactBlast(x, y) {
         const blast = document.createElement('div');
         blast.className = 'plasma-impact-burst';
@@ -541,9 +561,6 @@ class VisualEngine {
         }, 500);
     }
 
-    /**
-     * Vụ nổ acid khi quái vật tan biến
-     */
     createAcidDeathBurst(x, y) {
         const deathFx = document.createElement('div');
         deathFx.className = 'alien-acid-death-burst';
@@ -555,9 +572,6 @@ class VisualEngine {
         }, 700);
     }
 
-    /**
-     * Chữ sát thương nhảy lên (Floating Damage Text)
-     */
     showFloatingCombatText(x, y, text, cssClass) {
         const popup = document.createElement('div');
         popup.className = `combat-float-number ${cssClass}`;

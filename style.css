@@ -1,25 +1,36 @@
 /* ========================================================
-   AEGIS PROTOCOL: STARFALL - SCI-FI TURN-BASED RPG STYLESHEET
-   Style inspired by Angry Birds Epic with high-tech futuristic theme
+   AEGIS PROTOCOL: STARFALL - HIGH-TECH GREEN CARD RPG STYLESHEET
+   Tactical Battle Cards inspired by Angry Birds Epic with Matrix/Cyberpunk Tech-Green Theme
    ======================================================== */
 
 :root {
-    --bg-dark: #060913;
-    --bg-surface: #0b1122;
-    --bg-panel: rgba(13, 20, 38, 0.88);
-    --border-cyan: #00f3ff;
-    --cyan-glow: rgba(0, 243, 255, 0.4);
-    --laser-blue: #00b4d8;
-    --plasma-cyan: #48cae4;
+    /* Tông màu chủ đạo: XANH LÁ CÂY CÔNG NGHỆ (HIGH-TECH GREEN) */
+    --tech-green: #00ff88;
+    --tech-emerald: #00e676;
+    --matrix-green: #39ff14;
+    --green-glow: rgba(0, 255, 136, 0.45);
+    --green-glow-strong: rgba(0, 255, 136, 0.75);
+    
+    /* Màu phụ trợ công nghệ */
+    --tech-cyan: #00f0ff;
+    --cyan-glow: rgba(0, 240, 255, 0.35);
     --energy-gold: #ffb703;
     --gold-glow: rgba(255, 183, 3, 0.35);
-    --alien-acid: #39ff14;
-    --acid-glow: rgba(57, 255, 20, 0.4);
     --warning-red: #ff2056;
-    --red-glow: rgba(255, 32, 86, 0.4);
-    --text-primary: #f0f6fc;
-    --text-muted: #8b9bb4;
-    --text-cyan: #a5f3fc;
+    --red-glow: rgba(255, 32, 86, 0.45);
+    
+    /* Nền không gian số (Dark Matrix Void) */
+    --bg-dark: #040906;
+    --bg-surface: #07150e;
+    --bg-card: rgba(8, 24, 15, 0.92);
+    --bg-panel: rgba(6, 20, 13, 0.92);
+    --border-card: rgba(0, 255, 136, 0.35);
+    
+    /* Văn bản */
+    --text-primary: #f0fdf4;
+    --text-muted: #86efac;
+    --text-tech: #a7f3d0;
+    
     --font-heading: 'Orbitron', 'Rajdhani', sans-serif;
     --font-body: 'Rajdhani', 'Segoe UI', sans-serif;
 }
@@ -42,23 +53,23 @@ body {
     flex-direction: column;
     overflow-x: hidden;
     background-image: 
-        radial-gradient(circle at 50% 10%, rgba(0, 243, 255, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 90% 80%, rgba(255, 32, 86, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 10% 90%, rgba(0, 180, 216, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 50% 10%, rgba(0, 255, 136, 0.12) 0%, transparent 65%),
+        radial-gradient(circle at 85% 85%, rgba(0, 230, 118, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 15% 85%, rgba(0, 240, 255, 0.06) 0%, transparent 50%);
 }
 
 /* ========================================================
-   HEADER & CONTROLS
+   HEADER & TOP CONTROLS (HIGH-TECH GREEN)
    ======================================================== */
 .game-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 24px;
-    background: rgba(6, 9, 19, 0.92);
+    background: rgba(4, 12, 8, 0.95);
     backdrop-filter: blur(12px);
-    border-bottom: 2px solid rgba(0, 243, 255, 0.3);
-    box-shadow: 0 4px 20px rgba(0, 243, 255, 0.15);
+    border-bottom: 2px solid var(--border-card);
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.15);
     z-index: 100;
 }
 
@@ -71,12 +82,12 @@ body {
     font-weight: 700;
     letter-spacing: 2px;
     color: #ffffff;
-    text-shadow: 0 0 10px var(--cyan-glow);
+    text-shadow: 0 0 10px var(--green-glow);
 }
 
 .brand-icon {
     font-size: 1.5rem;
-    filter: drop-shadow(0 0 8px var(--border-cyan));
+    filter: drop-shadow(0 0 8px var(--tech-green));
 }
 
 .header-controls {
@@ -89,11 +100,11 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0, 243, 255, 0.1);
-    border: 1px solid rgba(0, 243, 255, 0.4);
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.45);
     border-radius: 20px;
     padding: 6px 14px;
-    color: var(--text-cyan);
+    color: var(--tech-green);
     font-family: var(--font-heading);
     font-size: 0.85rem;
     font-weight: 600;
@@ -102,14 +113,14 @@ body {
 }
 
 .btn-profile:hover {
-    background: rgba(0, 243, 255, 0.22);
-    box-shadow: 0 0 14px var(--cyan-glow);
-    border-color: var(--border-cyan);
+    background: rgba(0, 255, 136, 0.22);
+    box-shadow: 0 0 14px var(--green-glow);
+    border-color: var(--tech-green);
 }
 
 .hud-pill {
-    background: rgba(13, 20, 38, 0.85);
-    border: 1px solid rgba(0, 243, 255, 0.35);
+    background: rgba(6, 20, 13, 0.88);
+    border: 1px solid rgba(0, 255, 136, 0.35);
     border-radius: 18px;
     padding: 6px 14px;
     font-family: var(--font-heading);
@@ -120,7 +131,7 @@ body {
 }
 
 .streak-pill {
-    background: linear-gradient(135deg, rgba(255, 183, 3, 0.2), rgba(255, 32, 86, 0.2));
+    background: linear-gradient(135deg, rgba(255, 183, 3, 0.25), rgba(0, 255, 136, 0.2));
     border-color: var(--energy-gold);
     color: #ffe066;
     animation: streakGlow 1.5s infinite alternate;
@@ -128,18 +139,18 @@ body {
 
 @keyframes streakGlow {
     from { box-shadow: 0 0 4px rgba(255, 183, 3, 0.3); }
-    to { box-shadow: 0 0 12px rgba(255, 183, 3, 0.8); }
+    to { box-shadow: 0 0 14px rgba(255, 183, 3, 0.8); }
 }
 
 .btn-leaderboard, .btn-host-nav {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(13, 20, 38, 0.85);
-    border: 1px solid rgba(0, 243, 255, 0.3);
+    background: rgba(6, 20, 13, 0.88);
+    border: 1px solid rgba(0, 255, 136, 0.35);
     border-radius: 18px;
     padding: 6px 14px;
-    color: var(--text-cyan);
+    color: var(--tech-green);
     font-family: var(--font-heading);
     font-size: 0.8rem;
     font-weight: 700;
@@ -148,14 +159,14 @@ body {
 }
 
 .btn-leaderboard:hover, .btn-host-nav:hover {
-    border-color: var(--border-cyan);
-    background: rgba(0, 243, 255, 0.15);
-    box-shadow: 0 0 10px var(--cyan-glow);
+    border-color: var(--tech-green);
+    background: rgba(0, 255, 136, 0.15);
+    box-shadow: 0 0 12px var(--green-glow);
 }
 
 .btn-icon {
-    background: rgba(13, 20, 38, 0.85);
-    border: 1px solid rgba(0, 243, 255, 0.3);
+    background: rgba(6, 20, 13, 0.88);
+    border: 1px solid rgba(0, 255, 136, 0.35);
     border-radius: 50%;
     width: 36px;
     height: 36px;
@@ -164,16 +175,17 @@ body {
     justify-content: center;
     cursor: pointer;
     font-size: 1rem;
+    color: var(--tech-green);
     transition: all 0.2s ease;
 }
 
 .btn-icon:hover {
-    border-color: var(--border-cyan);
-    box-shadow: 0 0 10px var(--cyan-glow);
+    border-color: var(--tech-green);
+    box-shadow: 0 0 10px var(--green-glow);
 }
 
 /* ========================================================
-   PROGRESS STRIP
+   PROGRESS STRIP (SECTORS)
    ======================================================== */
 .progress-strip {
     display: flex;
@@ -181,8 +193,8 @@ body {
     align-items: center;
     gap: 20px;
     padding: 8px 16px;
-    background: rgba(11, 17, 34, 0.85);
-    border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+    background: rgba(4, 14, 9, 0.88);
+    border-bottom: 1px solid rgba(0, 255, 136, 0.2);
     font-family: var(--font-heading);
 }
 
@@ -202,15 +214,15 @@ body {
 }
 
 .challenge-step.active {
-    background: rgba(0, 243, 255, 0.12);
-    border-color: var(--border-cyan);
+    background: rgba(0, 255, 136, 0.15);
+    border-color: var(--tech-green);
     color: #ffffff;
-    box-shadow: 0 0 14px var(--cyan-glow);
+    box-shadow: 0 0 16px var(--green-glow);
 }
 
 .challenge-step.completed {
-    background: rgba(57, 255, 20, 0.1);
-    border-color: rgba(57, 255, 20, 0.4);
+    background: rgba(0, 230, 118, 0.1);
+    border-color: rgba(0, 230, 118, 0.4);
     color: #a7f3d0;
 }
 
@@ -227,13 +239,13 @@ body {
 }
 
 .challenge-step.active .step-circle {
-    background: var(--border-cyan);
-    color: #060913;
+    background: var(--tech-green);
+    color: #040906;
 }
 
 .challenge-step.completed .step-circle {
-    background: var(--alien-acid);
-    color: #060913;
+    background: var(--tech-emerald);
+    color: #040906;
 }
 
 /* ========================================================
@@ -251,19 +263,18 @@ body {
     position: relative;
 }
 
-/* 1. ĐẤU TRƯỜNG THEO LƯỢT */
 .visual-theater {
     width: 100%;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(0, 243, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 243, 255, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.35);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 255, 136, 0.15);
     position: relative;
 }
 
 .scifi-arena {
     width: 100%;
-    min-height: 420px;
+    min-height: 440px;
     background-size: cover;
     background-position: center;
     position: relative;
@@ -278,9 +289,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(6, 9, 19, 0.75);
+    background: rgba(4, 12, 8, 0.85);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 243, 255, 0.25);
+    border: 1px solid rgba(0, 255, 136, 0.3);
     border-radius: 10px;
     padding: 8px 16px;
 }
@@ -289,7 +300,7 @@ body {
     font-family: var(--font-heading);
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--warning-red);
+    color: var(--tech-green);
     letter-spacing: 1.5px;
     display: flex;
     align-items: center;
@@ -301,13 +312,13 @@ body {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--warning-red);
-    box-shadow: 0 0 8px var(--warning-red);
-    animation: pulseRed 1s infinite alternate;
+    background: var(--tech-green);
+    box-shadow: 0 0 8px var(--tech-green);
+    animation: pulseGreen 1s infinite alternate;
 }
 
-@keyframes pulseRed {
-    from { opacity: 0.4; }
+@keyframes pulseGreen {
+    from { opacity: 0.4; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1.2); }
 }
 
@@ -317,7 +328,7 @@ body {
 
 .sector-title {
     font-family: var(--font-heading);
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #ffffff;
     letter-spacing: 1px;
@@ -325,67 +336,198 @@ body {
 
 .sector-subtitle {
     font-size: 0.85rem;
-    color: var(--text-cyan);
+    color: var(--text-tech);
 }
 
 .combat-mode-badge {
     font-family: var(--font-heading);
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--plasma-cyan);
+    color: var(--tech-green);
     letter-spacing: 1px;
     padding: 4px 10px;
     border-radius: 6px;
-    background: rgba(0, 243, 255, 0.1);
-    border: 1px solid rgba(0, 243, 255, 0.2);
+    background: rgba(0, 255, 136, 0.12);
+    border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
-/* Khu vực chiến trường Angry Birds Epic (Robot bên trái, Quái bên phải) */
 .arena-battlefield {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0;
+    margin: 16px 0;
     position: relative;
     gap: 20px;
 }
 
-/* 1.1 HERO ZONE (BÊN TRÁI) */
-.hero-combatant-zone {
-    flex: 0 0 280px;
-    display: flex;
-    justify-content: center;
-}
-
-.hero-card {
-    background: rgba(11, 17, 34, 0.85);
-    border: 2px solid var(--border-cyan);
-    border-radius: 16px;
-    padding: 14px;
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+/* ========================================================
+   TACTICAL BATTLE CARDS (THIẾT KẾ THẺ BÀI CHIẾN THUẬT)
+   ======================================================== */
+.tactical-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border-card);
+    border-radius: 14px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     position: relative;
-    transition: transform 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 
-.hero-sprite-wrapper {
+.tactical-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--tech-green);
+    box-shadow: 0 0 20px var(--green-glow);
+}
+
+/* Top bar của thẻ bài */
+.card-top-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.card-type-tag {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--tech-green);
+    letter-spacing: 0.8px;
+}
+
+.card-type-tag.hero-tag {
+    color: var(--tech-cyan);
+}
+
+.card-rarity {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--energy-gold);
+    letter-spacing: 0.5px;
+}
+
+/* Khung tranh AI của thẻ bài */
+.card-portrait-frame {
     position: relative;
-    width: 170px;
-    height: 170px;
-    border-radius: 12px;
+    width: 100%;
+    border-radius: 8px;
     overflow: hidden;
-    border: 2px solid rgba(0, 243, 255, 0.6);
-    box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.4);
+    border: 1px solid rgba(0, 255, 136, 0.35);
+    background: #020604;
 }
 
-.combatant-img {
+.card-art-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease;
+}
+
+.tactical-card:hover .card-art-img {
+    transform: scale(1.04);
+}
+
+/* Góc công nghệ cho khung ảnh */
+.card-corner-bracket {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 2px solid var(--tech-green);
+    z-index: 2;
+    pointer-events: none;
+}
+.card-corner-bracket.top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
+.card-corner-bracket.top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
+.card-corner-bracket.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
+.card-corner-bracket.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* Hiệu ứng tia quét Hologram của thẻ bài */
+.card-scanline {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 136, 0.15) 50%, transparent 100%);
+    pointer-events: none;
+    animation: cardScanline 3s infinite linear;
+}
+
+@keyframes cardScanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+/* Phần chỉ số và chân thẻ bài */
+.card-stats-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.card-name-title {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-footer-stats {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.stat-pill {
+    font-family: var(--font-heading);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.atk-pill {
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    color: var(--tech-green);
+}
+
+.monster-atk-pill {
+    background: rgba(255, 32, 86, 0.15);
+    border: 1px solid rgba(255, 32, 86, 0.4);
+    color: #ff7b92;
+}
+
+/* ========================================================
+   THẺ BÀI ROBOT HERO (BÊN TRÁI)
+   ======================================================== */
+.hero-combatant-zone {
+    flex: 0 0 240px;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-battle-card {
+    width: 220px;
+    border-color: var(--tech-green);
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.25);
+}
+
+.hero-battle-card .card-portrait-frame {
+    height: 155px;
 }
 
 .muzzle-flash-anchor {
@@ -402,15 +544,15 @@ body {
 
 .muzzle-flash-anchor.muzzle-active {
     opacity: 1;
-    background: radial-gradient(circle, #ffffff 10%, #00f3ff 60%, transparent 90%);
-    box-shadow: 0 0 35px 15px #00f3ff;
+    background: radial-gradient(circle, #ffffff 10%, #00ff88 60%, transparent 90%);
+    box-shadow: 0 0 35px 15px #00ff88;
     transform: scale(2.2);
 }
 
 .shield-energy-bubble {
     position: absolute;
     inset: -6px;
-    border-radius: 16px;
+    border-radius: 14px;
     border: 2px solid transparent;
     pointer-events: none;
     transition: all 0.2s ease;
@@ -422,63 +564,40 @@ body {
     box-shadow: 0 0 25px var(--warning-red);
 }
 
-.hero-stats-panel {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.hero-name-tag {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-family: var(--font-heading);
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 1px;
-}
-
 .shield-bar-container {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
+    margin-top: 2px;
 }
 
 .shield-label-row {
     display: flex;
     justify-content: space-between;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    color: var(--text-cyan);
+    color: var(--tech-green);
 }
 
 .shield-track {
     width: 100%;
-    height: 10px;
+    height: 8px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
+    border-radius: 4px;
     overflow: hidden;
-    border: 1px solid rgba(0, 243, 255, 0.3);
+    border: 1px solid rgba(0, 255, 136, 0.35);
 }
 
 .shield-fill {
     height: 100%;
-    background: var(--border-cyan);
-    box-shadow: 0 0 10px var(--border-cyan);
+    background: var(--tech-green);
+    box-shadow: 0 0 10px var(--tech-green);
     transition: width 0.3s ease, background-color 0.3s ease;
 }
 
-.hero-weapon-tag {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--energy-gold);
-    text-align: center;
-}
-
-/* 1.2 ALIENS SQUAD ZONE (BÊN PHẢI) */
+/* ========================================================
+   THẺ BÀI QUÁI VẬT ALIEN SQUAD (BÊN PHẢI)
+   ======================================================== */
 .aliens-combatant-zone {
     flex: 1;
     display: flex;
@@ -487,7 +606,7 @@ body {
 
 .aliens-formation-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(140px, 170px));
+    grid-template-columns: repeat(2, minmax(145px, 175px));
     gap: 16px;
     justify-content: end;
 }
@@ -498,63 +617,54 @@ body {
     gap: 20px;
 }
 
-.alien-card {
-    background: rgba(11, 17, 34, 0.85);
-    border: 2px solid rgba(57, 255, 20, 0.35);
-    border-radius: 14px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    position: relative;
+.alien-battle-card {
+    width: 165px;
     cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-.alien-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--alien-acid);
-    box-shadow: 0 0 16px var(--acid-glow);
+.alien-battle-card .card-portrait-frame {
+    height: 110px;
 }
 
-.alien-card.alien-large {
-    border-color: rgba(255, 183, 3, 0.45);
+.alien-battle-card.card-large {
+    border-color: rgba(255, 183, 3, 0.5);
 }
 
-.alien-card.alien-large:hover {
+.alien-battle-card.card-large:hover {
     border-color: var(--energy-gold);
-    box-shadow: 0 0 18px var(--gold-glow);
+    box-shadow: 0 0 20px var(--gold-glow);
 }
 
-.alien-card.alien-queen {
-    border-color: rgba(255, 32, 86, 0.6);
-    padding: 16px;
-    width: 260px;
-    box-shadow: 0 0 25px rgba(255, 32, 86, 0.3);
+.alien-battle-card.card-queen {
+    width: 280px;
+    border-color: rgba(255, 32, 86, 0.65);
+    box-shadow: 0 0 30px rgba(255, 32, 86, 0.3);
 }
 
-.alien-card.alien-queen:hover {
+.alien-battle-card.card-queen:hover {
     border-color: var(--warning-red);
-    box-shadow: 0 0 30px var(--red-glow);
+    box-shadow: 0 0 35px var(--red-glow);
 }
 
-.alien-card.is-target-locked {
-    border-color: var(--border-cyan) !important;
-    box-shadow: 0 0 20px var(--cyan-glow) !important;
-    transform: scale(1.04);
+.alien-battle-card.card-queen .card-portrait-frame {
+    height: 160px;
 }
 
-.alien-card.is-destroyed {
+.alien-battle-card.is-target-locked {
+    border-color: var(--tech-green) !important;
+    box-shadow: 0 0 25px var(--green-glow-strong) !important;
+    transform: scale(1.05);
+}
+
+.alien-battle-card.is-destroyed {
     opacity: 0.35;
     filter: grayscale(1);
     pointer-events: none;
-    border-color: #555 !important;
+    border-color: #444 !important;
     box-shadow: none !important;
 }
 
-/* Tâm ngắm Target Lock */
+/* Tâm ngắm khóa mục tiêu Target Lock màu Xanh Lá */
 .target-crosshair-lock {
     position: absolute;
     inset: -6px;
@@ -563,7 +673,7 @@ body {
     transition: opacity 0.2s ease;
 }
 
-.alien-card.is-target-locked .target-crosshair-lock {
+.alien-battle-card.is-target-locked .target-crosshair-lock {
     opacity: 1;
 }
 
@@ -571,7 +681,8 @@ body {
     position: absolute;
     width: 14px;
     height: 14px;
-    border: 2px solid var(--border-cyan);
+    border: 2px solid var(--tech-green);
+    box-shadow: 0 0 8px var(--tech-green);
 }
 
 .crosshair-bracket.top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
@@ -586,26 +697,14 @@ body {
     transform: translateX(-50%);
     font-family: var(--font-heading);
     font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--border-cyan);
-    background: rgba(6, 9, 19, 0.9);
-    padding: 1px 6px;
+    font-weight: 800;
+    color: var(--tech-green);
+    background: rgba(4, 12, 8, 0.95);
+    padding: 1px 8px;
     border-radius: 4px;
     letter-spacing: 1px;
     white-space: nowrap;
-}
-
-.alien-portrait-wrapper {
-    position: relative;
-    width: 100%;
-    height: 110px;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.alien-card.alien-queen .alien-portrait-wrapper {
-    height: 160px;
+    border: 1px solid var(--tech-green);
 }
 
 .destroyed-stamp {
@@ -614,39 +713,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(20, 5, 5, 0.75);
+    background: rgba(15, 3, 3, 0.8);
     color: var(--warning-red);
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 900;
     letter-spacing: 2px;
     border: 2px solid var(--warning-red);
     transform: rotate(-10deg);
 }
 
-.alien-info-panel {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.alien-name-tag {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
 .alien-hp-row {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
 }
 
@@ -656,7 +736,7 @@ body {
 }
 
 .hp-heart {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: opacity 0.2s ease;
 }
 
@@ -683,16 +763,16 @@ body {
 .boss-hp-header {
     display: flex;
     justify-content: space-between;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
     color: var(--warning-red);
 }
 
 .queen-hp-track {
     width: 100%;
-    height: 10px;
+    height: 8px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
+    border-radius: 4px;
     overflow: hidden;
     border: 1px solid rgba(255, 32, 86, 0.4);
 }
@@ -727,17 +807,17 @@ body {
 }
 
 .arena-footer-tip {
-    background: rgba(6, 9, 19, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(4, 12, 8, 0.75);
+    border: 1px solid rgba(0, 255, 136, 0.2);
     border-radius: 8px;
     padding: 6px 14px;
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--text-tech);
     text-align: center;
 }
 
 /* ========================================================
-   COMBAT ANIMATIONS & FX
+   COMBAT ANIMATIONS & PROJECTILES (XANH LÁ CÔNG NGHỆ)
    ======================================================== */
 .robot-fire-recoil {
     animation: robotRecoil 0.25s ease-out;
@@ -749,13 +829,14 @@ body {
     100% { transform: translateX(0) scale(1); }
 }
 
+/* Đạn Plasma xanh lá bay xé gió qua màn hình */
 .plasma-projectile-bolt {
     position: fixed;
-    width: 50px;
-    height: 8px;
-    background: linear-gradient(90deg, rgba(0, 243, 255, 0) 0%, #00f3ff 60%, #ffffff 100%);
+    width: 55px;
+    height: 9px;
+    background: linear-gradient(90deg, rgba(0, 255, 136, 0) 0%, #00ff88 60%, #ffffff 100%);
     border-radius: 4px;
-    box-shadow: 0 0 16px 4px #00f3ff, 0 0 30px #ffffff;
+    box-shadow: 0 0 16px 4px #00ff88, 0 0 25px #ffffff;
     pointer-events: none;
     z-index: 9999;
     transform-origin: 0 50%;
@@ -764,11 +845,11 @@ body {
 .plasma-impact-burst {
     position: fixed;
     transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
-    background: radial-gradient(circle, #ffffff 10%, #00f3ff 50%, rgba(0, 243, 255, 0) 80%);
-    box-shadow: 0 0 35px 15px #00f3ff;
+    background: radial-gradient(circle, #ffffff 10%, #00ff88 50%, rgba(0, 255, 136, 0) 80%);
+    box-shadow: 0 0 35px 15px #00ff88;
     pointer-events: none;
     z-index: 9999;
     animation: impactBlast 0.4s ease-out forwards;
@@ -796,8 +877,8 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: radial-gradient(circle, #ffffff 10%, var(--alien-acid) 50%, rgba(57, 255, 20, 0) 80%);
-    box-shadow: 0 0 45px 20px var(--alien-acid);
+    background: radial-gradient(circle, #ffffff 10%, var(--matrix-green) 50%, rgba(57, 255, 20, 0) 80%);
+    box-shadow: 0 0 45px 20px var(--matrix-green);
     pointer-events: none;
     z-index: 9999;
     animation: acidBurst 0.6s ease-out forwards;
@@ -854,7 +935,7 @@ body {
 
 .damage-text {
     color: #ffffff;
-    text-shadow: 0 0 14px var(--border-cyan), 0 0 25px var(--border-cyan);
+    text-shadow: 0 0 14px var(--tech-green), 0 0 25px var(--tech-green);
 }
 
 .hero-damage-text {
@@ -875,12 +956,12 @@ body {
     position: absolute;
     top: 20px;
     right: 30px;
-    background: linear-gradient(135deg, rgba(0, 243, 255, 0.95), rgba(0, 119, 182, 0.95));
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.95), rgba(0, 180, 216, 0.95));
     border: 2px solid #ffffff;
     border-radius: 12px;
     padding: 10px 20px;
-    color: #060913;
-    box-shadow: 0 8px 30px rgba(0, 243, 255, 0.5);
+    color: #040906;
+    box-shadow: 0 8px 30px rgba(0, 255, 136, 0.5);
     pointer-events: none;
     opacity: 0;
     transform: translateY(-20px) scale(0.8);
@@ -910,16 +991,16 @@ body {
 .score-float-box .popup-sub {
     font-size: 0.85rem;
     font-weight: 700;
-    color: #060913;
+    color: #040906;
 }
 
 /* ========================================================
-   QUIZ PANEL & TIMER
+   QUIZ PANEL & TIMER (HIGH-TECH GREEN)
    ======================================================== */
 .quiz-panel {
     background: var(--bg-panel);
     backdrop-filter: blur(14px);
-    border: 1px solid rgba(0, 243, 255, 0.25);
+    border: 1px solid var(--border-card);
     border-radius: 16px;
     padding: 18px 24px;
     display: flex;
@@ -949,7 +1030,7 @@ body {
     transition: width 0.1s linear, background-color 0.3s ease;
 }
 
-.timer-normal { background: var(--border-cyan); box-shadow: 0 0 10px var(--border-cyan); }
+.timer-normal { background: var(--tech-green); box-shadow: 0 0 10px var(--tech-green); }
 .timer-warning { background: var(--energy-gold); box-shadow: 0 0 10px var(--energy-gold); }
 .timer-danger { background: var(--warning-red); box-shadow: 0 0 10px var(--warning-red); }
 
@@ -957,7 +1038,7 @@ body {
     font-family: var(--font-heading);
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--text-cyan);
+    color: var(--tech-green);
     min-width: 38px;
     text-align: right;
 }
@@ -972,7 +1053,7 @@ body {
     font-family: var(--font-heading);
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--text-cyan);
+    color: var(--tech-green);
     letter-spacing: 1px;
 }
 
@@ -990,13 +1071,13 @@ body {
 }
 
 .indicator-dot.active {
-    background: var(--border-cyan);
-    box-shadow: 0 0 8px var(--border-cyan);
+    background: var(--tech-green);
+    box-shadow: 0 0 8px var(--tech-green);
     transform: scale(1.2);
 }
 
 .indicator-dot.passed {
-    background: var(--alien-acid);
+    background: var(--tech-emerald);
 }
 
 .question-text {
@@ -1017,8 +1098,8 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
-    background: rgba(18, 28, 54, 0.7);
-    border: 1px solid rgba(0, 243, 255, 0.2);
+    background: rgba(8, 28, 18, 0.75);
+    border: 1px solid rgba(0, 255, 136, 0.25);
     border-radius: 12px;
     padding: 14px 18px;
     color: #ffffff;
@@ -1031,9 +1112,9 @@ body {
 }
 
 .quiz-option-btn:hover:not(:disabled) {
-    background: rgba(0, 243, 255, 0.15);
-    border-color: var(--border-cyan);
-    box-shadow: 0 0 14px var(--cyan-glow);
+    background: rgba(0, 255, 136, 0.18);
+    border-color: var(--tech-green);
+    box-shadow: 0 0 14px var(--green-glow);
     transform: translateY(-2px);
 }
 
@@ -1044,12 +1125,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 243, 255, 0.15);
-    border: 1px solid rgba(0, 243, 255, 0.4);
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid rgba(0, 255, 136, 0.4);
     font-family: var(--font-heading);
     font-size: 0.9rem;
     font-weight: 700;
-    color: var(--text-cyan);
+    color: var(--tech-green);
     flex-shrink: 0;
 }
 
@@ -1058,15 +1139,15 @@ body {
 }
 
 .option-correct {
-    background: rgba(57, 255, 20, 0.2) !important;
-    border-color: var(--alien-acid) !important;
-    box-shadow: 0 0 20px var(--acid-glow) !important;
+    background: rgba(0, 255, 136, 0.25) !important;
+    border-color: var(--tech-green) !important;
+    box-shadow: 0 0 20px var(--green-glow) !important;
 }
 
 .option-correct .option-key {
-    background: var(--alien-acid);
-    color: #060913;
-    border-color: var(--alien-acid);
+    background: var(--tech-green);
+    color: #040906;
+    border-color: var(--tech-green);
 }
 
 .option-incorrect {
@@ -1082,12 +1163,12 @@ body {
 }
 
 .explanation-box {
-    background: rgba(0, 243, 255, 0.08);
-    border-left: 4px solid var(--border-cyan);
+    background: rgba(0, 255, 136, 0.08);
+    border-left: 4px solid var(--tech-green);
     border-radius: 0 8px 8px 0;
     padding: 10px 14px;
     font-size: 0.9rem;
-    color: var(--text-cyan);
+    color: var(--text-tech);
     line-height: 1.4;
     animation: fadeIn 0.3s ease-out;
 }
@@ -1098,34 +1179,48 @@ body {
 }
 
 /* ========================================================
-   CINEMATIC COMIC OVERLAY
+   CINEMATIC COMIC OVERLAY & DIALOGUE CARD FIX
    ======================================================== */
 .cinematic-overlay {
     position: fixed;
     inset: 0;
     background: #000000;
-    z-index: 1000;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .cinematic-canvas-overlay {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
-    z-index: 5;
+    z-index: 10;
 }
 
-.cinematic-scene-stage {
+.cinematic-viewport {
     position: absolute;
     inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cinematic-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
 }
 
-.cinematic-scene-img {
+.cinematic-art-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1137,40 +1232,122 @@ body {
     100% { transform: scale(1.08) translate(-1%, -1%); }
 }
 
-.cinematic-vignette {
+.cinematic-grid-overlay {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
+    background-image: 
+        linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
     pointer-events: none;
+    z-index: 3;
 }
 
-.cinematic-top-bar {
+.cinematic-art-vignette {
     position: absolute;
-    top: 20px;
-    left: 30px;
-    right: 30px;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.88) 100%);
+    pointer-events: none;
+    z-index: 4;
+}
+
+/* Thanh timeline tiến trình tự động */
+.cinematic-timeline-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    z-index: 100;
+}
+
+.cinematic-timeline-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--tech-green);
+    box-shadow: 0 0 10px var(--tech-green);
+    animation: timelineFill linear forwards;
+}
+
+@keyframes timelineFill {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+/* HỘP DẪN TRUYỆN TRANH LUÔN HIỂN THỊ RÕ RÀNG Ở ĐÁY */
+.cinematic-dialogue-card {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 920px;
+    background: rgba(4, 15, 10, 0.94);
+    backdrop-filter: blur(16px);
+    border: 2px solid var(--tech-green);
+    border-radius: 16px;
+    padding: 20px 28px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 30px var(--green-glow);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: slideUpDialogue 0.4s ease-out;
+}
+
+@keyframes slideUpDialogue {
+    from { opacity: 0; transform: translate(-50%, 30px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.cinematic-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 20;
 }
 
-.cinematic-series-tag {
+.cinematic-step-pill {
     font-family: var(--font-heading);
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--border-cyan);
-    letter-spacing: 2px;
+    color: var(--tech-green);
+    letter-spacing: 1.5px;
+}
+
+.cinematic-control-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-cinematic-next {
+    background: var(--tech-green);
+    color: #040906;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 0 12px var(--green-glow);
+    transition: all 0.2s ease;
+}
+
+.btn-cinematic-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px var(--tech-green);
 }
 
 .btn-skip-cinematic {
-    background: rgba(6, 9, 19, 0.8);
-    border: 1px solid var(--border-cyan);
+    background: rgba(6, 20, 13, 0.8);
+    border: 1px solid var(--tech-green);
     border-radius: 20px;
-    padding: 8px 18px;
+    padding: 6px 16px;
     color: #ffffff;
     font-family: var(--font-heading);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 1px;
     cursor: pointer;
@@ -1178,67 +1355,37 @@ body {
 }
 
 .btn-skip-cinematic:hover {
-    background: var(--border-cyan);
-    color: #060913;
-    box-shadow: 0 0 15px var(--border-cyan);
+    background: rgba(0, 255, 136, 0.2);
+    box-shadow: 0 0 12px var(--green-glow);
 }
 
-.cinematic-caption-box {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 85%;
-    max-width: 900px;
-    background: rgba(6, 9, 19, 0.88);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border-cyan);
-    border-radius: 14px;
-    padding: 20px 28px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 243, 255, 0.2);
-    z-index: 20;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.caption-chapter-title {
+.cinematic-heading {
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--border-cyan);
+    color: #ffffff;
     letter-spacing: 1.5px;
+    text-shadow: 0 0 10px var(--green-glow);
 }
 
-.caption-body-text {
+.cinematic-caption {
     font-size: 1.05rem;
     line-height: 1.55;
-    color: #e0f2fe;
+    color: #d1fae5;
 }
 
-.cinematic-progress-line {
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-top: 6px;
-}
-
-.cinematic-progress-fill {
-    height: 100%;
-    width: 0%;
-    background: var(--border-cyan);
-    box-shadow: 0 0 8px var(--border-cyan);
+.cinematic-fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
 }
 
 /* ========================================================
-   STORY OVERLAY & VICTORY CARD
+   STORY OVERLAY & VICTORY SUMMARY CARD (HIGH-TECH GREEN)
    ======================================================== */
 .story-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(6, 9, 19, 0.92);
+    background: rgba(4, 10, 6, 0.94);
     backdrop-filter: blur(16px);
     display: flex;
     align-items: center;
@@ -1251,10 +1398,10 @@ body {
     max-width: 680px;
     width: 100%;
     background: var(--bg-surface);
-    border: 2px solid var(--border-cyan);
+    border: 2px solid var(--tech-green);
     border-radius: 20px;
     padding: 32px;
-    box-shadow: 0 0 40px rgba(0, 243, 255, 0.25);
+    box-shadow: 0 0 40px var(--green-glow);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1267,14 +1414,14 @@ body {
     font-size: 1.8rem;
     font-weight: 900;
     color: #ffffff;
-    text-shadow: 0 0 15px var(--cyan-glow);
+    text-shadow: 0 0 15px var(--green-glow);
     letter-spacing: 2px;
 }
 
 .story-subtitle {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--text-cyan);
+    color: var(--tech-green);
     letter-spacing: 1px;
 }
 
@@ -1293,11 +1440,11 @@ body {
 }
 
 .btn-mythic {
-    background: linear-gradient(135deg, #00f3ff, #0077b6);
+    background: linear-gradient(135deg, var(--tech-green), #00b4d8);
     border: none;
     border-radius: 12px;
     padding: 12px 32px;
-    color: #060913;
+    color: #040906;
     font-family: var(--font-heading);
     font-size: 1.05rem;
     font-weight: 900;
@@ -1305,12 +1452,12 @@ body {
     cursor: pointer;
     margin-top: 10px;
     transition: all 0.25s ease;
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+    box-shadow: 0 0 20px var(--green-glow);
 }
 
 .btn-mythic:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(0, 243, 255, 0.8);
+    box-shadow: 0 0 30px var(--tech-green);
 }
 
 /* Victory Summary Card */
@@ -1326,9 +1473,9 @@ body {
     font-family: var(--font-heading);
     font-size: 0.85rem;
     font-weight: 900;
-    color: var(--alien-acid);
-    background: rgba(57, 255, 20, 0.15);
-    border: 1px solid var(--alien-acid);
+    color: var(--tech-green);
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid var(--tech-green);
     padding: 6px 16px;
     border-radius: 20px;
     letter-spacing: 2px;
@@ -1344,7 +1491,7 @@ body {
 
 .victory-desc {
     font-size: 1rem;
-    color: #a7c4dd;
+    color: #a7f3d0;
     line-height: 1.5;
 }
 
@@ -1357,8 +1504,8 @@ body {
 }
 
 .stat-box {
-    background: rgba(6, 9, 19, 0.8);
-    border: 1px solid rgba(0, 243, 255, 0.3);
+    background: rgba(4, 12, 8, 0.85);
+    border: 1px solid rgba(0, 255, 136, 0.3);
     border-radius: 12px;
     padding: 14px 10px;
     display: flex;
@@ -1371,7 +1518,7 @@ body {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 900;
-    color: var(--border-cyan);
+    color: var(--tech-green);
 }
 
 .stat-num.rank-num {
@@ -1401,20 +1548,20 @@ body {
 }
 
 .btn-victory-restart {
-    background: var(--border-cyan);
-    color: #060913;
+    background: var(--tech-green);
+    color: #040906;
     border: none;
-    box-shadow: 0 0 15px var(--cyan-glow);
+    box-shadow: 0 0 15px var(--green-glow);
 }
 
 .btn-victory-leaderboard {
     background: transparent;
-    color: var(--text-cyan);
-    border: 1px solid var(--border-cyan);
+    color: var(--tech-green);
+    border: 1px solid var(--tech-green);
 }
 
 .btn-victory-leaderboard:hover {
-    background: rgba(0, 243, 255, 0.15);
+    background: rgba(0, 255, 136, 0.15);
 }
 
 /* ========================================================
@@ -1423,7 +1570,7 @@ body {
 .profile-modal-overlay, .host-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(6, 9, 19, 0.88);
+    background: rgba(4, 10, 6, 0.9);
     backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
@@ -1436,13 +1583,13 @@ body {
     max-width: 500px;
     width: 100%;
     background: var(--bg-surface);
-    border: 2px solid var(--border-cyan);
+    border: 2px solid var(--tech-green);
     border-radius: 18px;
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    box-shadow: 0 0 35px var(--cyan-glow);
+    box-shadow: 0 0 35px var(--green-glow);
     position: relative;
 }
 
@@ -1460,8 +1607,8 @@ body {
 
 .custom-name-input {
     width: 100%;
-    background: rgba(6, 9, 19, 0.8);
-    border: 1px solid rgba(0, 243, 255, 0.4);
+    background: rgba(4, 12, 8, 0.85);
+    border: 1px solid rgba(0, 255, 136, 0.4);
     border-radius: 10px;
     padding: 10px 14px;
     color: #ffffff;
@@ -1471,14 +1618,14 @@ body {
 }
 
 .custom-name-input:focus {
-    border-color: var(--border-cyan);
-    box-shadow: 0 0 10px var(--cyan-glow);
+    border-color: var(--tech-green);
+    box-shadow: 0 0 10px var(--green-glow);
 }
 
 .avatar-label {
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--text-cyan);
+    color: var(--tech-green);
 }
 
 .avatar-selection-grid {
@@ -1488,7 +1635,7 @@ body {
 }
 
 .avatar-btn {
-    background: rgba(6, 9, 19, 0.8);
+    background: rgba(4, 12, 8, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 8px;
@@ -1498,9 +1645,9 @@ body {
 }
 
 .avatar-btn:hover, .avatar-btn.active {
-    border-color: var(--border-cyan);
-    background: rgba(0, 243, 255, 0.2);
-    box-shadow: 0 0 10px var(--cyan-glow);
+    border-color: var(--tech-green);
+    background: rgba(0, 255, 136, 0.2);
+    box-shadow: 0 0 10px var(--green-glow);
 }
 
 .profile-actions, .host-actions {
@@ -1511,8 +1658,8 @@ body {
 
 .btn-save-profile, .btn-deploy-start {
     flex: 1;
-    background: var(--border-cyan);
-    color: #060913;
+    background: var(--tech-green);
+    color: #040906;
     border: none;
     border-radius: 10px;
     padding: 10px;
@@ -1520,7 +1667,7 @@ body {
     font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 0 12px var(--cyan-glow);
+    box-shadow: 0 0 12px var(--green-glow);
 }
 
 .btn-cancel-profile, .btn-host-reset {
@@ -1536,8 +1683,8 @@ body {
 }
 
 .host-pin-box {
-    background: rgba(6, 9, 19, 0.8);
-    border: 1px solid rgba(0, 243, 255, 0.3);
+    background: rgba(4, 12, 8, 0.85);
+    border: 1px solid rgba(0, 255, 136, 0.3);
     border-radius: 10px;
     padding: 12px;
     text-align: center;
@@ -1553,7 +1700,7 @@ body {
     font-family: var(--font-heading);
     font-size: 1.8rem;
     font-weight: 900;
-    color: var(--border-cyan);
+    color: var(--tech-green);
     letter-spacing: 3px;
 }
 
@@ -1561,8 +1708,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(0, 243, 255, 0.08);
-    border: 1px solid rgba(0, 243, 255, 0.2);
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.2);
     border-radius: 8px;
     padding: 8px 12px;
     font-size: 0.9rem;
@@ -1570,8 +1717,8 @@ body {
 
 .btn-inline-rename {
     background: transparent;
-    border: 1px solid var(--border-cyan);
-    color: var(--border-cyan);
+    border: 1px solid var(--tech-green);
+    color: var(--tech-green);
     border-radius: 6px;
     padding: 3px 8px;
     font-size: 0.8rem;
@@ -1590,7 +1737,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(6, 9, 19, 0.7);
+    background: rgba(4, 12, 8, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 6px 10px;
@@ -1598,8 +1745,8 @@ body {
 }
 
 .host-player-pill.is-self {
-    border-color: var(--border-cyan);
-    background: rgba(0, 243, 255, 0.12);
+    border-color: var(--tech-green);
+    background: rgba(0, 255, 136, 0.15);
 }
 
 /* Leaderboard Drawer */
@@ -1610,10 +1757,10 @@ body {
     width: 380px;
     max-width: 90vw;
     height: 100vh;
-    background: rgba(11, 17, 34, 0.96);
+    background: rgba(6, 18, 11, 0.97);
     backdrop-filter: blur(16px);
-    border-left: 2px solid var(--border-cyan);
-    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.8);
+    border-left: 2px solid var(--tech-green);
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.85);
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 1100;
@@ -1630,7 +1777,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 255, 136, 0.2);
 }
 
 .drawer-title {
@@ -1643,7 +1790,7 @@ body {
 .btn-close-drawer {
     background: none;
     border: none;
-    color: var(--border-cyan);
+    color: var(--tech-green);
     font-size: 1.8rem;
     cursor: pointer;
     line-height: 1;
@@ -1662,15 +1809,15 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(6, 9, 19, 0.6);
+    background: rgba(4, 12, 8, 0.65);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
     padding: 8px 12px;
 }
 
 .leaderboard-item.item-self {
-    border-color: var(--border-cyan);
-    background: rgba(0, 243, 255, 0.12);
+    border-color: var(--tech-green);
+    background: rgba(0, 255, 136, 0.12);
 }
 
 .item-rank {
@@ -1702,7 +1849,7 @@ body {
 }
 
 .tag-you {
-    color: var(--border-cyan);
+    color: var(--tech-green);
     font-size: 0.75rem;
     margin-left: 4px;
 }
@@ -1711,7 +1858,7 @@ body {
     font-family: var(--font-heading);
     font-size: 1rem;
     font-weight: 700;
-    color: var(--border-cyan);
+    color: var(--tech-green);
 }
 
 /* ========================================================
@@ -1726,12 +1873,12 @@ body {
         flex: 0 0 auto;
         width: 100%;
     }
-    .hero-card {
+    .hero-battle-card {
         flex-direction: row;
         width: 100%;
-        max-width: 480px;
+        max-width: 440px;
     }
-    .hero-sprite-wrapper {
+    .hero-battle-card .card-portrait-frame {
         width: 110px;
         height: 110px;
         flex-shrink: 0;

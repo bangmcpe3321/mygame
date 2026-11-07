@@ -465,13 +465,17 @@ class AegisGame {
             this.updateHUD();
             this.showScorePopup(roundScore, speedBonus, this.streak);
 
-            if (window.soundSystem) {
-                window.soundSystem.playStreakChime();
-            }
+            try {
+                if (window.soundSystem) {
+                    window.soundSystem.playStreakChime();
+                }
+            } catch (e) {}
 
-            if (window.multiplayer) {
-                window.multiplayer.recordAnswer(true, this.questionTimeLimit - this.timeRemaining, roundScore);
-            }
+            try {
+                if (window.multiplayer && typeof window.multiplayer.recordAnswer === 'function') {
+                    window.multiplayer.recordAnswer(true, this.questionTimeLimit - this.timeRemaining, roundScore);
+                }
+            } catch (e) {}
 
             // Tìm mục tiêu đang chọn hoặc mục tiêu còn sống đầu tiên
             let targetIdx = this.visuals.currentTargetIndex;
@@ -492,29 +496,36 @@ class AegisGame {
                     if (allDead) {
                         setTimeout(() => this.handleSectorCleared(), 600);
                     } else {
-                        // Chuyển sang câu hỏi tiếp theo sau 1.2 giây
+                        // Chuyển sang câu hỏi tiếp theo sau 1 giây
                         setTimeout(() => {
                             this.currentQuestionIndex++;
                             this.loadQuestion();
-                        }, 1200);
+                        }, 1000);
                     }
                 });
+            } else {
+                this.handleSectorCleared();
             }
         } else {
             // === TRẢ LỜI SAI: QUÁI VẬT PHẢN KÍCH BẬC NẢY CẮN XÉ ROBOT ===
             this.streak = 0;
             this.updateHUD();
 
-            if (window.soundSystem) {
-                window.soundSystem.playWrongBuzzer();
-            }
+            try {
+                if (window.soundSystem && typeof window.soundSystem.playWrongBuzzer === 'function') {
+                    window.soundSystem.playWrongBuzzer();
+                }
+            } catch (e) {}
 
-            if (window.multiplayer) {
-                window.multiplayer.recordAnswer(false, this.questionTimeLimit - this.timeRemaining, 0);
-            }
+            try {
+                if (window.multiplayer && typeof window.multiplayer.recordAnswer === 'function') {
+                    window.multiplayer.recordAnswer(false, this.questionTimeLimit - this.timeRemaining, 0);
+                }
+            } catch (e) {}
 
             // Quái vật còn sống đầu tiên phản kích
-            const attackerIdx = this.aliensState.findIndex(a => a.hp > 0);
+            let attackerIdx = this.aliensState.findIndex(a => a.hp > 0);
+            if (attackerIdx === -1) attackerIdx = 0;
             this.robotShield = Math.max(0, this.robotShield - 15);
 
             this.visuals.playAlienRetaliation(attackerIdx, this.robotShield, 15, () => {
@@ -522,11 +533,11 @@ class AegisGame {
                     // Khiên Robot cạn kiệt: Khởi động lại Sector
                     setTimeout(() => this.handleShieldDepleted(), 600);
                 } else {
-                    // Chuyển sang câu hỏi tiếp theo sau 1.2 giây
+                    // Chuyển sang câu hỏi tiếp theo sau 1 giây
                     setTimeout(() => {
                         this.currentQuestionIndex++;
                         this.loadQuestion();
-                    }, 1200);
+                    }, 1000);
                 }
             });
         }
