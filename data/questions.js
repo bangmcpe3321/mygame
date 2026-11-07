@@ -1,6 +1,6 @@
-* DỮ LIỆU CÂU HỎI VÀ DẪN CHUYỆN - GAME ODYSSEY
 /**
-* Bạn có thể dễ dàng thêm, sửa hoặc xóa các câu hỏi bên dưới.
+ * DỮ LIỆU CÂU HỎI VÀ DẪN CHUYỆN - GAME ODYSSEY
+ * Bạn có thể dễ dàng thêm, sửa hoặc xóa các câu hỏi bên dưới.
 * Mỗi câu hỏi có cấu trúc:
 *  - question: Nội dung câu hỏi
 *  - options: Mảng 4 lựa chọn trả lời
