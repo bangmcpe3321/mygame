@@ -82,6 +82,7 @@ class OdysseyGame {
         // Host Lobby modal
         this.hostModal = document.getElementById('host-modal');
         this.hostStartBtn = document.getElementById('host-start-btn');
+        this.hostCloseBtn = document.getElementById('host-close-btn');
         this.hostResetBtn = document.getElementById('host-reset-btn');
         this.hostRoomPinText = document.getElementById('host-room-pin');
         this.hostPlayerList = document.getElementById('host-player-list');
@@ -150,6 +151,14 @@ class OdysseyGame {
             this.hostStartBtn.addEventListener('click', () => {
                 multiplayer.startRoomByHost();
                 this.hostModal.style.display = 'none';
+            });
+        }
+        if (this.hostCloseBtn) {
+            this.hostCloseBtn.addEventListener('click', () => {
+                this.hostModal.style.display = 'none';
+                if (multiplayer.roomState !== 'RUNNING') {
+                    multiplayer.startRoomByHost();
+                }
             });
         }
         if (this.hostResetBtn) {
@@ -299,33 +308,46 @@ class OdysseyGame {
         clearInterval(this.timerInterval);
         clearTimeout(this.autoAdvanceTimeout);
 
+        if (!this.currentStageQuestions || this.currentStageQuestions.length === 0) {
+            const stageName = this.stages[this.currentStageIndex] || 'cyclops';
+            this.currentStageQuestions = ODYSSEY_QUESTIONS[stageName] || [];
+        }
+
         const currentQ = this.currentStageQuestions[this.currentQuestionIndex];
+        if (!currentQ) {
+            this.finishCurrentStage();
+            return;
+        }
+
         const totalQ = this.currentStageQuestions.length;
 
-        this.questionCounter.textContent = `CÂU HỎI ${this.currentQuestionIndex + 1} / ${totalQ}`;
+        if (this.questionCounter) this.questionCounter.textContent = `CÂU HỎI ${this.currentQuestionIndex + 1} / ${totalQ}`;
         this.renderDots(totalQ);
-        this.questionText.textContent = currentQ.question;
-        this.explanationBox.style.display = 'none';
+        if (this.questionText) this.questionText.textContent = currentQ.question;
+        if (this.explanationBox) this.explanationBox.style.display = 'none';
 
-        this.optionsContainer.innerHTML = '';
-        const letters = ['A', 'B', 'C', 'D'];
-        currentQ.options.forEach((optText, optIdx) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerHTML = `
-                <span class="option-letter">${letters[optIdx]}</span>
-                <span class="option-label">${optText}</span>
-            `;
-            btn.addEventListener('click', () => {
-                this.handleAnswer(optIdx, currentQ.correctIndex, currentQ.explanation);
+        if (this.optionsContainer) {
+            this.optionsContainer.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+            currentQ.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <span class="option-letter">${letters[optIdx]}</span>
+                    <span class="option-label">${optText}</span>
+                `;
+                btn.addEventListener('click', () => {
+                    this.handleAnswer(optIdx, currentQ.correctIndex, currentQ.explanation);
+                });
+                this.optionsContainer.appendChild(btn);
             });
-            this.optionsContainer.appendChild(btn);
-        });
+        }
 
         this.startQuestionTimer();
     }
 
     startQuestionTimer() {
+        clearInterval(this.timerInterval);
         this.timeRemaining = this.questionTimeLimit;
         this.updateTimerUI(1.0);
 
@@ -335,12 +357,16 @@ class OdysseyGame {
             this.updateTimerUI(ratio);
 
             if (this.timeRemaining <= 4.0 && this.timeRemaining > 0 && Math.abs(this.timeRemaining % 1) < 0.15) {
-                sounds.playTick();
+                try {
+                    sounds.playTick();
+                } catch (e) {}
             }
 
             if (this.timeRemaining <= 0) {
                 clearInterval(this.timerInterval);
-                this.handleAnswer(-1, this.currentStageQuestions[this.currentQuestionIndex].correctIndex, "Hết thời gian trả lời!");
+                const currentQ = this.currentStageQuestions ? this.currentStageQuestions[this.currentQuestionIndex] : null;
+                const correctIdx = currentQ ? currentQ.correctIndex : 0;
+                this.handleAnswer(-1, correctIdx, "Hết thời gian trả lời!");
             }
         }, 100);
     }
@@ -362,6 +388,7 @@ class OdysseyGame {
     }
 
     renderDots(total) {
+        if (!this.indicatorDots) return;
         this.indicatorDots.innerHTML = '';
         for (let i = 0; i < total; i++) {
             const dot = document.createElement('div');
@@ -380,61 +407,86 @@ class OdysseyGame {
         this.hasAnswered = true;
         clearInterval(this.timerInterval);
 
-        const isCorrect = selectedIndex === correctIndex;
-        this.stageQuestionResults.push(isCorrect);
-        this.totalQuestionsAnswered++;
+        try {
+            const isCorrect = selectedIndex === correctIndex;
+            this.stageQuestionResults.push(isCorrect);
+            this.totalQuestionsAnswered++;
 
-        const buttons = this.optionsContainer.querySelectorAll('.option-btn');
-        buttons.forEach((btn, idx) => {
-            btn.disabled = true;
-            if (idx === correctIndex) {
-                btn.classList.add('selected-correct');
-            } else if (idx === selectedIndex && !isCorrect) {
-                btn.classList.add('selected-wrong');
+            if (this.optionsContainer) {
+                const buttons = this.optionsContainer.querySelectorAll('.option-btn');
+                buttons.forEach((btn, idx) => {
+                    btn.disabled = true;
+                    if (idx === correctIndex) {
+                        btn.classList.add('selected-correct');
+                    } else if (idx === selectedIndex && !isCorrect) {
+                        btn.classList.add('selected-wrong');
+                    }
+                });
             }
-        });
 
-        const scoreResult = multiplayer.calculateQuizizzScore(isCorrect, this.timeRemaining, this.questionTimeLimit);
-        this.updateScoreDisplay();
+            let scoreResult = { totalPoints: 0, speedBonus: 0, streak: 0 };
+            try {
+                if (window.multiplayer && typeof multiplayer.calculateQuizizzScore === 'function') {
+                    scoreResult = multiplayer.calculateQuizizzScore(isCorrect, this.timeRemaining, this.questionTimeLimit);
+                }
+            } catch (e) {
+                console.warn("calculateQuizizzScore notice:", e);
+            }
 
-        if (isCorrect) {
-            sounds.playStreakChime(scoreResult.streak);
-            this.showScorePopup(`+${scoreResult.totalPoints.toLocaleString()} ĐIỂM`, `⚡ Tốc độ: +${scoreResult.speedBonus} ${scoreResult.streak > 1 ? `| 🔥 Chuỗi x${scoreResult.streak}` : ''}`, 'score-positive');
-        } else {
-            this.showScorePopup("0 ĐIỂM", selectedIndex === -1 ? "⏱️ Hết thời gian!" : "❌ Trả lời chưa chính xác", 'score-zero');
+            try {
+                this.updateScoreDisplay();
+            } catch (e) {}
+
+            try {
+                if (isCorrect) {
+                    sounds.playStreakChime(scoreResult.streak || 1);
+                    this.showScorePopup(`+${(scoreResult.totalPoints || 1000).toLocaleString()} ĐIỂM`, `⚡ Tốc độ: +${scoreResult.speedBonus || 0} ${scoreResult.streak > 1 ? `| 🔥 Chuỗi x${scoreResult.streak}` : ''}`, 'score-positive');
+                } else {
+                    this.showScorePopup("0 ĐIỂM", selectedIndex === -1 ? "⏱️ Hết thời gian!" : "❌ Trả lời chưa chính xác", 'score-zero');
+                }
+            } catch (e) {
+                console.warn("Score popup notice:", e);
+            }
+
+            try {
+                const stageName = this.stages[this.currentStageIndex];
+                if (stageName === 'cyclops') {
+                    if (isCorrect) {
+                        sounds.playArrowHit();
+                        if (this.visuals) this.visuals.triggerCyclopsCorrect();
+                    } else {
+                        sounds.playCyclopsRoar();
+                        if (this.visuals) this.visuals.triggerCyclopsWrong();
+                    }
+                } else if (stageName === 'sirens') {
+                    if (isCorrect) {
+                        sounds.playSirenFurious();
+                        if (this.visuals) this.visuals.triggerSirensCorrect();
+                    } else {
+                        sounds.playScreamAndSplash();
+                        if (this.visuals) this.visuals.triggerSirensWrong();
+                    }
+                } else if (stageName === 'scylla') {
+                    if (isCorrect) {
+                        sounds.playSwordSlash();
+                        if (this.visuals) this.visuals.triggerScyllaCorrect();
+                    } else {
+                        sounds.playScyllaBite();
+                        if (this.visuals) this.visuals.triggerScyllaWrong();
+                    }
+                }
+            } catch (e) {
+                console.warn("Visuals action notice:", e);
+            }
+        } catch (err) {
+            console.error("General error in handleAnswer:", err);
+        } finally {
+            // TỰ ĐỘNG CHUYỂN CÂU SAU 1.8 GIÂY - BẢO ĐẢM 100% LUÔN CHẠY
+            clearTimeout(this.autoAdvanceTimeout);
+            this.autoAdvanceTimeout = setTimeout(() => {
+                this.handleAutoNext();
+            }, 1800);
         }
-
-        const stageName = this.stages[this.currentStageIndex];
-        if (stageName === 'cyclops') {
-            if (isCorrect) {
-                sounds.playArrowHit();
-                this.visuals.triggerCyclopsCorrect();
-            } else {
-                sounds.playCyclopsRoar();
-                this.visuals.triggerCyclopsWrong();
-            }
-        } else if (stageName === 'sirens') {
-            if (isCorrect) {
-                sounds.playSirenFurious();
-                this.visuals.triggerSirensCorrect();
-            } else {
-                sounds.playScreamAndSplash();
-                this.visuals.triggerSirensWrong();
-            }
-        } else if (stageName === 'scylla') {
-            if (isCorrect) {
-                sounds.playSwordSlash();
-                this.visuals.triggerScyllaCorrect();
-            } else {
-                sounds.playScyllaBite();
-                this.visuals.triggerScyllaWrong();
-            }
-        }
-
-        // TỰ ĐỘNG CHUYỂN CÂU SAU 1.8 GIÂY
-        this.autoAdvanceTimeout = setTimeout(() => {
-            this.handleAutoNext();
-        }, 1800);
     }
 
     showScorePopup(title, subtitle, typeClass) {
@@ -450,7 +502,7 @@ class OdysseyGame {
     }
 
     updateScoreDisplay() {
-        const myData = multiplayer.players[multiplayer.playerId];
+        const myData = multiplayer && multiplayer.players ? multiplayer.players[multiplayer.playerId] : null;
         const currentScore = myData ? myData.score : 0;
         const currentStreak = myData ? myData.streak : 0;
 
@@ -481,38 +533,91 @@ class OdysseyGame {
     finishCurrentStage() {
         const stageName = this.stages[this.currentStageIndex];
 
+        let hasAdvanced = false;
+        const safeAdvance = (callback) => {
+            if (hasAdvanced) return;
+            hasAdvanced = true;
+            callback();
+        };
+
         if (stageName === 'cyclops') {
-            sounds.playBlindImpact();
-            this.visuals.triggerCyclopsFinalBlind(() => {
-                sounds.playStageVictory();
-                this.showStoryModal(
-                    ODYSSEY_STORY.transition1.title,
-                    ODYSSEY_STORY.transition1.subtitle,
-                    ODYSSEY_STORY.transition1.paragraphs,
-                    ODYSSEY_STORY.transition1.buttonText,
-                    () => {
-                        this.loadStage(1);
-                    }
-                );
-            });
+            try { sounds.playBlindImpact(); } catch (e) {}
+            const fallbackTimer = setTimeout(() => {
+                safeAdvance(() => {
+                    this.showStoryModal(
+                        ODYSSEY_STORY.transition1.title,
+                        ODYSSEY_STORY.transition1.subtitle,
+                        ODYSSEY_STORY.transition1.paragraphs,
+                        ODYSSEY_STORY.transition1.buttonText,
+                        () => this.loadStage(1)
+                    );
+                });
+            }, 2600);
+
+            try {
+                this.visuals.triggerCyclopsFinalBlind(() => {
+                    clearTimeout(fallbackTimer);
+                    try { sounds.playStageVictory(); } catch (e) {}
+                    safeAdvance(() => {
+                        this.showStoryModal(
+                            ODYSSEY_STORY.transition1.title,
+                            ODYSSEY_STORY.transition1.subtitle,
+                            ODYSSEY_STORY.transition1.paragraphs,
+                            ODYSSEY_STORY.transition1.buttonText,
+                            () => this.loadStage(1)
+                        );
+                    });
+                });
+            } catch (e) {
+                clearTimeout(fallbackTimer);
+                this.loadStage(1);
+            }
         } else if (stageName === 'sirens') {
-            sounds.playStageVictory();
-            this.visuals.triggerSirensPassThrough(() => {
-                this.showStoryModal(
-                    ODYSSEY_STORY.transition2.title,
-                    ODYSSEY_STORY.transition2.subtitle,
-                    ODYSSEY_STORY.transition2.paragraphs,
-                    ODYSSEY_STORY.transition2.buttonText,
-                    () => {
-                        this.loadStage(2);
-                    }
-                );
-            });
+            try { sounds.playStageVictory(); } catch (e) {}
+            const fallbackTimer = setTimeout(() => {
+                safeAdvance(() => {
+                    this.showStoryModal(
+                        ODYSSEY_STORY.transition2.title,
+                        ODYSSEY_STORY.transition2.subtitle,
+                        ODYSSEY_STORY.transition2.paragraphs,
+                        ODYSSEY_STORY.transition2.buttonText,
+                        () => this.loadStage(2)
+                    );
+                });
+            }, 2600);
+
+            try {
+                this.visuals.triggerSirensPassThrough(() => {
+                    clearTimeout(fallbackTimer);
+                    safeAdvance(() => {
+                        this.showStoryModal(
+                            ODYSSEY_STORY.transition2.title,
+                            ODYSSEY_STORY.transition2.subtitle,
+                            ODYSSEY_STORY.transition2.paragraphs,
+                            ODYSSEY_STORY.transition2.buttonText,
+                            () => this.loadStage(2)
+                        );
+                    });
+                });
+            } catch (e) {
+                clearTimeout(fallbackTimer);
+                this.loadStage(2);
+            }
         } else if (stageName === 'scylla') {
-            sounds.playStageVictory();
-            this.visuals.triggerScyllaEscape(() => {
+            try { sounds.playStageVictory(); } catch (e) {}
+            const fallbackTimer = setTimeout(() => {
+                safeAdvance(() => this.showEpilogue());
+            }, 2600);
+
+            try {
+                this.visuals.triggerScyllaEscape(() => {
+                    clearTimeout(fallbackTimer);
+                    safeAdvance(() => this.showEpilogue());
+                });
+            } catch (e) {
+                clearTimeout(fallbackTimer);
                 this.showEpilogue();
-            });
+            }
         }
     }
 
