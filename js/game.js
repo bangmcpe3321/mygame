@@ -173,7 +173,8 @@ class OdysseyGame {
     bindMultiplayerEvents() {
         multiplayer.onRoomStarted = () => {
             sounds.playWarHorn();
-            this.startCinematicIntro();
+            sounds.startAmbient();
+            this.loadStage(0);
         };
 
         multiplayer.onLeaderboardUpdate = (sortedList) => {
@@ -239,7 +240,19 @@ class OdysseyGame {
         if (this.hostRoomPinText) {
             this.hostRoomPinText.textContent = multiplayer.roomCode;
         }
-        this.openHostModal();
+
+        // MỞ ĐẦU SỬ THI CŨ: CUỘN GIẤY THẦN THOẠI "KHỞI HÀNH TỪ TROY"
+        this.showStoryModal(
+            ODYSSEY_STORY.intro.title,
+            ODYSSEY_STORY.intro.subtitle,
+            ODYSSEY_STORY.intro.paragraphs,
+            ODYSSEY_STORY.intro.buttonText,
+            () => {
+                sounds.init();
+                sounds.startAmbient();
+                this.loadStage(0);
+            }
+        );
     }
 
     openHostModal() {

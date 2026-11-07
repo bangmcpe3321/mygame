@@ -1499,16 +1499,26 @@ body {
     50% { transform: scale(1.02) translateY(-6px); }
 }
 
-.spear-strike-anim { animation: spearThrust 0.35s ease-out forwards; }
-@keyframes spearThrust {
-    0% { opacity: 0; transform: translate(-250px, 40px); }
-    100% { opacity: 1; transform: translate(0, 0); }
+/* STICKMAN ANIMATIONS */
+.cyclops-stick-idle {
+    transform-origin: 800px 350px;
+    animation: cyclopsBreathe 3s infinite ease-in-out;
+}
+.hero-stickman {
+    transform-origin: 180px 150px;
 }
 
-.monster-recoil-anim { animation: monsterRecoil 0.7s ease-out; }
-@keyframes monsterRecoil {
+.spear-strike-anim { animation: spearThrustStick 0.4s ease-out forwards; }
+@keyframes spearThrustStick {
     0% { transform: translate(0, 0); }
-    30% { transform: translate(45px, -15px) rotate(4deg); }
+    50% { transform: translate(160px, -30px) scale(1.08); }
+    100% { transform: translate(0, 0); }
+}
+
+.monster-recoil-anim { animation: monsterRecoilStick 0.7s ease-out; }
+@keyframes monsterRecoilStick {
+    0% { transform: translate(0, 0); }
+    35% { transform: translate(45px, -20px) rotate(5deg); }
     100% { transform: translate(0, 0); }
 }
 
@@ -1516,23 +1526,23 @@ body {
     animation: eyeDamage 0.4s infinite alternate;
 }
 @keyframes eyeDamage {
-    0% { transform: scale(1); box-shadow: 0 0 20px #ff0000; }
-    100% { transform: scale(2.2); box-shadow: 0 0 50px #ffffff, 0 0 80px #ff0000; background: #ffffff; }
+    0% { transform: scale(1); filter: drop-shadow(0 0 10px #ff00ea); }
+    100% { transform: scale(1.8); filter: drop-shadow(0 0 30px #ffffff); }
 }
 
 .cyclops-slam-anim { animation: cyclopsSlam 0.5s ease-in-out; }
 @keyframes cyclopsSlam {
     0% { transform: translateY(0); }
-    40% { transform: translateY(-25px) scale(1.04); }
-    70% { transform: translateY(12px) scale(0.98); }
+    40% { transform: translateY(-30px) scale(1.05); }
+    70% { transform: translateY(15px) scale(0.97); }
     100% { transform: translateY(0); }
 }
 
 .hero-stumble-anim { animation: heroStumble 0.4s ease-out; }
 @keyframes heroStumble {
     0%, 100% { transform: translateX(0); }
-    30% { transform: translateX(-15px); }
-    70% { transform: translateX(5px); }
+    30% { transform: translateX(-20px) rotate(-3deg); }
+    70% { transform: translateX(8px); }
 }
 
 .cyclops-defeated-anim { animation: cyclopsDefeated 2.2s forwards ease-in-out; }
@@ -1543,25 +1553,54 @@ body {
 }
 
 /* SIRENS ANIMATIONS */
-@keyframes oceanSway {
-    0% { transform: scale(1) translate(0, 0); }
-    100% { transform: scale(1.04) translate(-15px, -8px); }
+.ship-rocking-anim {
+    animation: shipRocking 2.8s infinite ease-in-out;
 }
-
 @keyframes shipRocking {
     0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(8px) rotate(-2deg); }
+    50% { transform: translateY(7px) rotate(-1.5deg); }
 }
 
-@keyframes waxPulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.05); }
+.sirens-hover-anim {
+    animation: sirenHover 2.4s infinite ease-in-out alternate;
+}
+@keyframes sirenHover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-12px); }
 }
 
-.ship-accelerating-anim { animation: shipSurge 1.3s ease-out; }
+.siren-notes-stream text {
+    animation: floatNote 2.5s infinite linear;
+}
+@keyframes floatNote {
+    0% { transform: translateX(0) translateY(0); opacity: 0; }
+    30% { opacity: 0.9; }
+    80% { opacity: 0.9; }
+    100% { transform: translateX(-160px) translateY(-30px); opacity: 0; }
+}
+
+.wax-shield-anim {
+    animation: waxPulseGlow 0.8s ease-in-out;
+}
+@keyframes waxPulseGlow {
+    0% { transform: scale(0.9); opacity: 0; }
+    50% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.85; }
+}
+
+.sailor-dive-anim {
+    animation: sailorDive 0.9s forwards ease-in;
+}
+@keyframes sailorDive {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    50% { transform: translate(30px, -40px) rotate(45deg); opacity: 1; }
+    100% { transform: translate(50px, 80px) rotate(90deg); opacity: 0; }
+}
+
+.ship-surge-anim { animation: shipSurge 1.3s ease-out; }
 @keyframes shipSurge {
     0% { transform: translateX(0); }
-    50% { transform: translateX(60px) translateY(-5px); }
+    50% { transform: translateX(50px) translateY(-4px); }
     100% { transform: translateX(0); }
 }
 
@@ -1579,51 +1618,35 @@ body {
     100% { transform: translateX(650px); opacity: 0; }
 }
 
-.sirens-frenzy-anim { animation: sirensFrenzy 0.15s infinite; }
-@keyframes sirensFrenzy {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15) translate(4px, -4px); }
-    100% { transform: scale(1); }
+/* SCYLLA ANIMATIONS (HOÀN TOÀN KHÔNG CÓ XOÁY NƯỚC) */
+.scylla-neck-ambient {
+    animation: scyllaSerpentBreathe 3.5s infinite ease-in-out alternate;
+}
+@keyframes scyllaSerpentBreathe {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-3deg) translate(-8px, 6px); }
 }
 
-/* SCYLLA ANIMATIONS */
-@keyframes stormDrift {
-    0% { transform: scale(1) translate(0, 0); }
-    100% { transform: scale(1.05) translate(10px, -10px); }
+.scylla-dive-anim { animation: scyllaBiteStrike 0.6s ease-in-out; }
+@keyframes scyllaBiteStrike {
+    0% { transform: translate(0, 0); }
+    45% { transform: translate(-120px, 65px) scale(1.15); }
+    100% { transform: translate(0, 0); }
 }
 
+.scylla-head-recoil-anim { animation: scyllaPainRecoil 0.7s ease-out; }
+@keyframes scyllaPainRecoil {
+    0% { transform: translate(0, 0); }
+    35% { transform: translate(90px, -50px) rotate(-25deg); }
+    100% { transform: translate(0, 0); }
+}
+
+.ship-in-strait-anim {
+    animation: straitShipBob 2.5s infinite ease-in-out alternate;
+}
 @keyframes straitShipBob {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50% { transform: translateY(6px) rotate(-1.5deg); }
-}
-
-.scylla-head-dive-anim { animation: scyllaDive 0.8s ease-in-out; }
-@keyframes scyllaDive {
-    0% { transform: translate(0, 0); }
-    45% { transform: translate(-80px, 60px) scale(1.15); }
-    100% { transform: translate(0, 0); }
-}
-
-.scylla-head-recoil-anim { animation: scyllaHeadRecoil 0.7s ease-out; }
-@keyframes scyllaHeadRecoil {
-    0% { transform: translate(0, 0); }
-    35% { transform: translate(90px, -50px) rotate(-20deg); }
-    100% { transform: translate(0, 0); }
-}
-
-.ship-bitten-anim { animation: shipBitten 0.1s 8; }
-@keyframes shipBitten {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    30% { transform: translate(-6px, 6px) rotate(3deg); }
-    70% { transform: translate(6px, -6px) rotate(-3deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-.ship-surge-anim { animation: shipSurgeStrait 1.2s ease-out; }
-@keyframes shipSurgeStrait {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(45px); }
-    100% { transform: translateX(0); }
 }
 
 .ship-full-escape-anim { animation: shipFullEscape 2.2s forwards ease-in; }
@@ -1632,8 +1655,13 @@ body {
     100% { transform: translateX(700px); opacity: 0; }
 }
 
-.whirlpool-spin { transform-origin: 0 0; animation: spinWhirl 2.5s infinite linear; }
-@keyframes spinWhirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.ocean-wave-anim {
+    animation: waveDrift 4s infinite ease-in-out alternate;
+}
+@keyframes waveDrift {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-25px); }
+}
 
 .screen-rumble { animation: rumble 0.1s 8; }
 @keyframes rumble {

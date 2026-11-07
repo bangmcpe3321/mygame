@@ -39,8 +39,8 @@ const ODYSSEY_STORY = {
         subtitle: "Chiếc thuyền vươn mình đến eo biển tử địa",
         paragraphs: [
             "Mặc cho những giọt mồ hôi lạnh và sự cám dỗ ghê gớm từ khúc ca mê hoặc, con tàu của Odysseus cuối cùng đã xuyên qua rạn đá Siren và thoát khỏi ranh giới sương mù.",
-            "Nhưng phía trước họ là thử thách khắc nghiệt nhất mà bất kỳ hoa tiêu nào nghe thấy cũng phải rùng mình: một eo biển hẹp tăm tối giữa hai vách đá dựng đứng.",
-            "Một bên là xoáy nước khổng lồ Charybdis sẵn sàng nuốt trọn cả đại dương. Phía bên kia, trong hang đá tối om trên vách đá cao, quái vật sáu đầu Scylla đang há những chiếc mõm háu đói chực chờ săn thịt thủy thủ..."
+            "Nhưng phía trước họ là thử thách khắc nghiệt nhất mà bất kỳ hoa tiêu nào nghe thấy cũng phải rùng mình: một eo biển hẹp tăm tối hiểm trở.",
+            "Trong hang đá tăm tối trên vách đá cao dựng đứng, quái vật biển sáu đầu Scylla đang há những chiếc mõm háu đói gớm ghiếc chực chờ nuốt chửng thủy thủ đoàn..."
         ],
         buttonText: "ĐỐI ĐẦU VỚI SCYLLA"
     },
