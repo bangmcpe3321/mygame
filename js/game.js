@@ -122,6 +122,8 @@ class TraMocGame {
             joinPinInput: id('join-pin-input'),
             joinStatusDisplay: id('join-status-display'),
             joinRoomBtn: id('join-room-btn'),
+            joinRoomRosterBox: id('join-room-roster-box'),
+            joinPlayerList: id('join-player-list'),
 
             leaderboardDrawer: id('leaderboard-drawer'),
             leaderboardCloseBtn: id('leaderboard-close-btn'),
@@ -211,6 +213,9 @@ class TraMocGame {
                         if (success) {
                             if (this.el.joinStatusDisplay) {
                                 this.el.joinStatusDisplay.innerHTML = `🟢 <span style="color:var(--tech-green)">${msg}</span>`;
+                            }
+                            if (this.el.joinRoomRosterBox) {
+                                this.el.joinRoomRosterBox.style.display = 'block';
                             }
                             this.spawnToast(msg, 'is-good');
                             this.renderHostPlayers();
@@ -492,10 +497,20 @@ class TraMocGame {
                 Trả lời sai hoặc hết giờ, dị vật sẽ phản kích làm hao tổn khiên Robot. 
                 Sau mỗi hiệp bắn, bạn đưa ra <b>Quyết định chiến lược</b> điều chỉnh 6 chỉ số thị trường.
             </div>
-            <div class="action-row">
+            <div class="action-row" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <button class="btn-ghost" id="btn-open-wait-room" type="button" style="border-color: #00e5ff; color: #00e5ff; padding: 9px 16px; font-weight: 700;">
+                    🌐 SẢNH CHỜ 5 NGƯỜI (WAITING ROOM)
+                </button>
                 <span class="spacer"></span>
                 <button class="btn-primary" id="btn-start-run" type="button">🚀 BẮT ĐẦU CHIẾN DỊCH (HỒI I) ➔</button>
             </div>`;
+
+        const waitRoomBtn = document.getElementById('btn-open-wait-room');
+        if (waitRoomBtn) {
+            waitRoomBtn.addEventListener('click', () => {
+                this.openHost();
+            });
+        }
 
         const btn = document.getElementById('btn-start-run');
         if (btn) {
@@ -1127,13 +1142,18 @@ class TraMocGame {
         if (this.el.hostPin) this.el.hostPin.textContent = window.multiplayer.roomCode;
         if (this.el.lobbyDisplay) this.el.lobbyDisplay.textContent = window.multiplayer.playerName;
 
+        const playerListHtml = players.map((p) => `
+            <div class="player-pill ${p.isSelf ? 'is-self' : ''}">
+                <span class="pill-avatar">${p.avatar}</span>
+                <span class="pill-name">${p.name}</span>
+                ${p.isSelf ? '<span class="pill-self-tag">(Bạn)</span>' : p.isBot ? '<span class="pill-bot-tag">(AI)</span>' : '<span class="pill-live-tag">● Live</span>'}
+            </div>`).join('');
+
         if (this.el.hostPlayerList) {
-            this.el.hostPlayerList.innerHTML = players.map((p) => `
-                <div class="player-pill ${p.isSelf ? 'is-self' : ''}">
-                    <span class="pill-avatar">${p.avatar}</span>
-                    <span class="pill-name">${p.name}</span>
-                    ${p.isSelf ? '<span class="pill-self-tag">(Bạn)</span>' : p.isBot ? '<span class="pill-bot-tag">(AI)</span>' : '<span class="pill-live-tag">● Live</span>'}
-                </div>`).join('');
+            this.el.hostPlayerList.innerHTML = playerListHtml;
+        }
+        if (this.el.joinPlayerList) {
+            this.el.joinPlayerList.innerHTML = playerListHtml;
         }
     }
 

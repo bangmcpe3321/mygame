@@ -37,8 +37,8 @@
             <button class="btn-hud" id="leaderboard-toggle-btn" type="button" aria-label="Bảng xếp hạng">
                 <span aria-hidden="true">🏆</span><span class="btn-hud-label">XẾP HẠNG</span>
             </button>
-            <button class="btn-hud" id="host-control-btn" type="button" aria-label="Phòng đấu 5 người">
-                <span aria-hidden="true">🌐</span><span class="btn-hud-label">ĐẤU PHÒNG 5 NGƯỜI</span>
+            <button class="btn-hud" id="host-control-btn" type="button" aria-label="Phòng chờ 5 người">
+                <span aria-hidden="true">🌐</span><span class="btn-hud-label">PHÒNG CHỜ (5 NGƯỜI)</span>
             </button>
             <button class="btn-icon" id="sound-toggle-btn" type="button" aria-label="Bật tắt âm thanh">
                 <span id="sound-icon" aria-hidden="true">🔊</span>
@@ -119,11 +119,11 @@
         </div>
     </div>
 
-    <!-- MODAL PHÒNG CHƠI ĐẤU TRƯỜNG 5 NGƯỜI (MULTIPLAYER LOBBY) -->
+    <!-- MODAL PHÒNG CHỜ ĐẤU TRƯỜNG 5 NGƯỜI (WAITING ROOM / MULTIPLAYER LOBBY) -->
     <div class="modal-overlay" id="host-modal">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="host-title">
-            <h3 class="modal-title" id="host-title">🌐 ĐẤU TRƯỜNG 5 NGƯỜI (MULTIPLAYER)</h3>
-            <p class="modal-desc">Đấu trường thương trường 5 người chơi cạnh tranh trực tiếp qua WebRTC P2P.</p>
+            <h3 class="modal-title" id="host-title">🌐 PHÒNG CHỜ THI ĐẤU 5 NGƯỜI (WAITING ROOM)</h3>
+            <p class="modal-desc">Sảnh chờ thi đấu thương trường 5 người chơi cạnh tranh trực tiếp qua WebRTC P2P.</p>
             
             <!-- Chuyển Tab: Tạo Phòng (Host) hoặc Vào Phòng (Join) -->
             <div class="lobby-tabs">
@@ -135,16 +135,16 @@
             <div class="lobby-panel active" id="lobby-host-panel">
                 <div class="pin-box">
                     <div>
-                        <span class="pin-label">MÃ PIN PHÒNG CHƠI</span>
+                        <span class="pin-label">MÃ PIN PHÒNG CHỜ (CHIA SẺ CHO BẠN CHƠI)</span>
                         <div class="pin-code" id="host-room-pin">7788</div>
                     </div>
-                    <button class="btn-mini" id="btn-copy-pin" type="button" title="Sao chép mã PIN">📋 SAO CHÉP</button>
+                    <button class="btn-mini" id="btn-copy-pin" type="button" title="Sao chép mã PIN">📋 SAO CHÉP MÃ</button>
                 </div>
                 <div class="lobby-bar">
                     <span id="lobby-player-display">Unit-07 (Host)</span>
-                    <button class="btn-mini" id="lobby-rename-btn" type="button">ĐỔI TÊN</button>
+                    <button class="btn-mini" id="lobby-rename-btn" type="button">ĐỔI TÊN / AVATAR</button>
                 </div>
-                <p class="field-label" style="margin-top: 10px; font-size: 11px;">DANH SÁCH 5 THÀNH VIÊN ĐẤU TRƯỜNG (AI BÙ NẾU THIẾU):</p>
+                <p class="field-label" style="margin-top: 10px; font-size: 11px;">DANH SÁCH 5 THÀNH VIÊN TRONG PHÒNG CHỜ (AI BÙ NẾU THIẾU):</p>
                 <div class="host-player-grid" id="host-player-list"></div>
                 <div class="modal-actions">
                     <button class="btn-primary" id="host-start-btn" type="button">🚀 BẮT ĐẦU ĐẤU TRƯỜNG 5 NGƯỜI</button>
@@ -154,11 +154,21 @@
 
             <!-- Tab 2: Vào phòng bằng PIN -->
             <div class="lobby-panel" id="lobby-join-panel" style="display: none;">
-                <p class="field-label" style="margin-top: 6px;">Nhập mã PIN 4 chữ số do Host chia sẻ:</p>
-                <input class="text-input" id="join-pin-input" type="text" maxlength="8" placeholder="Nhập mã PIN (Ví dụ: 7788)" style="font-size: 18px; letter-spacing: 2px; text-align: center; text-transform: uppercase;">
-                <div class="join-status-box" id="join-status-display">Chưa kết nối tới phòng nào.</div>
-                <div class="modal-actions">
-                    <button class="btn-primary" id="join-room-btn" type="button">🔗 KẾT NỐI VÀO PHÒNG</button>
+                <p class="field-label" style="margin-top: 6px;">Nhập mã PIN 4 chữ số do Host chia sẻ để vào Phòng Chờ:</p>
+                <div style="display: flex; gap: 8px;">
+                    <input class="text-input" id="join-pin-input" type="text" maxlength="8" placeholder="MÃ PIN (VD: 7788)" style="font-size: 18px; letter-spacing: 2px; text-align: center; text-transform: uppercase; flex: 1;">
+                    <button class="btn-primary" id="join-room-btn" type="button" style="white-space: nowrap;">🔗 VÀO PHÒNG</button>
+                </div>
+                <div class="join-status-box" id="join-status-display">Chưa kết nối tới phòng nào. Nhập mã PIN và bấm Vào Phòng.</div>
+
+                <!-- Danh sách thành viên khi đã kết nối phòng chờ -->
+                <div id="join-room-roster-box" style="margin-top: 12px; display: none;">
+                    <p class="field-label" style="font-size: 11px;">DANH SÁCH THÀNH VIÊN TRONG PHÒNG CHỜ:</p>
+                    <div class="host-player-grid" id="join-player-list"></div>
+                    <div class="waiting-indicator-banner">
+                        <span class="pulse-dot"></span>
+                        <span>ĐANG TRONG PHÒNG CHỜ — ĐỢI HOST PHÁT LỆNH XUẤT KÍCH...</span>
+                    </div>
                 </div>
             </div>
 
