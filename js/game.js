@@ -438,6 +438,10 @@ class TraMocGame {
     }
 
     renderBrief() {
+        const panel = document.getElementById('brief-panel') || this.el.briefPanel;
+        if (!panel) return;
+        this.el.briefPanel = panel;
+
         const ch = this.phase === 'intro' ? null : this.chapter;
 
         if (!ch) {
@@ -448,7 +452,7 @@ class TraMocGame {
                     <p class="brief-text" style="margin:6px 0 0;">${s.desc}</p>
                 </div>`).join('');
 
-            this.el.briefPanel.innerHTML = `
+            panel.innerHTML = `
                 <div class="brief-meta-row">
                     <span class="brief-tag">${GAME_CONFIG.setting}</span>
                     <span class="brief-tag is-stage">${GAME_CONFIG.course}</span>
@@ -464,7 +468,7 @@ class TraMocGame {
             return;
         }
 
-        this.el.briefPanel.innerHTML = `
+        panel.innerHTML = `
             <div class="brief-meta-row">
                 <span class="brief-tag">${ch.place}</span>
                 <span class="brief-tag">${ch.year}</span>
@@ -482,7 +486,7 @@ class TraMocGame {
                 <span>Chương ${ch.id} / ${CHAPTERS.length}</span>
             </div>`;
 
-        this.el.briefPanel.scrollTop = 0;
+        panel.scrollTop = 0;
     }
 
     renderPlay() {
