@@ -553,6 +553,29 @@ class MarketMultiplayer {
                 const speedBonus = Math.round((speed * 0.7 + Math.random() * 0.3) * 450);
                 bot.score += 1000 + speedBonus;
                 bot.streak = (bot.streak || 0) + 1;
+
+                // Đối thủ AI chọn mục tiêu để bắn đạn qua ngôi sao
+                const candidates = Object.keys(this.players).filter(id => id !== bot.id);
+                if (candidates.length) {
+                    const targetId = candidates[Math.floor(Math.random() * candidates.length)];
+                    const targetPlayer = this.players[targetId];
+                    if (targetPlayer) {
+                        const dmg = 15;
+                        const newHp = Math.max(0, (targetPlayer.hp || 100) - dmg);
+                        targetPlayer.hp = newHp;
+
+                        if (targetId === this.playerId) {
+                            this.shield = Math.max(0, this.shield - dmg);
+                            if (typeof this.onAttackedByRival === 'function') {
+                                this.onAttackedByRival(bot.name, dmg, this.shield, bot.id);
+                            }
+                        } else {
+                            if (typeof this.onCompetitorDamaged === 'function') {
+                                this.onCompetitorDamaged(targetId, newHp, dmg, bot.id);
+                            }
+                        }
+                    }
+                }
             } else {
                 bot.streak = 0;
                 bot.hp = Math.max(10, (bot.hp || 100) - 10);

@@ -294,13 +294,14 @@ class TraMocGame {
         };
 
         // Khi bị đối thủ tấn công khiên thị trường
-        window.multiplayer.onAttackedByRival = (attackerName, damage) => {
-            const dmg = damage || 20;
+        window.multiplayer.onAttackedByRival = (attackerName, damage, remainingShield, attackerId) => {
+            const dmg = damage || 15;
             this.robotShield = Math.max(0, this.robotShield - dmg);
             if (this.visuals) {
-                this.visuals.updateRobotShieldDisplay(this.robotShield);
+                const attackerIdx = this.aliensState ? this.aliensState.findIndex((c) => c.id === attackerId || c.name === attackerName) : 0;
+                this.visuals.playAlienRetaliation(attackerIdx >= 0 ? attackerIdx : 0, this.robotShield, dmg);
             }
-            this.spawnToast(`⚠️ Đối thủ ${attackerName} tấn công khiên của bạn (-${dmg} HP)!`, 'is-bad');
+            this.spawnToast(`⚠️ Đối thủ ${attackerName} bắn tia Plasma tấn công khiên của bạn (-${dmg} HP)!`, 'is-bad');
             if (this.robotShield <= 0) {
                 this.robotShield = 100;
                 this.spawnToast('⚠️ Khiên thị trường cạn kiệt! Nạp quỹ dự phòng (+100 HP)', 'is-bad');
@@ -309,13 +310,18 @@ class TraMocGame {
         };
 
         // Khi đối thủ khác bị tấn công mất HP
-        window.multiplayer.onCompetitorDamaged = (targetId, newHp) => {
+        window.multiplayer.onCompetitorDamaged = (targetId, newHp, damage, attackerId) => {
             if (!this.aliensState) return;
-            const idx = this.aliensState.findIndex((c) => c.id === targetId);
-            if (idx !== -1) {
-                this.aliensState[idx].hp = newHp;
+            const targetIdx = this.aliensState.findIndex((c) => c.id === targetId);
+            const attackerIdx = attackerId ? this.aliensState.findIndex((c) => c.id === attackerId) : -1;
+
+            if (targetIdx !== -1) {
+                this.aliensState[targetIdx].hp = newHp;
                 if (this.visuals) {
-                    this.visuals.updateAlienHpDisplay(idx, newHp, newHp <= 0);
+                    if (attackerIdx !== -1 && typeof this.visuals.playCrossfireBetweenRivals === 'function') {
+                        this.visuals.playCrossfireBetweenRivals(attackerIdx, targetIdx, damage || 15);
+                    }
+                    this.visuals.updateAlienHpDisplay(targetIdx, newHp, newHp <= 0);
                 }
             }
         };

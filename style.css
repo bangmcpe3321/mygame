@@ -2936,5 +2936,452 @@ h1, h2, h3 {
     animation: pulse-live 1.2s infinite ease-in-out;
 }
 
+/* ==================================================================
+   BỐ CỤC ĐẤU TRƯỜNG NGÔI SAO 5 CÁNH (5-PLAYER STAR FORMATION ARENA)
+   ================================================================== */
+
+.star-formation-arena {
+    padding: 10px 12px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sân khấu Ngôi Sao 5 Cánh */
+.star-formation-stage {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    margin: 8px auto 6px;
+    overflow: visible;
+}
+
+/* Lưới Dây Laser Ngôi Sao 5 Cánh SVG */
+.star-pentagram-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.star-pentagon-perimeter {
+    fill: rgba(0, 229, 255, 0.02);
+    stroke: rgba(0, 229, 255, 0.25);
+    stroke-width: 1.5;
+    stroke-dasharray: 4, 3;
+    filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.4));
+}
+
+.star-laser-crossbeam {
+    fill: none;
+    stroke: rgba(0, 255, 136, 0.28);
+    stroke-width: 1.8;
+    stroke-dasharray: 6, 4;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+    animation: beam-flow 8s linear infinite;
+}
+
+@keyframes beam-flow {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -100; }
+}
+
+/* Lõi Thị Trường Trung Tâm (Aegis Market Core) */
+.market-star-core {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    transform: translate(-50%, -50%);
+    width: 76px;
+    height: 76px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.core-outer-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1.5px dashed rgba(0, 229, 255, 0.45);
+    border-radius: 50%;
+    animation: spin-slow 16s linear infinite;
+}
+
+.core-middle-ring {
+    position: absolute;
+    width: 78%;
+    height: 78%;
+    border: 1px solid rgba(0, 255, 136, 0.35);
+    border-radius: 50%;
+    animation: spin-reverse 10s linear infinite;
+}
+
+.core-inner-glow {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 136, 0.35) 0%, rgba(0, 229, 255, 0.15) 60%, transparent 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 18px rgba(0, 255, 136, 0.6);
+}
+
+.core-pulse-orb {
+    font-size: 19px;
+    line-height: 1;
+    animation: pulse-core 2s infinite ease-in-out;
+}
+
+.core-title-text {
+    font-family: var(--font-heading);
+    font-size: 7.5px;
+    font-weight: 800;
+    color: #00e5ff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+    margin-top: 3px;
+    white-space: nowrap;
+}
+
+.core-sub-text {
+    font-size: 6.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+}
+
+@keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes pulse-core {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px #00ff88); }
+    50% { transform: scale(1.15); filter: drop-shadow(0 0 14px #00e5ff); }
+}
+
+/* Định vị 5 Thẻ bài trên 5 Đỉnh Ngôi Sao */
+.star-card {
+    position: absolute;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    width: 122px;
+    padding: 7px;
+    border-radius: 11px;
+    cursor: pointer;
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.star-card:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+    z-index: 25;
+}
+
+/* Tọa độ 5 đỉnh ngôi sao đối xứng */
+.star-node-0 {
+    left: 50%;
+    top: 84%;
+}
+
+.star-node-1 {
+    left: 14%;
+    top: 56%;
+}
+
+.star-node-2 {
+    left: 26%;
+    top: 18%;
+}
+
+.star-node-3 {
+    left: 74%;
+    top: 18%;
+}
+
+.star-node-4 {
+    left: 86%;
+    top: 56%;
+}
+
+/* Thẻ của BẠN (Hero Star Card) */
+.hero-star-card {
+    width: 145px;
+    border-color: var(--tech-green) !important;
+    background: linear-gradient(175deg, rgba(4, 25, 15, 0.92) 0%, rgba(2, 14, 8, 0.98) 100%) !important;
+    box-shadow: 0 0 18px rgba(0, 255, 136, 0.28);
+}
+
+.hero-star-card:hover {
+    box-shadow: 0 0 26px var(--tech-green) !important;
+}
+
+.hero-badge-wrap {
+    background: radial-gradient(circle, rgba(0, 255, 136, 0.18) 0%, transparent 70%) !important;
+}
+
+.hero-avatar-icon {
+    filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.6)) !important;
+}
+
+.hero-founder-tag {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0, 255, 136, 0.2);
+    border: 1px solid var(--tech-green);
+    color: var(--tech-green);
+    font-size: 9.5px;
+    font-weight: 800;
+    padding: 1px 6px;
+    border-radius: 5px;
+    letter-spacing: 0.5px;
+}
+
+.hero-shield-fill {
+    background: linear-gradient(90deg, #00b4d8, #00ff88) !important;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.7) !important;
+}
+
+.hero-name-title {
+    color: #e2e8f0;
+    font-weight: 800;
+}
+
+/* Đạn đỏ của Đối thủ khi bắn trả qua ngôi sao */
+.plasma-projectile-bolt.rival-red-bolt {
+    background: linear-gradient(90deg, #ff3366, #ffb703) !important;
+    box-shadow: 0 0 12px #ff3366, 0 0 24px #ffb703 !important;
+}
+
+/* ==================================================================
+   MOBILE UI OPTIMIZATION (HOÀN THIỆN GIAO DIỆN DI ĐỘNG)
+   ================================================================== */
+
+@media (max-width: 768px) {
+    .star-formation-stage {
+        height: 350px;
+    }
+
+    .star-card {
+        width: 100px;
+        padding: 5px;
+    }
+
+    .hero-star-card {
+        width: 120px;
+    }
+
+    .star-card .competitor-avatar-badge {
+        font-size: 38px;
+    }
+
+    .star-card .card-portrait-frame {
+        height: 58px;
+    }
+
+    .game-lower-deck {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .brief-panel, .play-panel {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+@media (max-width: 520px) {
+    /* Header di động gọn gàng */
+    .app-header {
+        padding: 6px 10px !important;
+        gap: 6px !important;
+    }
+
+    .brand-mark {
+        font-size: 16px !important;
+    }
+
+    .brand-title {
+        font-size: 13px !important;
+    }
+
+    .btn-hud {
+        padding: 4px 7px !important;
+        font-size: 10px !important;
+    }
+
+    .btn-hud-label {
+        font-size: 9.5px !important;
+    }
+
+    /* Đấu trường Ngôi Sao trên màn hình điện thoại (360px - 480px) */
+    .star-formation-stage {
+        height: 315px !important;
+        margin: 4px auto !important;
+    }
+
+    .star-card {
+        width: 72px !important;
+        padding: 4px !important;
+        border-radius: 8px !important;
+    }
+
+    .star-card .card-top-bar {
+        display: none !important;
+    }
+
+    .star-card .card-portrait-frame {
+        height: 42px !important;
+        border-radius: 6px !important;
+    }
+
+    .star-card .competitor-avatar-badge {
+        font-size: 26px !important;
+    }
+
+    .star-card .card-name-title {
+        font-size: 8.5px !important;
+        line-height: 1.1 !important;
+        margin: 2px 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 66px !important;
+    }
+
+    .star-card .competitor-hp-box {
+        margin: 2px 0 !important;
+    }
+
+    .star-card .competitor-hp-row {
+        font-size: 7px !important;
+        margin-bottom: 1px !important;
+    }
+
+    .star-card .competitor-hp-row span:first-child {
+        display: none !important;
+    }
+
+    .star-card .competitor-hp-text {
+        font-size: 7.5px !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .star-card .shield-track {
+        height: 3.5px !important;
+    }
+
+    .star-card .card-footer-stats {
+        margin-top: 2px !important;
+    }
+
+    .star-card .stat-pill {
+        font-size: 7.5px !important;
+        padding: 1px 3px !important;
+        letter-spacing: 0 !important;
+    }
+
+    .hero-star-card {
+        width: 86px !important;
+    }
+
+    .hero-star-card .card-name-title {
+        max-width: 78px !important;
+    }
+
+    /* Tọa độ tối ưu cho màn hình hẹp */
+    .star-node-0 {
+        left: 50% !important;
+        top: 86% !important;
+    }
+
+    .star-node-1 {
+        left: 13% !important;
+        top: 58% !important;
+    }
+
+    .star-node-2 {
+        left: 21% !important;
+        top: 18% !important;
+    }
+
+    .star-node-3 {
+        left: 79% !important;
+        top: 18% !important;
+    }
+
+    .star-node-4 {
+        left: 87% !important;
+        top: 58% !important;
+    }
+
+    /* Lõi Thị Trường trên điện thoại */
+    .market-star-core {
+        width: 54px !important;
+        height: 54px !important;
+        top: 48% !important;
+    }
+
+    .core-inner-glow {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .core-pulse-orb {
+        font-size: 14px !important;
+    }
+
+    .core-title-text {
+        font-size: 6px !important;
+    }
+
+    .core-sub-text {
+        display: none !important;
+    }
+
+    /* Nút câu hỏi & Tương tác cảm ứng di động */
+    .question-text {
+        font-size: 14px !important;
+        line-height: 1.45 !important;
+    }
+
+    .option-grid {
+        gap: 8px !important;
+    }
+
+    .option-btn {
+        padding: 11px 12px !important;
+        font-size: 13px !important;
+        min-height: 48px !important;
+    }
+
+    .choice-btn {
+        padding: 10px 12px !important;
+    }
+
+    .arena-footer-tip {
+        font-size: 10px !important;
+        padding: 4px 8px !important;
+    }
+
+    .brief-panel, .play-panel {
+        padding: 12px 14px !important;
+    }
+}
+
+
 
 

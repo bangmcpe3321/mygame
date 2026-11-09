@@ -59,6 +59,309 @@ const ACTS = [
 /* 3. MƯỜI HAI CHƯƠNG                                               */
 /* ---------------------------------------------------------------- */
 
+const QUESTION_BANK = [
+    {
+        "id": 1,
+        "prompt": "Các ý nào dưới đây không đúng?",
+        "options": [
+            "Cổ phiếu và trái phiếu là hàng hoá của thị trường chứng khoán",
+            "Lãi cổ phiếu phụ thuộc kết quả kinh doanh của công ty còn lãi của trái phiếu là đại lượng cố định",
+            "Người mua trái phiếu không là cổ đông",
+            "Cổ phiếu và trái phiếu đều được thanh toán cả gốc và lãi khi đến kỳ hạn."
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 2,
+        "prompt": "Những tiến trình có tính quy luật để chuyển kinh tế hàng hoá giản đơn lên kinh tế TBCN là gì?",
+        "options": [
+            "Cách mạng trong nông nghiệp và trong lực lượng lao động",
+            "Chuyển từ tư hữu nhỏ sang tư hữu lớn TBCN",
+            "Nhà nước đóng vai trò \"bà đỡ\"",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 3,
+        "prompt": "Sở hữu nhà nước được hình thành bằng cách:",
+        "options": [
+            "Xây dựng xí nghiệp nhà nước bằng ngân sách",
+            "Quốc hữu hoá",
+            "Mua cổ phần của doanh nghiệp tư nhân",
+            "Cả a, b, c"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 4,
+        "prompt": "Chọn ý kiến đúng về giá cả ruộng đất và giá cả hàng hoá thông thường",
+        "options": [
+            "Đều là sự biểu hiện bằng tiền của giá trị hàng hoá",
+            "Đều chịu sự ảnh hưởng của quan hệ cung cầu",
+            "Giá trị của chúng đều do lao động xã hội hao phí quyết định",
+            "Cả a, b, c"
+        ],
+        "correctIndex": 1,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 5,
+        "prompt": "Giá cả thị trường của hàng hoá xoay quanh yếu tố nào?",
+        "options": [
+            "Giá trị thị trường",
+            "Giá trị của hàng hoá",
+            "Giá cả sản xuất",
+            "Quan hệ cung cầu hàng hoá"
+        ],
+        "correctIndex": 0,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 6,
+        "prompt": "Tỷ suất lợi tức phụ thuộc vào các nhân tố nào?",
+        "options": [
+            "ý chí của người cho vay",
+            "Yêu cầu bức thiết của người vay",
+            "Tỷ suất lợi nhuận bình quân",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 7,
+        "prompt": "Cơ chế kinh tế của CNTB độc quyền nhà nước gồm:",
+        "options": [
+            "Cơ chế thị trường và độc quyền tư nhân",
+            "Độc quyền tư nhân và sự điều tiết của nhà nước",
+            "Cơ chế thị trường, độc quyền tư nhân và sự can thiệp của nhà nước",
+            "Cơ chế thị trường và sự điều tiết của nhà nước"
+        ],
+        "correctIndex": 2,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 8,
+        "prompt": "Quan hệ cung cầu có ảnh hưởng đến:",
+        "options": [
+            "Tỷ suất lợi nhuận",
+            "Tỷ suất giá trị thặng dư",
+            "Khối lượng giá trị thặng dư",
+            "Cả a, b, c"
+        ],
+        "correctIndex": 0,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 9,
+        "prompt": "Sự ra đời của CNTB độc quyền nhà nước nhằm mục đích:",
+        "options": [
+            "Phục vụ lợi ích của CNTB",
+            "Phục vụ lợi ích của tổ chức độc quyền tư nhân",
+            "Phục vụ lợi ích của nhà nước tư sản",
+            "Phục vụ lợi ích của tổ chức độc quyền tư nhân và cứu nguy cho CNTB"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 10,
+        "prompt": "Quan hệ cung cầu có ảnh hưởng đến:",
+        "options": [
+            "Giá trị hàng hoá",
+            "Giá cả hàng hoá",
+            "Giá trị thặng dư",
+            "Cả a, b, c"
+        ],
+        "correctIndex": 1,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 11,
+        "prompt": "Quy luật giá trị biểu hiện sự vận động thông qua sự vận động của:",
+        "options": [
+            "Giá cả hàng hoá",
+            "Giá cả sản xuất",
+            "Giá cả độc quyền",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 0,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 12,
+        "prompt": "Cổ phiếu và trái phiếu là hình thức đầu tư. Chọn các ý đúng dưới đây:",
+        "options": [
+            "Mua cổ phiếu và trái phiếu đều có thời hạn, hết thời hạn người sở hữu chúng được thanh toán",
+            "Lãi cổ phiếu và trái phiếu đều phụ thuộc kết quả kinh doanh của công ty",
+            "Cổ phiếu và trái phiếu đều có thể đem bán",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 2,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 13,
+        "prompt": "Cổ phiếu và trái phiếu đều là hình thức đầu tư. Chọn ý kiến đúng dưới đây:",
+        "options": [
+            "Đều là đầu tư trực tiếp, dài hạn",
+            "Đều là đầu tư gián tiếp, ngắn hạn",
+            "Cổ phiếu là đầu tư trực tiếp còn trái phiếu là đầu tư gián tiếp",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 2,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 14,
+        "prompt": "Đâu là sự khác nhau giữa địa tô phong kiến và địa tô TBCN?",
+        "options": [
+            "Địa tô phong kiến dựa trên cưỡng bức siêu kinh tế",
+            "Địa tô TBCN dựa trên quan hệ kinh tế",
+            "Địa tô phong kiến là toàn bộ sản phẩm thặng dư của nông dân",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 15,
+        "prompt": "Giá trị xã hội của hàng hoá công nghiệp và nông nghiệp giống nhau ở chỗ dựa trên:",
+        "options": [
+            "Hao phí lao động của người sản xuất hàng hoá",
+            "Hao phí lao động xã hội cần thiết",
+            "Hao phí lao động xã hội trong điều kiện sản xuất trung bình",
+            "Hao phí lao động xã hội trong điều kiện sản xuất khó khăn nhất"
+        ],
+        "correctIndex": 1,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 16,
+        "prompt": "Mua bán ruộng đất và mua bán cổ phiếu có điểm gì giống nhau:",
+        "options": [
+            "Đều không dựa trên cơ sở giá trị",
+            "Đều do quan hệ cung cầu chi phối",
+            "Đều phụ thuộc vào tỷ suất lợi tức tiền gửi ngân hàng",
+            "Cả a, b, c"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 17,
+        "prompt": "Sở hữu độc quyền nhà nước là sự kết hợp của:",
+        "options": [
+            "Sở hữu nhà nước và sở hữu tư nhân TBCN",
+            "Sở hữu nhà nước và sở hữu độc quyền tư nhân",
+            "Sở hữu của nhà nước tư sản",
+            "Sở hữu của nhiều nước tư bản"
+        ],
+        "correctIndex": 1,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 18,
+        "prompt": "Trong lịch sử hình thức can thiệp phi kinh tế là của nhà nước nào?",
+        "options": [
+            "Phong kiến",
+            "CNTB tự do cạnh tranh",
+            "CNTB độc quyền",
+            "Cả a, b, c"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 19,
+        "prompt": "Nhà nước can thiệp vào các khâu nào của quá trình sản xuất?",
+        "options": [
+            "Sản xuất",
+            "Sản xuất và tiêu dùng",
+            "Phân phối và trao đổi",
+            "Sản xuất - phân phối - trao đổi – tiêu dùng"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 20,
+        "prompt": "CNTB độc quyền nhà nước là:",
+        "options": [
+            "Một quan hệ kinh tế, chính trị, xã hội",
+            "Một chính sách trong giai đoạn độc quyền",
+            "Một kiểu tổ chức kinh tế - xã hội",
+            "Một cơ chế điều tiết của nhà nước tư sản"
+        ],
+        "correctIndex": 0,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 21,
+        "prompt": "Khi lạm phát phi mã xảy ra, hình thức sử dụng tiền nào không có lợi?",
+        "options": [
+            "Đầu tư sản xuất kinh doanh",
+            "Gửi ngân hàng",
+            "Cất ở nhà",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 22,
+        "prompt": "Khi lạm phát phi mã xảy ra, hình thức sử dụng tiền nào có lợi nhất?",
+        "options": [
+            "Cất ở nhà",
+            "Gửi ngân hàng",
+            "Đầu tư vào sản xuất kinh doanh",
+            "Mua hàng hoá hoặc vàng cất giữ"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 23,
+        "prompt": "Trong cơ chế của CNTB độc quyền nhà nước thì:",
+        "options": [
+            "Tổ chức độc quyền phụ thuộc vào nhà nước.",
+            "Nhà nước phụ thuộc vào tổ chức độc quyền",
+            "Nhà nước không phụ thuộc vào tổ chức độc quyền",
+            "Nhà nước chi phối tổ chức độc quyền"
+        ],
+        "correctIndex": 1,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 24,
+        "prompt": "Sự phân chia giá trị thặng dư giữa tư bản công nghiệp và tư bản thương nghiệp dựa vào đâu?",
+        "options": [
+            "Khối lượng giá trị thặng dư",
+            "Tỷ suất giá trị thặng dư",
+            "Tỷ suất lợi nhuận",
+            "Tỷ suất lợi nhuận bình quân"
+        ],
+        "correctIndex": 3,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    },
+    {
+        "id": 25,
+        "prompt": "Tỷ suất lợi tức thay đổi trong phạm vi nào?",
+        "options": [
+            "Lớn hơn không (z' >0)",
+            "Bằng tỷ suất lợi nhuận bình quân (z' = p')",
+            "Lớn hơn tỷ suất lợi nhuận bình quân (z' > p')",
+            "Cả a, b và c"
+        ],
+        "correctIndex": 0,
+        "explanation": "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
+    }
+];
+
 const CHAPTERS = [
     {
         id: 1, act: 0, year: 2124, place: 'Aegis-7 · Kho Hàng Số 4', stage: 'Cạnh tranh sinh tồn',
@@ -69,15 +372,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Quản đốc khoang tàu', text: 'Trà Vương trả gấp đôi tín dụng để độc chiếm nguồn năng lượng kho hàng này. Cậu tính sao? Không thì tôi mở cổng cho họ tiếp quản cả dãy.' },
         question: {
-            prompt: 'Cạnh tranh lành mạnh mang lại điều gì cho người tiêu dùng?',
+            prompt: "Các ý nào dưới đây không đúng?",
             options: [
-                'Giá thấp hơn và nhiều lựa chọn hơn',
-                'Giá luôn cao hơn để bù chi phí',
-                'Một thương hiệu duy nhất, dễ tin cậy',
-                'Ít sản phẩm hơn nhưng chất lượng ổn định'
+                "Cổ phiếu và trái phiếu là hàng hoá của thị trường chứng khoán",
+                "Lãi cổ phiếu phụ thuộc kết quả kinh doanh của công ty còn lãi của trái phiếu là đại lượng cố định",
+                "Người mua trái phiếu không là cổ đông",
+                "Cổ phiếu và trái phiếu đều được thanh toán cả gốc và lãi khi đến kỳ hạn."
             ],
-            correctIndex: 0,
-            explanation: 'Cạnh tranh buộc doanh nghiệp cải thiện chất lượng hoặc giảm chi phí. Kết quả thường là giá thấp hơn và nhiều lựa chọn hơn cho người mua.'
+            correctIndex: 3,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -112,15 +415,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Giám đốc Phương Nam Agri', text: 'Aegis-7 là đối tác tiêu thụ lớn của chúng tôi. Tôi không muốn trạm nào khác chen vào. Hợp đồng độc quyền này là cách tốt nhất cho cả hai.' },
         question: {
-            prompt: 'Một doanh nghiệp nắm 80% nguồn cung nguyên liệu có thể làm gì?',
+            prompt: "Những tiến trình có tính quy luật để chuyển kinh tế hàng hoá giản đơn lên kinh tế TBCN là gì?",
             options: [
-                'Chỉ ảnh hưởng tới giá bán lẻ, không tới đối tác',
-                'Tự đặt giá và gây sức ép lên đối tác của mình',
-                'Buộc phải giảm giá để chia sẻ lợi nhuận',
-                'Mất quyền quyết định giá vì bị giám sát'
+                "Cách mạng trong nông nghiệp và trong lực lượng lao động",
+                "Chuyển từ tư hữu nhỏ sang tư hữu lớn TBCN",
+                "Nhà nước đóng vai trò \"bà đỡ\"",
+                "Cả a, b và c"
             ],
-            correctIndex: 1,
-            explanation: 'Độc quyền tư nhân hình thành khi một doanh nghiệp kiểm soát phần lớn thị trường hoặc nguồn cung. Vị thế đó cho phép họ tự đặt giá và gây sức ép lên đối tác.'
+            correctIndex: 3,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -155,15 +458,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'CEO Trà Vương', text: 'Cô đang thắng ở một khoang tàu nhỏ. Tôi đang mời cô làm chủ thị trường toàn Vành Đai. Đừng để cái tôi cá nhân tiêu diệt con tàu này.' },
         question: {
-            prompt: 'Thương vụ mua lại giúp mở rộng thị phần nhanh, nhưng kèm rủi ro gì?',
+            prompt: "Sở hữu nhà nước được hình thành bằng cách:",
             options: [
-                'Không có rủi ro nếu hai bên tự nguyện',
-                'Tạo vị thế thống lĩnh và bị cơ quan cạnh tranh xem xét',
-                'Luôn làm giảm thị phần của bên mua',
-                'Chỉ bị xem xét khi giá trị hợp đồng quá nhỏ'
+                "Xây dựng xí nghiệp nhà nước bằng ngân sách",
+                "Quốc hữu hoá",
+                "Mua cổ phần của doanh nghiệp tư nhân",
+                "Cả a, b, c"
             ],
-            correctIndex: 1,
-            explanation: 'Sáp nhập có thể mang lại hiệu quả thật, nhưng nếu khiến thị trường chỉ còn vài người chơi hoặc đẩy đối thủ nhỏ ra ngoài, nó trở thành vấn đề cạnh tranh.'
+            correctIndex: 3,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -199,16 +502,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Quản lý khoang hàng', text: 'Những người sống sót đang hoảng loạn, họ không quan tâm ai bền vững hơn. Họ chỉ nhìn vào con số trên bảng giá.' },
         question: {
-            prompt: 'Bán dưới chi phí để loại đối thủ rồi nâng giá trở lại gọi là gì?',
+            prompt: "Chọn ý kiến đúng về giá cả ruộng đất và giá cả hàng hoá thông thường",
             options: [
-                'Chiến tranh giá',
-                'Bán phá giá',
-                'Thao túng giá',
-                'Giảm giá khai trương'
+                "Đều là sự biểu hiện bằng tiền của giá trị hàng hoá",
+                "Đều chịu sự ảnh hưởng của quan hệ cung cầu",
+                "Giá trị của chúng đều do lao động xã hội hao phí quyết định",
+                "Cả a, b, c"
             ],
             correctIndex: 1,
-            explanation: 'Bán phá giá là bán dưới chi phí nhằm loại đối thủ, sau đó nâng giá. Ranh giới nằm ở ý định và khả năng bù lỗ kéo dài.',
-            insightCard: 'thi-phan'
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -244,16 +546,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Trưởng phòng truyền thông', text: 'Chúng ta có ba lựa chọn: công khai minh bạch sự thật, dùng tiền bịt miệng truyền thông, hoặc phản đòn tờ báo. Quyết định đi, nhưng mọi vết tích số đều không thể xóa bỏ.' },
         question: {
-            prompt: 'Điều gì khiến niềm tin người tiêu dùng trở thành tài sản chiến lược?',
+            prompt: "Giá cả thị trường của hàng hoá xoay quanh yếu tố nào?",
             options: [
-                'Nó được ghi nhận trong bảng cân đối kế toán',
-                'Nó quyết định việc khách có quay lại hay không',
-                'Nó giúp công ty không bị thanh tra',
-                'Nó chỉ có giá trị với doanh nghiệp nhà nước'
+                "Giá trị thị trường",
+                "Giá trị của hàng hoá",
+                "Giá cả sản xuất",
+                "Quan hệ cung cầu hàng hoá"
             ],
-            correctIndex: 1,
-            explanation: 'Niềm tin quyết định việc khách hàng có tiếp tục mua khi có lựa chọn khác hay không. Một khi mất niềm tin, chi phí giành lại thường lớn hơn chi phí phòng ngừa rất nhiều.',
-            insightCard: 'niem-tin'
+            correctIndex: 0,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -289,15 +590,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Vị đại diện Hội đồng', text: 'Chúng tôi không cần cô lớn nhanh. Chúng tôi cần sự ổn định tuyệt đối. Hội đồng chịu trách nhiệm về mạng sống của hàng triệu công dân ngoài vành đai, cô hiểu chứ?' },
         question: {
-            prompt: 'Độc quyền nhà nước có thể ổn định an sinh, nhưng thường kèm hệ quả nào?',
+            prompt: "Tỷ suất lợi tức phụ thuộc vào các nhân tố nào?",
             options: [
-                'Doanh nghiệp luôn có nhiều động lực đổi mới hơn',
-                'Thiếu cạnh tranh có thể dẫn tới kém hiệu quả và chi phí cao',
-                'Giá cả luôn tự động giảm theo thị trường tự do',
-                'Không cần bất kỳ sự giám sát nào từ cơ quan quản lý'
+                "ý chí của người cho vay",
+                "Yêu cầu bức thiết của người vay",
+                "Tỷ suất lợi nhuận bình quân",
+                "Cả a, b và c"
             ],
-            correctIndex: 1,
-            explanation: 'Độc quyền nhà nước bảo đảm an sinh xã hội nhưng nếu thiếu cơ chế kiểm soát, dễ dẫn đến quan liêu, kém linh hoạt và chi phí vận hành phình to.'
+            correctIndex: 3,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -333,15 +634,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Đại diện nghiệp đoàn', text: 'Chúng tôi không đòi công ty nhỏ lại. Chúng tôi chỉ muốn phần lớn lên đó cũng đến được với người làm ra nó.' },
         question: {
-            prompt: 'Trách nhiệm xã hội của doanh nghiệp chủ yếu là gì?',
+            prompt: "Cơ chế kinh tế của CNTB độc quyền nhà nước gồm:",
             options: [
-                'Tối đa hóa lợi nhuận bằng mọi giá để nộp thuế',
-                'Chỉ cần tuân thủ tối thiểu quy định pháp luật hiện hành',
-                'Cân bằng lợi nhuận với phúc lợi người lao động và cộng đồng',
-                'Hoạt động từ thiện để đánh bóng hình ảnh thương hiệu'
+                "Cơ chế thị trường và độc quyền tư nhân",
+                "Độc quyền tư nhân và sự điều tiết của nhà nước",
+                "Cơ chế thị trường, độc quyền tư nhân và sự can thiệp của nhà nước",
+                "Cơ chế thị trường và sự điều tiết của nhà nước"
             ],
             correctIndex: 2,
-            explanation: 'Trách nhiệm xã hội đòi hỏi doanh nghiệp không chỉ theo đuổi lợi nhuận đơn thuần mà phải chăm lo cho người lao động, môi trường và cộng đồng xung quanh.'
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -376,15 +677,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Chủ quầy Hạt Mầm', text: 'Tôi trả phí để được bán. Nhưng cái cửa cô mở ra lại chỉ dẫn khách về phía cô.' },
         question: {
-            prompt: 'Nền tảng ưu tiên gian hàng của chính mình là biểu hiện của gì?',
+            prompt: "Quan hệ cung cầu có ảnh hưởng đến:",
             options: [
-                'Cạnh tranh hoàn hảo trên thị trường tự do',
-                'Xung đột lợi ích và lạm dụng vị thế kép trên nền tảng',
-                'Hành vi bình thường không gây ảnh hưởng tới đối tác',
-                'Biện pháp bảo vệ quyền lợi người tiêu dùng'
+                "Tỷ suất lợi nhuận",
+                "Tỷ suất giá trị thặng dư",
+                "Khối lượng giá trị thặng dư",
+                "Cả a, b, c"
             ],
-            correctIndex: 1,
-            explanation: 'Vừa vận hành sân chơi vừa làm cầu thủ khiến nền tảng có động cơ ưu ái sản phẩm của mình, bóp nghẹt cơ hội của các bên thứ ba.'
+            correctIndex: 0,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -420,15 +721,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'CEO một chuỗi đối thủ', text: 'Không ai thiệt cả. Chỉ là ba người lớn ngồi lại với nhau thôi.' },
         question: {
-            prompt: 'Vì sao cartel thường mong manh?',
+            prompt: "Sự ra đời của CNTB độc quyền nhà nước nhằm mục đích:",
             options: [
-                'Vì các thành viên luôn có động cơ bí mật phá giá để giành thêm thị phần',
-                'Vì pháp luật luôn cho phép nên không có áp lực',
-                'Vì chi phí duy trì cartel luôn cao hơn lợi nhuận thu được',
-                'Vì người tiêu dùng không thể nhận biết được sự cấu kết'
+                "Phục vụ lợi ích của CNTB",
+                "Phục vụ lợi ích của tổ chức độc quyền tư nhân",
+                "Phục vụ lợi ích của nhà nước tư sản",
+                "Phục vụ lợi ích của tổ chức độc quyền tư nhân và cứu nguy cho CNTB"
             ],
-            correctIndex: 0,
-            explanation: 'Cartel luôn đối mặt với vấn đề phản bội nội bộ: mỗi bên đều muốn lén bán nhiều hơn ở mức giá cao, khiến thỏa thuận dễ vỡ từ bên trong.'
+            correctIndex: 3,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -464,15 +765,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Trưởng đoàn điều tra', text: 'Chúng tôi không tìm cách phá doanh nghiệp. Chúng tôi đang kiểm tra xem cạnh tranh còn thở được không.' },
         question: {
-            prompt: 'Luật chống độc quyền trừng phạt điều gì?',
+            prompt: "Quan hệ cung cầu có ảnh hưởng đến:",
             options: [
-                'Việc doanh nghiệp đạt quy mô quá lớn',
-                'Hành vi lạm dụng sức mạnh thị trường để ngăn cản cạnh tranh',
-                'Tất cả các thương vụ sáp nhập giữa các doanh nghiệp',
-                'Mọi hình thức giảm giá để thu hút khách hàng'
+                "Giá trị hàng hoá",
+                "Giá cả hàng hoá",
+                "Giá trị thặng dư",
+                "Cả a, b, c"
             ],
             correctIndex: 1,
-            explanation: 'Quy mô lớn là kết quả của thành công và không phải là tội. Luật chỉ xử lý khi doanh nghiệp dùng quy mô đó để bóp nghẹt thị trường.'
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -508,15 +809,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Vị đại diện Hội đồng', text: 'Cô có thể tiếp tục lớn cho đến khi có người chặn cô. Hoặc cô có thể giúp viết cái hàng rào mà sau này chính cô cũng muốn sống bên trong.' },
         question: {
-            prompt: 'Điểm khác biệt cốt lõi giữa liên minh cạnh tranh và cartel là gì?',
+            prompt: "Quy luật giá trị biểu hiện sự vận động thông qua sự vận động của:",
             options: [
-                'Không có điểm khác biệt, cả hai đều bất hợp pháp',
-                'Liên minh tạo giá trị mới; cartel chỉ chia chác giá trị hiện có',
-                'Cartel luôn được nhà nước khuyến khích hơn liên minh',
-                'Liên minh chỉ dành cho các doanh nghiệp quy mô nhỏ'
+                "Giá cả hàng hoá",
+                "Giá cả sản xuất",
+                "Giá cả độc quyền",
+                "Cả a, b và c"
             ],
-            correctIndex: 1,
-            explanation: 'Liên minh hợp tác để làm chiếc bánh to hơn (R&D, chuẩn hóa); cartel câu kết để chia nhau chiếc bánh mà không tạo ra thêm giá trị nào.'
+            correctIndex: 0,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {
@@ -552,15 +853,15 @@ const CHAPTERS = [
         ],
         dialogue: { speaker: 'Hệ thống AI Trung Tâm Aegis-7', text: 'Nữ Chúa đã bị tiêu diệt. Bàn điều khiển sẵn sàng. Xin hãy xác nhận triết lý vận hành cốt lõi trước khi kích hoạt Hải Đăng Cứu Hộ S.O.S.' },
         question: {
-            prompt: 'Lợi thế cạnh tranh bền vững nhất đến từ đâu?',
+            prompt: "Cổ phiếu và trái phiếu là hình thức đầu tư. Chọn các ý đúng dưới đây:",
             options: [
-                'Triệt tiêu toàn bộ đối thủ để độc chiếm thị trường',
-                'Năng lực đổi mới liên tục và niềm tin của người tiêu dùng',
-                'Sự bảo hộ tuyệt đối và vĩnh viễn từ nhà nước',
-                'Việc sở hữu nguồn vốn lớn nhất trong ngành'
+                "Mua cổ phiếu và trái phiếu đều có thời hạn, hết thời hạn người sở hữu chúng được thanh toán",
+                "Lãi cổ phiếu và trái phiếu đều phụ thuộc kết quả kinh doanh của công ty",
+                "Cổ phiếu và trái phiếu đều có thể đem bán",
+                "Cả a, b và c"
             ],
-            correctIndex: 1,
-            explanation: 'Vốn, sự bảo hộ hay rào cản đều có thể xói mòn theo thời gian. Chỉ có đổi mới không ngừng và niềm tin người mua mới tạo nên sức mạnh trường tồn.'
+            correctIndex: 2,
+            explanation: "Đáp án chính xác theo giáo trình Kinh tế chính trị Mác – Lênin."
         },
         choices: [
             {

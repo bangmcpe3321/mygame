@@ -58,84 +58,55 @@ class VisualEngine {
         this.autoSelectFirstAliveTarget();
 
         const arenaHtml = `
-            <div class="scifi-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(3, 10, 6, 0.7), rgba(3, 10, 6, 0.85)), url('${config.bg}');">
-                <!-- Dải HUD nhận diện Tàu Vận Tải Trà Mộc gặp nạn -->
+            <div class="scifi-arena star-formation-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(3, 10, 6, 0.75), rgba(3, 10, 6, 0.9)), url('${config.bg}');">
+                <!-- Dải HUD nhận diện Tàu Vận Tải Trà Mộc -->
                 <div class="tea-freighter-hud-bar">
-                    <div class="tea-freighter-tag"><span class="tea-icon">🍃</span> TÀU VẬN TẢI TRÀ MỘC · AEGIS-7</div>
-                    <div class="tea-freighter-status"><span class="pulse-dot"></span> BÁO ĐỘNG HỎA HOẠN: RÒ RỈ TINH DẦU TRÀ THỦY CANH // DỊ VẬT XÂM NHẬP KHOANG</div>
-                    <div class="tea-cargo-label">CONTAINER #TM-07 [THỦNG VỎ]</div>
+                    <div class="tea-freighter-tag"><span class="tea-icon">🍃</span> ĐẤU TRƯỜNG 5 NGƯỜI · TRÀ MỘC AEGIS-7</div>
+                    <div class="tea-freighter-status"><span class="pulse-dot"></span> ĐỐI KHÁNG THỊ TRƯỜNG NGÔI SAO 5 CÁNH // REAL-TIME STAR ARENA</div>
+                    <div class="tea-cargo-label">BỐ CỤC NGŨ GIÁC SAO</div>
                 </div>
 
                 <!-- Header thông tin chiến trường -->
                 <div class="arena-header-banner">
-                    <div class="sector-code-badge">SECTOR 0${sectorIndex + 1} // ACTIVE</div>
+                    <div class="sector-code-badge">SECTOR 0${sectorIndex + 1} // STAR ARENA</div>
                     <div class="sector-titles-wrap">
                         <h2 class="sector-title">${config.name}</h2>
                         <span class="sector-subtitle">${config.sub}</span>
                     </div>
-                    <div class="combat-mode-badge">TURN-BASED CARD RPG</div>
+                    <div class="combat-mode-badge">5-PLAYER BATTLE ROYALE</div>
                 </div>
 
-                <!-- Đấu trường Thẻ bài: Bên trái Robot - Bên phải Đội quân Dị vật -->
-                <div class="arena-battlefield">
-                    <!-- 1. BÊN TRÁI: THẺ BÀI ROBOT CHIẾN ĐẤU UNIT-07 (PLAYER HERO CARD) -->
-                    <div class="hero-combatant-zone" id="robot-hero-zone">
-                        <div class="tactical-card hero-battle-card" id="robot-card">
-                            <!-- Header thẻ bài -->
-                            <div class="card-top-bar">
-                                <span class="card-type-tag hero-tag">UNIT-07 // TRÀ MỘC DEFENDER</span>
-                                <span class="card-rarity">SSR ★★★★★</span>
-                            </div>
+                <!-- ĐẤU TRƯỜNG HÌNH NGÔI SAO 5 CÁNH (STAR FORMATION STAGE) -->
+                <div class="star-formation-stage" id="star-formation-stage">
+                    <!-- Dây truyền dẫn năng lượng & lưới laser ngôi sao 5 cánh SVG -->
+                    <svg class="star-pentagram-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <!-- Đường bao ngũ giác quanh 5 đỉnh -->
+                        <polygon class="star-pentagon-perimeter" points="50,84 14,56 26,18 74,18 86,56" />
+                        <!-- 5 dây chéo tạo hình ngôi sao 5 cánh xuyên tâm -->
+                        <polyline class="star-laser-crossbeam" points="50,84 26,18 86,56 14,56 74,18 50,84" />
+                    </svg>
 
-                            <!-- Khung tranh AI Robot -->
-                            <div class="card-portrait-frame">
-                                <div class="card-corner-bracket top-left"></div>
-                                <div class="card-corner-bracket top-right"></div>
-                                <div class="card-corner-bracket bottom-left"></div>
-                                <div class="card-corner-bracket bottom-right"></div>
-                                
-                                <img src="assets/robot_hero.jpg" alt="Unit-07 Combat Robot" class="card-art-img" id="robot-sprite-img" />
-                                <div class="card-scanline"></div>
-                                <div class="muzzle-flash-anchor" id="robot-muzzle"></div>
-                                <div class="shield-energy-bubble" id="robot-shield-bubble"></div>
-                            </div>
-                            
-                            <!-- Bảng chỉ số thẻ bài Robot -->
-                            <div class="card-stats-panel">
-                                <div class="card-name-title">ROBOT BẢO AN [TRÀ MỘC · UNIT-07]</div>
-                                
-                                <!-- Thanh Khiên & Máu Năng Lượng 200 HP -->
-                                <div class="shield-bar-container">
-                                    <div class="shield-label-row">
-                                        <span>🛡️ KHIÊN NĂNG LƯỢNG SINH THÁI</span>
-                                        <span id="robot-shield-text">${robotShield}/200 HP</span>
-                                    </div>
-                                    <div class="shield-track">
-                                        <div class="shield-fill" id="robot-shield-bar" style="width: ${Math.min(100, (Math.max(0, robotShield) / 200) * 100)}%;"></div>
-                                    </div>
-                                </div>
-
-                                <div class="card-footer-stats">
-                                    <span class="stat-pill atk-pill">⚡ PLASMA BLASTER // CỐT TRÀ NĂNG LƯỢNG</span>
-                                </div>
-                            </div>
+                    <!-- LÕI THỊ TRƯỜNG TRUNG TÂM (AEGIS MARKET CORE) -->
+                    <div class="market-star-core" id="market-star-core" title="Lõi Thị Trường / Aegis Market Core">
+                        <div class="core-outer-ring"></div>
+                        <div class="core-middle-ring"></div>
+                        <div class="core-inner-glow">
+                            <span class="core-pulse-orb">⚛️</span>
                         </div>
+                        <div class="core-title-text">LÕI THỊ TRƯỜNG</div>
+                        <div class="core-sub-text">AEGIS CORE</div>
                     </div>
 
-                    <!-- VÙNG CHIẾN ĐẤU GIỮA: HIỆU ỨNG TIA LASER & ĐẠN ĐẠO -->
-                    <div class="combat-crossfire-zone" id="crossfire-zone"></div>
+                    <!-- 1. ĐỈNH DƯỚI (NODE 0): THẺ CỦA BẠN (PLAYER HERO STAR CARD) -->
+                    ${this.generateHeroStarCardHTML(robotShield)}
 
-                    <!-- 2. BÊN PHẢI: ĐỘI QUÂN THẺ BÀI DỊ VẬT NGOÀI HÀNH TINH (ALIEN SQUAD CARDS) -->
-                    <div class="aliens-combatant-zone" id="aliens-squad-zone">
-                        <div class="aliens-formation-grid ${sectorIndex === 2 ? 'boss-formation' : ''}" id="aliens-grid">
-                            ${this.generateAliensHTML()}
-                        </div>
-                    </div>
+                    <!-- 2. BỐN ĐỈNH CÒN LẠI (NODES 1..4): 4 ĐỐI THỦ THƯƠNG TRƯỜNG -->
+                    ${this.generateStarCompetitorsHTML()}
                 </div>
 
                 <!-- Bảng nhắc chiến thuật -->
                 <div class="arena-footer-tip" id="arena-tip">
-                    <span>💡 Bấm vào một Thẻ bài Quái vật để khóa mục tiêu (Target Lock). Trả lời đúng để nạp đạn Plasma tiêu diệt mục tiêu!</span>
+                    <span>💡 Bấm vào một Thẻ Đối Thủ để Khóa Mục Tiêu (Target Lock). Trả lời đúng để bắn tia Plasma Blaster xuyên tâm ngôi sao!</span>
                 </div>
             </div>
         `;
@@ -145,97 +116,77 @@ class VisualEngine {
     }
 
     /**
-     * Sinh mã HTML cho danh sách Thẻ bài Quái vật
+     * Sinh mã HTML cho Thẻ bài của Bản Thân (Hero Star Card - Đỉnh dưới Node 0)
      */
-    generateAliensHTML() {
+    generateHeroStarCardHTML(robotShield) {
+        const playerName = window.multiplayer ? window.multiplayer.playerName : 'Unit-07';
+        const playerAvatar = window.multiplayer ? window.multiplayer.playerAvatar : '🤖';
+        const safeShield = Math.max(0, robotShield);
+        const shieldPct = Math.min(100, (safeShield / 200) * 100);
+
+        return `
+            <div class="tactical-card star-card hero-star-card star-node-0" id="robot-card" title="Vị trí của bạn (Founder Unit-07)">
+                <div class="card-top-bar">
+                    <span class="card-type-tag hero-tag">👑 BẠN // FOUNDER</span>
+                    <span class="card-rarity">RANK #1</span>
+                </div>
+                <div class="card-portrait-frame">
+                    <div class="card-corner-bracket top-left"></div>
+                    <div class="card-corner-bracket top-right"></div>
+                    <div class="card-corner-bracket bottom-left"></div>
+                    <div class="card-corner-bracket bottom-right"></div>
+
+                    <div class="competitor-avatar-badge-wrap hero-badge-wrap">
+                        <span class="competitor-avatar-badge hero-avatar-icon">${playerAvatar}</span>
+                        <div class="hero-founder-tag">BẠN</div>
+                    </div>
+                    <div class="card-scanline"></div>
+                    <div class="muzzle-flash-anchor" id="robot-muzzle"></div>
+                    <div class="shield-energy-bubble" id="robot-shield-bubble"></div>
+                </div>
+                <div class="card-stats-panel">
+                    <div class="card-name-title hero-name-title">${playerName}</div>
+                    <div class="competitor-hp-box">
+                        <div class="competitor-hp-row">
+                            <span>🛡️ KHIÊN NĂNG LƯỢNG</span>
+                            <span class="competitor-hp-text hero-shield-text" id="robot-shield-text">${safeShield}/200 HP</span>
+                        </div>
+                        <div class="shield-track">
+                            <div class="shield-fill hero-shield-fill" id="robot-shield-bar" style="width: ${shieldPct}%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-footer-stats">
+                        <span class="stat-pill atk-pill">⚡ SÚNG PLASMA BLASTER</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Sinh mã HTML cho 4 Thẻ bài Đối thủ trên 4 đỉnh ngôi sao (Nodes 1..4)
+     */
+    generateStarCompetitorsHTML() {
+        const nodeClasses = ['star-node-1', 'star-node-2', 'star-node-3', 'star-node-4'];
+
         return this.aliens.map((alien, index) => {
             const isDead = alien.hp <= 0;
             const isTargeted = index === this.currentTargetIndex && !isDead;
-            const isQueen = alien.type === 'queen';
-            const isLarge = alien.type === 'large';
-            const isRival = alien.type === 'rival' || alien.isPlayer || typeof alien.avatar !== 'undefined';
-            
-            let cardClass = `tactical-card alien-battle-card card-${alien.type || 'rival'}`;
+            const nodeClass = nodeClasses[index] || `star-node-${index + 1}`;
+            const maxHp = alien.maxHp || 100;
+            const curHp = Math.max(0, typeof alien.hp === 'number' ? alien.hp : maxHp);
+            const hpPercent = Math.min(100, Math.max(0, (curHp / maxHp) * 100));
+
+            let cardClass = `tactical-card star-card competitor-card competitor-star-card alien-battle-card ${nodeClass}`;
             if (isDead) cardClass += ' is-destroyed';
             if (isTargeted) cardClass += ' is-target-locked';
-            if (isRival) cardClass += ' competitor-card';
 
-            // Thông tin vai trò & Rarity
-            let typeTag = 'TIỂU DỊ VẬT // DRONE';
-            let rarity = 'COMMON ★';
-            let atkText = '⚔️ CÀO CẮN: 15 DMG';
-
-            if (isRival) {
-                typeTag = alien.isPlayer ? `NGƯỜI CHƠI 0${index + 2} // THỰC` : `TẬP ĐOÀN // AI RIVAL`;
-                rarity = `RANK #${index + 2}`;
-                atkText = '⚔️ TRANH ĐOẠT: 25 DMG';
-            } else if (isLarge) {
-                typeTag = 'CHIẾN BINH GAI // BRUTE';
-                rarity = 'ELITE ★★★';
-                atkText = '⚔️ ĐUÔI GAI: 15 DMG';
-            } else if (isQueen) {
-                typeTag = 'NỮ CHÚA XENOMORPH // BOSS';
-                rarity = 'LEGENDARY ★★★★★';
-                atkText = '☣️ PHUN ACID: 15 DMG';
-            }
-
-            // Thanh máu của thẻ bài
-            let hpIndicatorsHtml = '';
-            if (isRival) {
-                const hpPercent = Math.min(100, Math.max(0, (alien.hp / alien.maxHp) * 100));
-                hpIndicatorsHtml = `
-                    <div class="competitor-hp-box">
-                        <div class="competitor-hp-row">
-                            <span>🛡️ KHIÊN THỊ TRƯỜNG</span>
-                            <span class="competitor-hp-text" id="alien-hp-text-${index}">${alien.hp}/${alien.maxHp} HP</span>
-                        </div>
-                        <div class="shield-track">
-                            <div class="shield-fill ${alien.hp <= 30 ? 'danger' : alien.hp <= 60 ? 'warn' : ''}" id="alien-hp-bar-${index}" style="width: ${hpPercent}%;"></div>
-                        </div>
-                    </div>
-                `;
-            } else if (isQueen) {
-                const hpPercent = (alien.hp / alien.maxHp) * 100;
-                hpIndicatorsHtml = `
-                    <div class="queen-boss-hp-box">
-                        <div class="boss-hp-header">
-                            <span class="boss-crown">👑 MÁU NỮ CHÚA</span>
-                            <span class="boss-hp-val">${alien.hp} / ${alien.maxHp} HP</span>
-                        </div>
-                        <div class="queen-hp-track">
-                            <div class="queen-hp-fill" id="alien-hp-bar-${index}" style="width: ${hpPercent}%;"></div>
-                        </div>
-                        <div class="queen-hp-pips">
-                            ${Array.from({ length: alien.maxHp }).map((_, i) => `
-                                <span class="hp-pip ${i < alien.hp ? 'pip-full' : 'pip-empty'}"></span>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (isLarge) {
-                hpIndicatorsHtml = `
-                    <div class="alien-hp-row">
-                        <div class="hp-pips-group">
-                            ${Array.from({ length: alien.maxHp }).map((_, i) => `
-                                <span class="hp-heart ${i < alien.hp ? 'heart-full' : 'heart-empty'}">🩸</span>
-                            `).join('')}
-                        </div>
-                        <span class="hp-number">${alien.hp}/${alien.maxHp} HP</span>
-                    </div>
-                `;
-            } else {
-                hpIndicatorsHtml = `
-                    <div class="alien-hp-row">
-                        <div class="hp-pips-group">
-                            <span class="hp-heart ${alien.hp > 0 ? 'heart-full' : 'heart-empty'}">🩸</span>
-                        </div>
-                        <span class="hp-number">${alien.hp}/${alien.maxHp} HP</span>
-                    </div>
-                `;
-            }
+            const typeTag = alien.isPlayer ? `NGƯỜI CHƠI 0${index + 2}` : `TẬP ĐOÀN // AI`;
+            const rarity = `RANK #${index + 2}`;
+            const avatar = alien.avatar || '⚔️';
 
             return `
-                <div class="${cardClass}" id="alien-card-${index}" data-alien-index="${index}" title="Bấm để nhắm bắn đối thủ này">
+                <div class="${cardClass}" id="alien-card-${index}" data-alien-index="${index}" title="Bấm để nhắm bắn đối thủ này (${alien.name})">
                     <!-- Tâm ngắm khóa mục tiêu công nghệ xanh lá -->
                     <div class="target-crosshair-lock">
                         <span class="crosshair-bracket top-left"></span>
@@ -251,41 +202,48 @@ class VisualEngine {
                         <span class="card-rarity">${rarity}</span>
                     </div>
 
-                    <!-- Khung ảnh tranh thẻ bài -->
+                    <!-- Khung ảnh Avatar Đối Thủ -->
                     <div class="card-portrait-frame">
                         <div class="card-corner-bracket top-left"></div>
                         <div class="card-corner-bracket top-right"></div>
                         <div class="card-corner-bracket bottom-left"></div>
                         <div class="card-corner-bracket bottom-right"></div>
 
-                        ${isRival && alien.avatar ? `
-                            <div class="competitor-avatar-badge-wrap">
-                                <span class="competitor-avatar-badge">${alien.avatar}</span>
-                                <div class="competitor-rank-pill">#${alien.rank || (index + 2)}</div>
-                            </div>
-                        ` : `
-                            <img src="${alien.image}" alt="${alien.name}" class="card-art-img" id="alien-img-${index}" />
-                        `}
+                        <div class="competitor-avatar-badge-wrap">
+                            <span class="competitor-avatar-badge">${avatar}</span>
+                            <div class="competitor-rank-pill">#${index + 2}</div>
+                        </div>
                         <div class="card-scanline"></div>
-                        ${isDead ? '<div class="destroyed-stamp">' + (isRival ? 'TÁI CƠ CẤU' : 'ĐÃ TIÊU DIỆT') + '</div>' : ''}
+                        ${isDead ? '<div class="destroyed-stamp">TÁI CƠ CẤU</div>' : ''}
                     </div>
 
                     <!-- Tên & Chỉ số Thẻ bài -->
                     <div class="card-stats-panel">
                         <div class="card-name-title">${alien.name}</div>
-                        ${hpIndicatorsHtml}
+                        <div class="competitor-hp-box">
+                            <div class="competitor-hp-row">
+                                <span>🛡️ KHIÊN THỊ TRƯỜNG</span>
+                                <span class="competitor-hp-text" id="alien-hp-text-${index}">${curHp}/${maxHp} HP</span>
+                            </div>
+                            <div class="shield-track">
+                                <div class="shield-fill ${curHp <= 30 ? 'danger' : curHp <= 60 ? 'warn' : ''}" id="alien-hp-bar-${index}" style="width: ${hpPercent}%;"></div>
+                            </div>
+                        </div>
                         <div class="card-footer-stats">
-                            ${isRival && typeof alien.score !== 'undefined' ? `
-                                <span class="stat-pill score-pill">⭐ ${(alien.score || 0).toLocaleString('vi-VN')} đ</span>
-                                <span class="stat-pill streak-pill">🔥 x${alien.streak || 0}</span>
-                            ` : `
-                                <span class="stat-pill monster-atk-pill">${atkText}</span>
-                            `}
+                            <span class="stat-pill score-pill">⭐ ${(alien.score || 0).toLocaleString('vi-VN')} đ</span>
+                            <span class="stat-pill streak-pill">🔥 x${alien.streak || 0}</span>
                         </div>
                     </div>
                 </div>
             `;
         }).join('');
+    }
+
+    /**
+     * Sinh mã HTML cho danh sách Thẻ bài (Tương thích ngược)
+     */
+    generateAliensHTML() {
+        return this.generateStarCompetitorsHTML();
     }
 
     /**
@@ -482,6 +440,30 @@ class VisualEngine {
             setTimeout(() => attackerCard.classList.remove('alien-lunge-attack'), 500);
         }
 
+        // Bắn tia đạn đỏ từ đối thủ xuyên tâm ngôi sao tới Bạn
+        if (attackerCard && robotCard) {
+            const startPos = this.getElementCenter(attackerCard);
+            const endPos = this.getElementCenter(robotCard);
+            const deltaX = endPos.x - startPos.x;
+            const deltaY = endPos.y - startPos.y;
+            const angleDeg = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+            const bolt = document.createElement('div');
+            bolt.className = 'plasma-projectile-bolt rival-red-bolt';
+            bolt.style.left = `${startPos.x}px`;
+            bolt.style.top = `${startPos.y}px`;
+            bolt.style.transform = `rotate(${angleDeg}deg)`;
+            document.body.appendChild(bolt);
+
+            if (bolt.animate) {
+                bolt.animate([
+                    { transform: `translate(0, 0) rotate(${angleDeg}deg)`, opacity: 1 },
+                    { transform: `translate(${deltaX}px, ${deltaY}px) rotate(${angleDeg}deg)`, opacity: 1 }
+                ], { duration: 250, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+            }
+            setTimeout(() => { if (bolt.parentNode) bolt.parentNode.removeChild(bolt); }, 250);
+        }
+
         const sound = window.soundSystem || window.audio;
         try {
             if (sound && sound.playAlienAttack) sound.playAlienAttack();
@@ -511,6 +493,7 @@ class VisualEngine {
 
             // Hiện chữ mất khiên
             const robotPos = this.getElementCenter(robotImg || robotCard);
+            this.createImpactBlast(robotPos.x, robotPos.y);
             this.showFloatingCombatText(robotPos.x, robotPos.y - 40, `-${damage} SHIELD!`, 'hero-damage-text');
 
             // Cập nhật thanh giáp của Robot
@@ -518,7 +501,53 @@ class VisualEngine {
 
             this.isAnimating = false;
             if (callback) callback();
-        }, 300);
+        }, 250);
+    }
+
+    /**
+     * HOẠT ẢNH BẮN ĐẠN CHÉO GIỮA 2 ĐỐI THỦ THƯƠNG TRƯỜNG (RIVAL VS RIVAL)
+     */
+    playCrossfireBetweenRivals(attackerIndex, targetIndex, damage = 15, callback) {
+        const attackerCard = document.getElementById(`alien-card-${attackerIndex}`);
+        const targetCard = document.getElementById(`alien-card-${targetIndex}`);
+        if (!attackerCard || !targetCard) {
+            if (callback) callback();
+            return;
+        }
+
+        attackerCard.classList.add('alien-lunge-attack');
+        setTimeout(() => attackerCard.classList.remove('alien-lunge-attack'), 400);
+
+        const startPos = this.getElementCenter(attackerCard);
+        const endPos = this.getElementCenter(targetCard);
+        const deltaX = endPos.x - startPos.x;
+        const deltaY = endPos.y - startPos.y;
+        const angleDeg = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+        const bolt = document.createElement('div');
+        bolt.className = 'plasma-projectile-bolt rival-red-bolt';
+        bolt.style.left = `${startPos.x}px`;
+        bolt.style.top = `${startPos.y}px`;
+        bolt.style.transform = `rotate(${angleDeg}deg)`;
+        document.body.appendChild(bolt);
+
+        if (bolt.animate) {
+            bolt.animate([
+                { transform: `translate(0, 0) rotate(${angleDeg}deg)`, opacity: 1 },
+                { transform: `translate(${deltaX}px, ${deltaY}px) rotate(${angleDeg}deg)`, opacity: 1 }
+            ], { duration: 250, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+        }
+
+        setTimeout(() => {
+            if (bolt.parentNode) bolt.parentNode.removeChild(bolt);
+            this.createImpactBlast(endPos.x, endPos.y);
+            this.showFloatingCombatText(endPos.x, endPos.y - 30, `-${damage} HP`, 'hero-damage-text');
+
+            targetCard.classList.add('alien-hit-recoil');
+            setTimeout(() => targetCard.classList.remove('alien-hit-recoil'), 350);
+
+            if (callback) callback();
+        }, 250);
     }
 
     /**
