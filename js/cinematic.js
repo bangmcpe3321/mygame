@@ -1,8 +1,9 @@
 /**
  * HỆ THỐNG PHÂN CẢNH ĐIỆN ẢNH & TRUYỆN TRANH (SCI-FI CINEMATIC ENGINE)
- * - Tự động chuyển cảnh với hiệu ứng Ken Burns, tàn tro không gian và thanh tiến trình.
- * - Hộp thoại truyện tranh công nghệ cao luôn hiển thị sắc nét, cố định và rõ ràng.
- * - Hỗ trợ nút "HỒI TIẾP THEO ➔" để chuyển nhanh và "BỎ QUA ⏭" để vào thẳng trận đấu.
+ * - Từng trang phân cảnh được điều khiển thủ công bởi người chơi (hoàn toàn không tự ý nhảy trang).
+ * - Hiệu ứng Ken Burns nghệ thuật, bụi tro không gian và hiển thị tiến trình từng trang.
+ * - Hỗ trợ nút "HỒI TIẾP THEO ➔", "◀ HỒI TRƯỚC" và "BỎ QUA TẤT CẢ ⏭".
+ * - Hỗ trợ phím tắt: Space, Enter, Mũi tên Phải (Tiếp tục), Mũi tên Trái (Quay lại), Escape (Bỏ qua).
  */
 
 class SciFiCinematic {
@@ -11,11 +12,11 @@ class SciFiCinematic {
         this.scenes = scenes || [];
         this.onComplete = onComplete;
         this.currentScene = 0;
-        this.timer = null;
         this.particleCanvas = null;
         this.particleCtx = null;
         this.particles = [];
         this.animFrame = null;
+        this._keyHandler = null;
     }
 
     start() {
@@ -25,7 +26,41 @@ class SciFiCinematic {
         }
         this.container.style.display = 'flex';
         this.initCanvas();
+        this.initKeyboard();
         this.showScene(0);
+    }
+
+    initKeyboard() {
+        if (this._keyHandler) {
+            window.removeEventListener('keydown', this._keyHandler);
+        }
+        this._keyHandler = (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                this.nextScene();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                this.prevScene();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.finish();
+            }
+        };
+        window.addEventListener('keydown', this._keyHandler);
+    }
+
+    nextScene() {
+        if (this.currentScene < this.scenes.length - 1) {
+            this.showScene(this.currentScene + 1);
+        } else {
+            this.finish();
+        }
+    }
+
+    prevScene() {
+        if (this.currentScene > 0) {
+            this.showScene(this.currentScene - 1);
+        }
     }
 
     initCanvas() {
@@ -50,7 +85,7 @@ class SciFiCinematic {
                 speedY: -(Math.random() * 1.2 + 0.5),
                 speedX: (Math.random() - 0.5) * 0.8,
                 opacity: Math.random() * 0.7 + 0.3,
-                hue: Math.random() > 0.4 ? 145 : 35 // Xanh lá cây công nghệ (#00ff88) hoặc vàng cam tia lửa
+                hue: Math.random() > 0.4 ? 145 : 35
             });
         }
         this.animateParticles();
@@ -99,6 +134,9 @@ class SciFiCinematic {
         }
         this.currentScene = idx;
         const sc = this.scenes[idx];
+        const isLastScene = idx === this.scenes.length - 1;
+        const nextBtnLabel = isLastScene ? 'VÀO TRẬN CHIẾN ➔' : 'HỒI TIẾP THEO ➔';
+        const progressPct = Math.round(((idx + 1) / this.scenes.length) * 100);
 
         let stageBox = document.getElementById('cinematic-scene-viewport');
         if (!stageBox) {
@@ -116,9 +154,9 @@ class SciFiCinematic {
                 <div class="cinematic-art-vignette"></div>
             </div>
 
-            <!-- THANH TIẾN TRÌNH TỰ ĐỘNG CHẠY (TIMELINE PROGRESS BAR) -->
+            <!-- THANH TIẾN TRÌNH THEO TỪNG TRANG -->
             <div class="cinematic-timeline-bar">
-                <div class="cinematic-timeline-fill" id="cinematic-timeline-fill" style="animation-duration: ${sc.duration}ms;"></div>
+                <div class="cinematic-timeline-fill" id="cinematic-timeline-fill" style="width: ${progressPct}%;"></div>
             </div>
 
             <!-- HỘP THOẠI TRUYỆN TRANH DÃ SỬ SCI-FI (LUÔN CỐ ĐỊNH Ở ĐÁY) -->
@@ -126,8 +164,9 @@ class SciFiCinematic {
                 <div class="cinematic-header-row">
                     <div class="cinematic-step-pill">HỒI ${idx + 1} / ${this.scenes.length} // BÁO ĐỘNG ĐỎ</div>
                     <div class="cinematic-control-btns">
-                        <button class="btn-cinematic-next" id="btn-next-cinematic">HỒI TIẾP THEO ➔</button>
-                        <button class="btn-skip-cinematic" id="btn-skip-cinematic" title="Bỏ qua dẫn truyện">VÀO TRẬN CHIẾN ⏭</button>
+                        ${idx > 0 ? `<button class="btn-cinematic-prev" id="btn-prev-cinematic">◀ HỒI TRƯỚC</button>` : ''}
+                        <button class="btn-cinematic-next" id="btn-next-cinematic">${nextBtnLabel}</button>
+                        <button class="btn-skip-cinematic" id="btn-skip-cinematic" title="Bỏ qua dẫn truyện">BỎ QUA TẤT CẢ ⏭</button>
                     </div>
                 </div>
                 <h2 class="cinematic-heading">${sc.title}</h2>
@@ -135,7 +174,7 @@ class SciFiCinematic {
             </div>
         `;
 
-        // Bắt sự kiện bấm nút Tiếp tục hoặc Bỏ qua
+        // Bắt sự kiện bấm nút Tiếp tục, Quay lại hoặc Bỏ qua
         const skipBtn = document.getElementById('btn-skip-cinematic');
         if (skipBtn) {
             skipBtn.onclick = (e) => {
@@ -148,20 +187,27 @@ class SciFiCinematic {
         if (nextBtn) {
             nextBtn.onclick = (e) => {
                 e.stopPropagation();
-                clearTimeout(this.timer);
-                this.showScene(this.currentScene + 1);
+                this.nextScene();
             };
         }
 
-        // Tự động chuyển cảnh sau thời gian duration của cảnh đó
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-            this.showScene(this.currentScene + 1);
-        }, sc.duration);
+        const prevBtn = document.getElementById('btn-prev-cinematic');
+        if (prevBtn) {
+            prevBtn.onclick = (e) => {
+                e.stopPropagation();
+                this.prevScene();
+            };
+        }
+
+        // HOÀN TOÀN KHÔNG CÒN SETTIMEOUT TỰ CHẠY SKIP
+        // Người chơi tự bấm nút hoặc nhấn phím để đọc từng trang
     }
 
     finish() {
-        clearTimeout(this.timer);
+        if (this._keyHandler) {
+            window.removeEventListener('keydown', this._keyHandler);
+            this._keyHandler = null;
+        }
         if (this.animFrame) cancelAnimationFrame(this.animFrame);
         if (this.container) {
             this.container.classList.add('cinematic-fade-out');
@@ -169,10 +215,9 @@ class SciFiCinematic {
                 this.container.style.display = 'none';
                 this.container.classList.remove('cinematic-fade-out');
                 if (this.onComplete) this.onComplete();
-            }, 500);
+            }, 450);
         } else if (this.onComplete) {
             this.onComplete();
         }
     }
 }
-
