@@ -803,22 +803,22 @@ function resolveEnding(stats, log) {
 
 const INTRO_SCENES = [
     {
-        id: 'intro-shop',
-        kicker: 'KHỞI ĐIỂM · 2124',
-        title: 'Mười hai mét vuông ở vành dưới',
-        desc: 'Một quầy trà trong hành lang kim loại của Trạm Cửa Đá. Bạn tự pha trà từ lá Mộc thủy canh, tự đẩy xe giao hàng, tự trả lời tin nhắn lúc mười một giờ đêm theo giờ trạm. Doanh thu tháng đầu đủ trả tiền điện và một bữa ăn.'
+        id: 'intro-ship',
+        kicker: 'HẢI TRÌNH 2124 · TÀU VẬN TẢI TRÀ MỘC',
+        title: 'Sứ mệnh giao thương trà giữa các vì sao',
+        desc: 'Phi thuyền chuyên dụng Aegis-7 của Tập đoàn Trà Mộc mang theo hàng ngàn container trà Mộc thủy canh thượng hạng và tinh dầu trà sinh thái đi trao đổi với các trạm không gian Liên bang Vành đai. Đây là hải trình thương mại chiến lược của tập đoàn.'
     },
     {
-        id: 'intro-rival',
-        kicker: 'ĐỐI THỦ · BÊN KIA HÀNH LANG',
-        title: 'Trà Vương treo bảng khai trương',
-        desc: 'Mua một tặng một, giảm 50% trong ba ca. Nhân viên của họ đứng phát tờ rơi hologram ngay trước cửa quầy bạn, trên cùng một hành lang, cách nhau mười bước chân.'
+        id: 'intro-crash',
+        kicker: 'BIẾN CỐ · THIÊN THẠCH & DỊ VẬT',
+        title: 'Bão thiên thạch và cú rơi kinh hoàng',
+        desc: 'Bão thiên thạch không gian bất ngờ tập kích xé toạc các tấm chắn phản lực. Tàu rơi khẩn cấp xuống tinh cầu hoang phế ngoài rìa Ngân Hà. Vỏ tàu nứt toác, hương thơm trà quý rò rỉ thu hút bầy dị vật Xenomorph khát máu tràn vào cắn phá các khoang ủ trà!'
     },
     {
-        id: 'intro-choice',
-        kicker: 'LUẬT CHƠI',
-        title: 'Mười hai chương, sáu chỉ số, sáu kết cục',
-        desc: 'Mỗi quyết định đổi một thứ này lấy một thứ khác. Không có lựa chọn nào miễn phí — chỉ có cái giá bạn chọn trả.'
+        id: 'intro-mission',
+        kicker: 'MỤC TIÊU CHIẾN DỊCH',
+        title: 'Robot Unit-07 nạp đạn Plasma bảo vệ kho trà',
+        desc: 'Mỗi câu hỏi tri thức giải mã chính xác sẽ nạp năng lượng Plasma Blaster cho Robot Unit-07 tiêu diệt quái vật. Hãy bảo vệ các khoang trà, vượt qua 3 khu vực và tiến tới Cầu Tàu phát tín hiệu cứu hộ S.O.S!'
     }
 ];
 
@@ -828,68 +828,75 @@ const INTRO_SCENES = [
 
 const AEGIS_STORY = {
     intro: {
-        title: "BÁO ĐỘNG ĐỎ: THIÊN THẠCH TẬP KÍCH",
-        subtitle: "Hải trình giao thương của phi thuyền vận tải Aegis-7",
+        title: "BÁO ĐỘNG ĐỎ: TÀU VẬN TẢI TRÀ MỘC BỊ TẬP KÍCH",
+        subtitle: "Hải trình giao thương của phi thuyền vận tải Aegis-7 thuộc Tập đoàn Trà Mộc",
         scenes: [
             {
-                id: "scene-meteor",
-                title: "HỒI I: BÃO THIÊN THẠCH VÀNH ĐAI",
-                desc: "Năm 2124, trên hải trình vận chuyển khoáng thạch năng lượng và lá Mộc thủy canh đến Trạm Cửa Đá, phi thuyền Aegis bất ngờ va chạm dữ dội với cơn bão thiên thạch không gian.",
-                duration: 4000,
+                id: "scene-tea-cargo",
+                title: "HỒI I: HẢI TRÌNH GIAO THƯƠNG TRÀ MỘC LIÊN HÀNH TINH",
+                desc: "Năm 2124, phi thuyền vận tải chuyên dụng Aegis-7 của Tập đoàn Trà Mộc mang theo lô hàng chiến lược: hàng ngàn container trà Mộc Thủy Canh Thượng Hạng và tinh dầu trà sinh thái lượng tử trên hải trình giao thương với các trạm không gian Liên bang Vành đai.",
+                duration: 4500,
                 image: "assets/cinematic_meteor.jpg"
             },
             {
-                id: "scene-crash",
-                title: "HỒI II: HẠ CÁNH KHẨN CẤP",
-                desc: "Hệ thống phản lực trọng trường sụp đổ. Con tàu lao thẳng xuống bầu khí quyển mù mịt và va chạm xuống hành tinh hoang phế ngoài rìa Ngân Hà. Robot bảo an UNIT-07 tự động kích hoạt vũ khí!",
-                duration: 4000,
+                id: "scene-meteor-crash",
+                title: "HỒI II: BÃO THIÊN THẠCH & HẠ CÁNH KHẨN CẤP",
+                desc: "Bão thiên thạch không gian bất ngờ ập tới xé toạc các tấm chắn phản lực trọng trường. Con tàu bốc cháy dữ dội, chao đảo và lao thẳng xuống va chạm kinh hoàng trên một hành tinh hoang phế ngoài rìa Ngân Hà.",
+                duration: 4500,
                 image: "assets/cinematic_crash.jpg"
             },
             {
-                id: "scene-swarm",
-                title: "HỒI III: DỊ VẬT NGOÀI HÀNH TINH XÂM NHẬP",
-                desc: "Lớp vỏ tàu bị thủng. Hàng trăm sinh vật khát máu dạng Xenomorph ngửi thấy nguồn năng lượng và ồ ạt tràn vào xé toạc các hành lang. Hãy trả lời câu hỏi để nạp đạn Plasma tiêu diệt chúng và đưa ra các quyết định chiến lược!",
+                id: "scene-tea-breach",
+                title: "HỒI III: DỊ VẬT XENOMORPH ĐỘT KÍCH KHO TRÀ",
+                desc: "Lớp vỏ tàu nứt toác, các module ủ trà thủy canh chấn động vỡ vụn. Mùi hương thảo mộc nồng nàn và bức xạ sinh thái thoát ra đã kích thích khứu giác bầy dị vật Xenomorph khát máu. Chúng ồ ạt tràn vào cắn phá các khoang hàng trà quý!",
                 duration: 4500,
                 image: "assets/cinematic_swarm.jpg"
+            },
+            {
+                id: "scene-robot-defense",
+                title: "HỒI IV: ROBOT UNIT-07 BẢO VỆ TINH HOA TRÀ MỘC",
+                desc: "Robot Bảo An UNIT-07 kích hoạt súng Plasma Blaster và khiên 200 HP. Hãy trả lời đúng các câu hỏi tri thức và đưa ra các quyết định chiến lược để nạp đạn Plasma, quét sạch dị vật, bảo vệ nguyên vẹn các mẫu trà Mộc và mở đường tới Cầu Tàu phát tín hiệu S.O.S!",
+                duration: 5000,
+                image: "assets/robot_hero.jpg"
             }
         ]
     },
     transition1: {
-        title: "DỌN SẠCH KHO HÀNG (CARGO BAY)",
-        subtitle: "Vượt qua Hồi I: Khởi nghiệp · Tiến sâu vào Khoang Lò Phản Ứng",
+        title: "DỌN SẠCH KHO HÀNG TRÀ THỦY CANH (CARGO BAY)",
+        subtitle: "Vượt qua Hồi I: Khởi nghiệp · Tiến sâu vào Khoang Ủ Trà & Lò Phản Ứng",
         paragraphs: [
-            "Bầy bọ Swarm Drones đầu tiên đã bị luồng đạn Plasma của Unit-07 quét sạch trong đống đổ nát của Khoang hàng.",
-            "Tại trạm, thương hiệu Trà Mộc đã vượt qua giai đoạn khởi nghiệp khốc liệt nhất.",
-            "Tuy nhiên, cảm biến sinh học cảnh báo những cá thể ngoại lai to lớn bọc giáp gai — Xeno Brutes — đang cố gắng phá hủy Lò phản ứng năng lượng. Hãy nạp đạn và tiến lên bảo vệ con tàu!"
+            "Bầy bọ Swarm Drones cắn phá các container Trà Mộc đã bị quét sạch bởi hỏa lực Plasma kiên cường của Unit-07.",
+            "Tại trạm, thương hiệu Trà Mộc đã vượt qua giai đoạn khởi nghiệp khốc liệt nhất, bảo toàn được các thùng nguyên liệu lá Mộc đầu tiên.",
+            "Tuy nhiên, cảm biến sinh học cảnh báo các cá thể bọc giáp gai — Xeno Brutes — đang cố gắng xâm nhập Lò phản ứng & Dây chuyền ủ nhiệt, nhằm phá hủy toàn bộ hệ sinh thái sản xuất trà độc quyền. Hãy nạp đạn và tiến lên bảo vệ dây chuyền!"
         ],
-        buttonText: "TIẾN VÀO LÒ PHẢN ỨNG (HỒI II) ➔"
+        buttonText: "TIẾN VÀO DÂY CHUYỀN Ủ TRÀ (HỒI II) ➔"
     },
     transition2: {
-        title: "KHOANG ĐỘNG CƠ AN TOÀN",
-        subtitle: "Vượt qua Hồi II: Mở rộng · Cánh cửa dẫn tới Cầu Tàu Chỉ Huy",
+        title: "BẢO VỆ THÀNH CÔNG DÂY CHUYỀN Ủ NHIỆT",
+        subtitle: "Vượt qua Hồi II: Mở rộng · Cánh cửa dẫn tới Cầu Tàu & Kho Mẫu Trà Tổ",
         paragraphs: [
-            "Lũ dị vật giáp gai bốc cháy trước hỏa lực kiên cường của Unit-07. Lò phản ứng đã được cô lập an toàn.",
-            "Nhưng trước cửa Đài chỉ huy (Bridge), mặt sàn rung chuyển dữ dội... Một thực thể khổng lồ với vương miện giáp xác dày đặc — ALIEN QUEEN (NỮ CHÚA XENOMORPH), hiện thân của Thế Lực Độc Quyền Tối Thượng đang chực chờ nuốt chửng tất cả.",
-            "Đây là trận quyết chiến sinh tử để mở khóa bảng điều khiển và phát tín hiệu cứu hộ S.O.S ra toàn vũ trụ!"
+            "Lũ dị vật giáp gai bốc cháy trước hỏa lực của Unit-07. Lò phản ứng và buồng ủ trà đã được cô lập an toàn.",
+            "Nhưng trước cửa Đài chỉ huy (Bridge) — nơi lưu giữ mẫu trà tổ hoàng gia và trạm phát sóng cứu hộ S.O.S, mặt sàn rung chuyển dữ dội... NỮ CHÚA XENOMORPH (HIVE QUEEN BOSS) khổng lồ, hiện thân của thế lực tàn phá tối thượng đang chực chờ nuốt chửng tất cả.",
+            "Đây là trận quyết chiến sinh tử để bảo vệ tinh hoa Trà Mộc, mở khóa bảng điều khiển và phát tín hiệu S.O.S triệu hồi hạm đội cứu viện!"
         ],
-        buttonText: "ĐỐI ĐẦU NỮ CHÚA ALIEN QUEEN (HỒI III) ➔"
+        buttonText: "QUYẾT CHIẾN NỮ CHÚA BẢO VỆ TRÀ MỘC (HỒI III) ➔"
     },
     epilogue: {
-        title: "TÍN HIỆU CỨU HỘ VƯƠN XA",
-        subtitle: "Đánh bại Nữ Chúa Độc Quyền · Kích hoạt Hải Đăng S.O.S",
+        title: "TÍN HIỆU CỨU HỘ VƯƠN XA — BẢO VỆ TRỌN VẸN TRÀ MỘC",
+        subtitle: "Đánh bại Nữ Chúa · Kích hoạt Hải Đăng S.O.S Tập Đoàn Trà Mộc",
         scenes: [
             {
                 id: "scene-queen-down",
-                title: "HỒI KẾT: NỮ CHÚA GỤC NGÃ",
-                desc: "Với phát đạn Plasma Blaster năng lượng hủy diệt cuối cùng, Nữ Chúa gầm lên thảm thiết rồi đổ sụp xuống mặt sàn. Bầy quái vật còn lại tan tác tháo chạy vào bóng đêm vô tận.",
-                duration: 4000,
+                title: "HỒI KẾT: NỮ CHÚA GỤC NGÃ — KHO MẪU TRÀ AN TOÀN",
+                desc: "Với phát đạn Plasma Blaster năng lượng hủy diệt cuối cùng, Nữ Chúa gầm lên rồi đổ sụp xuống mặt sàn. Khoang lưu trữ mẫu trà tổ và công nghệ ủ trà độc quyền của Tập đoàn Trà Mộc đã được bảo vệ toàn vẹn trước nanh vuốt quái vật!",
+                duration: 4500,
                 image: "assets/alien_queen.jpg"
             },
             {
                 id: "scene-beacon",
-                title: "KHỞI ĐỘNG HẢI ĐĂNG CỨU HỘ S.O.S",
-                desc: "Robot Unit-07 cùng bạn cắm thẻ khóa năng lượng vào bàn điều khiển chính. Cột sáng tín hiệu cứu hộ khẩn cấp phóng vút qua tầng khí quyển, xuyên thẳng vào vũ trụ bao la.",
-                duration: 4500,
+                title: "KHỞI ĐỘNG HẢI ĐĂNG CỨU HỘ VỀ TẬP ĐOÀN TRÀ MỘC",
+                desc: "Robot Unit-07 cắm thẻ khóa năng lượng vào bàn điều khiển chính. Cột Hải Đăng mang tần số định danh của Tập đoàn Trà Mộc phóng vút qua tầng khí quyển, truyền tín hiệu giải cứu về phi đội cứu hộ không gian, hoàn thành xuất sắc sứ mệnh giao thương vĩ đại!",
+                duration: 5000,
                 image: "assets/cinematic_beacon.jpg"
             }
         ]
@@ -897,23 +904,23 @@ const AEGIS_STORY = {
 };
 
 const SECTOR_MONSTERS = [
-    // Hồi I (Chương 1–4): Kho Hàng - 4 Drones (1 HP mỗi con)
+    // Hồi I (Chương 1–4): Kho Hàng Trà - 4 Drones (1 HP mỗi con)
     [
-        { id: 's1_drone1', name: 'Bọ Drone α', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
-        { id: 's1_drone2', name: 'Bọ Drone β', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
-        { id: 's1_drone3', name: 'Bọ Drone γ', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
-        { id: 's1_drone4', name: 'Bọ Drone δ', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' }
+        { id: 's1_drone1', name: 'Bọ Cắn Phá Trà α', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+        { id: 's1_drone2', name: 'Bọ Cắn Phá Trà β', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+        { id: 's1_drone3', name: 'Bọ Cắn Phá Trà γ', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+        { id: 's1_drone4', name: 'Bọ Cắn Phá Trà δ', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' }
     ],
-    // Hồi II (Chương 5–8): Lò Phản Ứng - 2 Drones (1 HP) + 2 Brutes bọc giáp (1 HP)
+    // Hồi II (Chương 5–8): Lò Phản Ứng & Dây Chuyền Ủ Trà - 2 Drones (1 HP) + 2 Brutes bọc giáp (1 HP)
     [
-        { id: 's2_drone1', name: 'Bọ Swarmer A', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
-        { id: 's2_drone2', name: 'Bọ Swarmer B', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
-        { id: 's2_brute1', name: 'Quái Gai Brute X', type: 'large', hp: 1, maxHp: 1, image: 'assets/alien_large.jpg' },
-        { id: 's2_brute2', name: 'Quái Gai Brute Y', type: 'large', hp: 1, maxHp: 1, image: 'assets/alien_large.jpg' }
+        { id: 's2_drone1', name: 'Dị Vật Đột Kích A', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+        { id: 's2_drone2', name: 'Dị Vật Đột Kích B', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+        { id: 's2_brute1', name: 'Xeno Phá Dây Chuyền X', type: 'large', hp: 1, maxHp: 1, image: 'assets/alien_large.jpg' },
+        { id: 's2_brute2', name: 'Xeno Phá Dây Chuyền Y', type: 'large', hp: 1, maxHp: 1, image: 'assets/alien_large.jpg' }
     ],
-    // Hồi III (Chương 9–12): Cầu Tàu - 1 Guard (1 HP) + Nữ Chúa Boss (3 HP) = 4 đòn bắn
+    // Hồi III (Chương 9–12): Cầu Tàu & Kho Mẫu Trà Tổ - 1 Guard (1 HP) + Nữ Chúa Boss (3 HP) = 4 đòn bắn
     [
-        { id: 's3_guard', name: 'Vệ Binh Hoàng Gia', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
+        { id: 's3_guard', name: 'Vệ Binh Xenomorph', type: 'small', hp: 1, maxHp: 1, image: 'assets/alien_small.jpg' },
         { id: 's3_queen', name: 'NỮ CHÚA XENOMORPH', type: 'queen', hp: 3, maxHp: 3, image: 'assets/alien_queen.jpg' }
     ]
 ];

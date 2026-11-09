@@ -34,20 +34,20 @@ class VisualEngine {
         const sectorConfigs = [
             {
                 id: 'cargo',
-                name: 'SECTOR 01: KHO HÀNG (CARGO BAY) · HỒI I',
-                sub: 'Cảnh báo: 4 Dị vật nhỏ (Swarm Drones) đang cắn phá vỏ tàu!',
+                name: 'SECTOR 01: KHO HÀNG TRÀ THỦY CANH (TEA CARGO BAY) · HỒI I',
+                sub: 'Cảnh báo: 4 Dị vật nhỏ (Swarm Drones) đang cắn phá các container Trà Mộc!',
                 bg: 'assets/bg_cargobay.jpg'
             },
             {
                 id: 'reactor',
-                name: 'SECTOR 02: LÒ PHẢN ỨNG (REACTOR CORE) · HỒI II',
-                sub: 'Báo động: Dị vật bọc giáp gai Brutes đe dọa chuỗi năng lượng!',
+                name: 'SECTOR 02: DÂY CHUYỀN Ủ TRÀ & LÒ PHẢN ỨNG (TEA REACTOR CORE) · HỒI II',
+                sub: 'Báo động: Dị vật bọc giáp gai Brutes đe dọa dây chuyền ủ trà và nguồn năng lượng!',
                 bg: 'assets/bg_reactor.jpg'
             },
             {
                 id: 'bridge',
-                name: 'SECTOR 03: CẦU TÀU CHỈ HUY (COMMAND BRIDGE) · HỒI III',
-                sub: 'Khẩn cấp Tối Cao: NỮ CHÚA XENOMORPH (HIVE QUEEN BOSS) ĐÃ XUẤT HIỆN!',
+                name: 'SECTOR 03: CẦU TÀU CHỈ HUY & KHO MẪU TRÀ TỔ (TEA ARCHIVES & BRIDGE) · HỒI III',
+                sub: 'Khẩn cấp Tối Cao: NỮ CHÚA XENOMORPH bao vây kho mẫu trà tổ và đài phát S.O.S!',
                 bg: 'assets/bg_bridge.jpg'
             }
         ];
@@ -58,7 +58,14 @@ class VisualEngine {
         this.autoSelectFirstAliveTarget();
 
         const arenaHtml = `
-            <div class="scifi-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(3, 10, 6, 0.65), rgba(3, 10, 6, 0.82)), url('${config.bg}');">
+            <div class="scifi-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(3, 10, 6, 0.7), rgba(3, 10, 6, 0.85)), url('${config.bg}');">
+                <!-- Dải HUD nhận diện Tàu Vận Tải Trà Mộc gặp nạn -->
+                <div class="tea-freighter-hud-bar">
+                    <div class="tea-freighter-tag"><span class="tea-icon">🍃</span> TÀU VẬN TẢI TRÀ MỘC · AEGIS-7</div>
+                    <div class="tea-freighter-status"><span class="pulse-dot"></span> BÁO ĐỘNG HỎA HOẠN: RÒ RỈ TINH DẦU TRÀ THỦY CANH // DỊ VẬT XÂM NHẬP KHOANG</div>
+                    <div class="tea-cargo-label">CONTAINER #TM-07 [THỦNG VỎ]</div>
+                </div>
+
                 <!-- Header thông tin chiến trường -->
                 <div class="arena-header-banner">
                     <div class="sector-code-badge">SECTOR 0${sectorIndex + 1} // ACTIVE</div>
@@ -76,7 +83,7 @@ class VisualEngine {
                         <div class="tactical-card hero-battle-card" id="robot-card">
                             <!-- Header thẻ bài -->
                             <div class="card-top-bar">
-                                <span class="card-type-tag hero-tag">UNIT-07 // HERO</span>
+                                <span class="card-type-tag hero-tag">UNIT-07 // TRÀ MỘC DEFENDER</span>
                                 <span class="card-rarity">SSR ★★★★★</span>
                             </div>
 
@@ -95,12 +102,12 @@ class VisualEngine {
                             
                             <!-- Bảng chỉ số thẻ bài Robot -->
                             <div class="card-stats-panel">
-                                <div class="card-name-title">ROBOT BẢO AN [AEGIS]</div>
+                                <div class="card-name-title">ROBOT BẢO AN [TRÀ MỘC · UNIT-07]</div>
                                 
                                 <!-- Thanh Khiên & Máu Năng Lượng 200 HP -->
                                 <div class="shield-bar-container">
                                     <div class="shield-label-row">
-                                        <span>🛡️ MÁU / KHIÊN BẢO VỆ</span>
+                                        <span>🛡️ KHIÊN NĂNG LƯỢNG SINH THÁI</span>
                                         <span id="robot-shield-text">${robotShield}/200 HP</span>
                                     </div>
                                     <div class="shield-track">
@@ -109,7 +116,7 @@ class VisualEngine {
                                 </div>
 
                                 <div class="card-footer-stats">
-                                    <span class="stat-pill atk-pill">⚡ SÚNG PLASMA: 1 DMG</span>
+                                    <span class="stat-pill atk-pill">⚡ PLASMA BLASTER // CỐT TRÀ NĂNG LƯỢNG</span>
                                 </div>
                             </div>
                         </div>
