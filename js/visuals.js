@@ -76,9 +76,12 @@ class VisualEngine {
                     <div class="combat-mode-badge">TURN-BASED CARD RPG</div>
                 </div>
 
-                <!-- Đấu trường Thẻ bài: Bên trái Robot - Bên phải Đội quân Dị vật -->
+                <!-- Đấu trường Thẻ bài: Bảng Bối Cảnh (Trái) - Robot - Quái vật (Phải) -->
                 <div class="arena-battlefield">
-                    <!-- 1. BÊN TRÁI: THẺ BÀI ROBOT CHIẾN ĐẤU UNIT-07 (PLAYER HERO CARD) -->
+                    <!-- 0. BẢNG BỐI CẢNH DẪN TRUYỆN (NGAY BÊN TRÁI, CẠNH THẺ NHÂN VẬT) -->
+                    <section class="brief-panel" id="brief-panel" aria-label="Bối cảnh chương"></section>
+
+                    <!-- 1. THẺ BÀI ROBOT CHIẾN ĐẤU UNIT-07 (CẠNH Ô DẪN TRUYỆN, KÉO XA QUÁI VẬT) -->
                     <div class="hero-combatant-zone" id="robot-hero-zone">
                         <div class="tactical-card hero-battle-card" id="robot-card">
                             <!-- Header thẻ bài -->

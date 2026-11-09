@@ -513,31 +513,33 @@ h1, h2, h3 {
 }
 
 .game-lower-deck {
-    display: grid;
-    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
-    gap: 12px;
-    flex: 1;
-    min-height: 280px;
+    display: block;
+    margin-top: 10px;
+    width: 100%;
 }
 
 /* --------------------------- BẢNG BỐI CẢNH ------------------------ */
 
 .brief-panel {
-    min-height: 0;
-    max-height: 300px;
+    flex: 0 1 330px;
+    max-width: 360px;
+    min-width: 250px;
+    height: 275px;
+    max-height: 275px;
     overflow-y: auto;
-    padding: 14px 16px;
+    padding: 12px 14px;
     border-radius: var(--radius-lg);
     border: 1px solid rgba(0, 255, 136, 0.35);
     background:
-        linear-gradient(135deg, rgba(8, 24, 18, 0.94) 0%, rgba(4, 14, 10, 0.9) 100%);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 255, 136, 0.05);
+        linear-gradient(135deg, rgba(6, 20, 14, 0.94) 0%, rgba(3, 12, 8, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(0, 255, 136, 0.05);
     scrollbar-width: thin;
-    scrollbar-color: var(--line-mid) transparent;
+    scrollbar-color: var(--tech-green) transparent;
 }
 
-.brief-panel::-webkit-scrollbar { width: 6px; }
-.brief-panel::-webkit-scrollbar-thumb { background: var(--line-mid); border-radius: 3px; }
+.brief-panel::-webkit-scrollbar { width: 5px; }
+.brief-panel::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.4); border-radius: 3px; }
 
 .brief-meta-row {
     display: flex;
@@ -626,7 +628,10 @@ h1, h2, h3 {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 14px 16px;
+    padding: 14px 18px;
+    max-width: 980px;
+    margin: 0 auto;
+    width: 100%;
     border-radius: var(--radius-lg);
     border: 1px solid var(--line-soft);
     background:
@@ -1568,13 +1573,24 @@ h1, h2, h3 {
     }
 
     .game-lower-deck {
-        grid-template-columns: 1fr;
+        display: block;
     }
 
     .arena-battlefield {
+        flex-wrap: wrap !important;
         justify-content: center !important;
-        padding: 0 8px !important;
-        gap: 30px !important;
+        gap: 12px !important;
+    }
+
+    .brief-panel {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: 190px !important;
+    }
+
+    .combat-crossfire-zone {
+        display: none !important;
     }
 
     .aliens-formation-grid {
@@ -1648,7 +1664,7 @@ h1, h2, h3 {
 
 .scifi-arena {
     width: 100%;
-    min-height: 290px;
+    min-height: 330px;
     background-size: cover;
     background-position: center;
     position: relative;
@@ -1792,12 +1808,12 @@ h1, h2, h3 {
 
 .arena-battlefield {
     display: flex;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     align-items: center;
-    margin: 4px 0;
+    margin: 6px 0;
     position: relative;
-    gap: 65px !important;
-    padding: 0 16px;
+    gap: 16px !important;
+    padding: 0 10px;
     width: 100%;
 }
 
@@ -1944,26 +1960,29 @@ h1, h2, h3 {
     color: #ff7b92;
 }
 
-/* THẺ BÀI ROBOT HERO (ĐỐI DIỆN QUÁI VẬT VỚI KHOẢNG CÁCH VỪA VẶN) */
+/* THẺ BÀI ROBOT HERO (NGAY CẠNH Ô DẪN TRUYỆN, KÉO XA KHỎI QUÁI VẬT) */
 .hero-combatant-zone {
     flex: 0 0 auto !important;
     display: flex;
     justify-content: center;
-    margin-left: 0 !important;
+    margin: 0 !important;
 }
 
 .combat-crossfire-zone {
-    display: none !important;
+    flex: 1 !important;
+    min-width: 40px !important;
+    display: block !important;
+    position: relative;
 }
 
 .hero-battle-card {
-    width: 180px;
+    width: 170px;
     border-color: var(--tech-green);
     box-shadow: 0 0 25px rgba(0, 255, 136, 0.25);
 }
 
 .hero-battle-card .card-portrait-frame {
-    height: 115px;
+    height: 105px;
 }
 
 .muzzle-flash-anchor {
@@ -2035,14 +2054,15 @@ h1, h2, h3 {
 .aliens-combatant-zone {
     flex: 0 0 auto !important;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-left: auto;
 }
 
 .aliens-formation-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(115px, 138px));
     gap: 10px;
-    justify-content: center;
+    justify-content: end;
 }
 
 .aliens-formation-grid.boss-formation {
