@@ -114,6 +114,14 @@ class TraMocGame {
             hostStartBtn: id('host-start-btn'),
             hostResetBtn: id('host-reset-btn'),
             hostCloseBtn: id('host-close-btn'),
+            tabHostBtn: id('tab-host-btn'),
+            tabJoinBtn: id('tab-join-btn'),
+            lobbyHostPanel: id('lobby-host-panel'),
+            lobbyJoinPanel: id('lobby-join-panel'),
+            btnCopyPin: id('btn-copy-pin'),
+            joinPinInput: id('join-pin-input'),
+            joinStatusDisplay: id('join-status-display'),
+            joinRoomBtn: id('join-room-btn'),
 
             leaderboardDrawer: id('leaderboard-drawer'),
             leaderboardCloseBtn: id('leaderboard-close-btn'),
@@ -153,6 +161,71 @@ class TraMocGame {
 
         if (this.el.hostBtn) this.el.hostBtn.addEventListener('click', () => this.openHost());
         if (this.el.hostCloseBtn) this.el.hostCloseBtn.addEventListener('click', () => this.closeHost());
+
+        // Tab chuyển đổi Host / Join trong Modal Đấu Phòng 5 Người
+        if (this.el.tabHostBtn && this.el.tabJoinBtn) {
+            this.el.tabHostBtn.addEventListener('click', () => {
+                this.el.tabHostBtn.classList.add('active');
+                this.el.tabJoinBtn.classList.remove('active');
+                if (this.el.lobbyHostPanel) this.el.lobbyHostPanel.style.display = 'block';
+                if (this.el.lobbyJoinPanel) this.el.lobbyJoinPanel.style.display = 'none';
+            });
+            this.el.tabJoinBtn.addEventListener('click', () => {
+                this.el.tabJoinBtn.classList.add('active');
+                this.el.tabHostBtn.classList.remove('active');
+                if (this.el.lobbyHostPanel) this.el.lobbyHostPanel.style.display = 'none';
+                if (this.el.lobbyJoinPanel) this.el.lobbyJoinPanel.style.display = 'block';
+                if (this.el.joinPinInput) setTimeout(() => this.el.joinPinInput.focus(), 60);
+            });
+        }
+
+        // Nút sao chép mã PIN
+        if (this.el.btnCopyPin) {
+            this.el.btnCopyPin.addEventListener('click', () => {
+                const pin = (this.el.hostPin ? this.el.hostPin.textContent : '').trim();
+                if (pin && navigator.clipboard) {
+                    navigator.clipboard.writeText(pin).then(() => {
+                        this.spawnToast(`Đã sao chép mã PIN: ${pin}`, 'is-good');
+                    }).catch(() => {
+                        this.spawnToast(`Mã phòng: ${pin}`);
+                    });
+                } else if (pin) {
+                    this.spawnToast(`Mã phòng: ${pin}`);
+                }
+            });
+        }
+
+        // Nút Kết nối vào phòng bằng mã PIN
+        if (this.el.joinRoomBtn) {
+            this.el.joinRoomBtn.addEventListener('click', () => {
+                const pin = (this.el.joinPinInput ? this.el.joinPinInput.value : '').trim();
+                if (!pin) {
+                    this.spawnToast('Vui lòng nhập mã PIN gồm 4 chữ số!', 'is-bad');
+                    return;
+                }
+                if (this.el.joinStatusDisplay) {
+                    this.el.joinStatusDisplay.innerHTML = `⏳ Đang kết nối tới phòng #${pin}...`;
+                }
+                if (window.multiplayer) {
+                    window.multiplayer.joinRoomByPin(pin, (success, msg) => {
+                        if (success) {
+                            if (this.el.joinStatusDisplay) {
+                                this.el.joinStatusDisplay.innerHTML = `🟢 <span style="color:var(--tech-green)">${msg}</span>`;
+                            }
+                            this.spawnToast(msg, 'is-good');
+                            this.renderHostPlayers();
+                            this.renderLeaderboard();
+                        } else {
+                            if (this.el.joinStatusDisplay) {
+                                this.el.joinStatusDisplay.innerHTML = `🔴 <span style="color:var(--danger)">${msg}</span>`;
+                            }
+                            this.spawnToast(msg, 'is-bad');
+                        }
+                    });
+                }
+            });
+        }
+
         if (this.el.hostStartBtn) {
             this.el.hostStartBtn.addEventListener('click', () => {
                 if (window.multiplayer) window.multiplayer.startRoomAsHost();
@@ -162,10 +235,13 @@ class TraMocGame {
         }
         if (this.el.hostResetBtn) {
             this.el.hostResetBtn.addEventListener('click', () => {
-                if (window.multiplayer) window.multiplayer.resetScores();
+                if (window.multiplayer) {
+                    window.multiplayer.changeRoomCode();
+                    window.multiplayer.resetScores();
+                }
                 this.resetGame(true);
                 this.renderHostPlayers();
-                this.spawnToast('Đã đặt lại phòng và điểm số');
+                this.spawnToast('Đã đổi mã phòng mới và đặt lại điểm số', 'is-good');
             });
         }
 
@@ -178,11 +254,65 @@ class TraMocGame {
     bindMultiplayer() {
         if (!window.multiplayer) return;
 
-        window.multiplayer.onLeaderboardUpdate = () => this.renderLeaderboard();
-        window.multiplayer.onPlayerListChange = () => this.renderHostPlayers();
+        window.multiplayer.onLeaderboardUpdate = (ranked) => {
+            this.renderLeaderboard();
+            if (this.aliensState && this.visuals) {
+                this.aliensState.forEach((comp, idx) => {
+                    const info = (ranked || []).find((p) => p.id === comp.id);
+                    if (info) {
+                        comp.score = info.score;
+                        comp.streak = info.streak;
+                        this.visuals.updateCompetitorScore(idx, comp.score, comp.streak);
+                    }
+                });
+            }
+        };
+
+        window.multiplayer.onPlayerListChange = () => {
+            this.renderHostPlayers();
+            // Nếu đang trong trận, cập nhật lại tên và avatar đối thủ
+            if (this.aliensState && this.visuals && window.multiplayer.getCompetitors) {
+                const freshComps = window.multiplayer.getCompetitors();
+                freshComps.forEach((fc, idx) => {
+                    if (this.aliensState[idx]) {
+                        this.aliensState[idx].name = fc.name;
+                        this.aliensState[idx].avatar = fc.avatar;
+                        this.aliensState[idx].isPlayer = fc.isPlayer;
+                    }
+                });
+            }
+        };
+
         window.multiplayer.onRoomStarted = () => {
             this.closeHost();
             this.playIntroCinematic(() => this.beginChapter(0));
+        };
+
+        // Khi bị đối thủ tấn công khiên thị trường
+        window.multiplayer.onAttackedByRival = (attackerName, damage) => {
+            const dmg = damage || 20;
+            this.robotShield = Math.max(0, this.robotShield - dmg);
+            if (this.visuals) {
+                this.visuals.updateRobotShieldDisplay(this.robotShield);
+            }
+            this.spawnToast(`⚠️ Đối thủ ${attackerName} tấn công khiên của bạn (-${dmg} HP)!`, 'is-bad');
+            if (this.robotShield <= 0) {
+                this.robotShield = 100;
+                this.spawnToast('⚠️ Khiên thị trường cạn kiệt! Nạp quỹ dự phòng (+100 HP)', 'is-bad');
+                if (this.visuals) this.visuals.updateRobotShieldDisplay(this.robotShield);
+            }
+        };
+
+        // Khi đối thủ khác bị tấn công mất HP
+        window.multiplayer.onCompetitorDamaged = (targetId, newHp) => {
+            if (!this.aliensState) return;
+            const idx = this.aliensState.findIndex((c) => c.id === targetId);
+            if (idx !== -1) {
+                this.aliensState[idx].hp = newHp;
+                if (this.visuals) {
+                    this.visuals.updateAlienHpDisplay(idx, newHp, newHp <= 0);
+                }
+            }
         };
     }
 
@@ -615,6 +745,14 @@ class TraMocGame {
     /* Vòng chơi & Đấu trường                                         */
     /* ------------------------------------------------------------- */
 
+    getSectorCompetitors(sector) {
+        if (window.multiplayer && typeof window.multiplayer.getCompetitors === 'function') {
+            const comps = window.multiplayer.getCompetitors();
+            if (comps && comps.length > 0) return comps;
+        }
+        return JSON.parse(JSON.stringify(SECTOR_MONSTERS[sector] || SECTOR_MONSTERS[0]));
+    }
+
     beginChapter(index) {
         this.chapterIndex = index;
         this.phase = 'question';
@@ -627,7 +765,7 @@ class TraMocGame {
         const sector = Math.floor(index / 4);
         if (this.currentSectorIndex !== sector || !this.aliensState || this.aliensState.length === 0) {
             this.currentSectorIndex = sector;
-            this.aliensState = JSON.parse(JSON.stringify(SECTOR_MONSTERS[sector] || SECTOR_MONSTERS[0]));
+            this.aliensState = this.getSectorCompetitors(sector);
         }
 
         // Render Đấu trường VisualEngine
@@ -669,44 +807,63 @@ class TraMocGame {
             if (q.insightCard) this.unlockCard(q.insightCard);
 
             // Tìm mục tiêu đang chọn hoặc mục tiêu còn sống đầu tiên
-            let targetIdx = this.visuals.currentTargetIndex;
+            let targetIdx = this.visuals ? this.visuals.currentTargetIndex : 0;
             if (!this.aliensState[targetIdx] || this.aliensState[targetIdx].hp <= 0) {
                 targetIdx = this.aliensState.findIndex((a) => a.hp > 0);
             }
 
             if (targetIdx !== -1) {
                 const target = this.aliensState[targetIdx];
-                const newHp = Math.max(0, target.hp - 1);
+                const isRival = target.type === 'rival' || target.isPlayer || target.avatar;
+                const damage = isRival ? 25 : 1;
+                const newHp = Math.max(0, target.hp - damage);
                 target.hp = newHp;
                 const isDead = newHp <= 0;
 
                 // Hoạt ảnh Robot bắn đạn Plasma Blaster
-                this.visuals.playRobotAttack(targetIdx, newHp, isDead, () => {
+                if (this.visuals) {
+                    this.visuals.playRobotAttack(targetIdx, newHp, isDead, () => {
+                        this.renderPlay();
+                    });
+                } else {
                     this.renderPlay();
-                });
+                }
+
+                if (window.multiplayer && typeof window.multiplayer.attackCompetitor === 'function') {
+                    window.multiplayer.attackCompetitor(targetIdx, damage);
+                }
             } else {
                 this.renderPlay();
             }
         } else {
             this.streak = 0;
 
-            // Quái vật phản kích
+            // Quái vật / Đối thủ phản kích
             let attackerIdx = this.aliensState.findIndex((a) => a.hp > 0);
             if (attackerIdx === -1) attackerIdx = 0;
-            this.robotShield = Math.max(0, this.robotShield - 15);
+            const attacker = this.aliensState[attackerIdx];
+            const attackerName = attacker ? attacker.name : 'Đối thủ thị trường';
+            const damage = 15;
+            this.robotShield = Math.max(0, this.robotShield - damage);
 
-            this.visuals.playAlienRetaliation(attackerIdx, this.robotShield, 15, () => {
-                if (this.robotShield <= 0) {
-                    this.robotShield = 100;
-                    this.spawnToast('⚠️ Khiên sụp đổ! Tự động nạp nguồn dự phòng (+100 HP)', 'is-bad');
-                    if (this.visuals) this.visuals.updateRobotShieldDisplay(this.robotShield);
-                }
+            if (this.visuals) {
+                this.visuals.playAlienRetaliation(attackerIdx, this.robotShield, damage, () => {
+                    if (this.robotShield <= 0) {
+                        this.robotShield = 100;
+                        this.spawnToast('⚠️ Khiên thị trường sụp đổ! Tự động nạp quỹ dự phòng (+100 HP)', 'is-bad');
+                        if (this.visuals) this.visuals.updateRobotShieldDisplay(this.robotShield);
+                    }
+                    this.renderPlay();
+                });
+            } else {
                 this.renderPlay();
-            });
+            }
+
+            this.spawnToast(`⚠️ Bị ${attackerName} phản kích tranh đoạt thị trường (-${damage} HP khiên)!`, 'is-bad');
         }
 
         if (window.multiplayer && typeof window.multiplayer.recordAnswer === 'function') {
-            window.multiplayer.recordAnswer(correct, points);
+            window.multiplayer.recordAnswer(correct, points, this.visuals ? this.visuals.currentTargetIndex : 0);
         }
 
         this.lastAnswer = { correct, chosen: optionIndex, points };
@@ -967,15 +1124,17 @@ class TraMocGame {
     renderHostPlayers() {
         if (!window.multiplayer) return;
         const players = window.multiplayer.getPlayerList();
-        this.el.hostPin.textContent = window.multiplayer.roomCode;
-        this.el.lobbyDisplay.textContent = window.multiplayer.playerName;
+        if (this.el.hostPin) this.el.hostPin.textContent = window.multiplayer.roomCode;
+        if (this.el.lobbyDisplay) this.el.lobbyDisplay.textContent = window.multiplayer.playerName;
 
-        this.el.hostPlayerList.innerHTML = players.map((p) => `
-            <div class="player-pill ${p.isSelf ? 'is-self' : ''}">
-                <span class="pill-avatar">${p.avatar}</span>
-                <span class="pill-name">${p.name}</span>
-                ${p.isSelf ? '<span class="pill-self-tag">(Bạn)</span>' : ''}
-            </div>`).join('');
+        if (this.el.hostPlayerList) {
+            this.el.hostPlayerList.innerHTML = players.map((p) => `
+                <div class="player-pill ${p.isSelf ? 'is-self' : ''}">
+                    <span class="pill-avatar">${p.avatar}</span>
+                    <span class="pill-name">${p.name}</span>
+                    ${p.isSelf ? '<span class="pill-self-tag">(Bạn)</span>' : p.isBot ? '<span class="pill-bot-tag">(AI)</span>' : '<span class="pill-live-tag">● Live</span>'}
+                </div>`).join('');
+        }
     }
 
     openProfile() {

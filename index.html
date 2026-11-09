@@ -37,8 +37,8 @@
             <button class="btn-hud" id="leaderboard-toggle-btn" type="button" aria-label="Bảng xếp hạng">
                 <span aria-hidden="true">🏆</span><span class="btn-hud-label">XẾP HẠNG</span>
             </button>
-            <button class="btn-hud" id="host-control-btn" type="button" aria-label="Phòng host">
-                <span aria-hidden="true">👑</span><span class="btn-hud-label">PHÒNG HOST</span>
+            <button class="btn-hud" id="host-control-btn" type="button" aria-label="Phòng đấu 5 người">
+                <span aria-hidden="true">🌐</span><span class="btn-hud-label">ĐẤU PHÒNG 5 NGƯỜI</span>
             </button>
             <button class="btn-icon" id="sound-toggle-btn" type="button" aria-label="Bật tắt âm thanh">
                 <span id="sound-icon" aria-hidden="true">🔊</span>
@@ -119,24 +119,49 @@
         </div>
     </div>
 
-    <!-- MODAL PHÒNG CHƠI HOST -->
+    <!-- MODAL PHÒNG CHƠI ĐẤU TRƯỜNG 5 NGƯỜI (MULTIPLAYER LOBBY) -->
     <div class="modal-overlay" id="host-modal">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="host-title">
-            <h3 class="modal-title" id="host-title">PHÒNG CHỈ HUY HOST (LOBBY)</h3>
-            <p class="modal-desc">Tất cả người chơi sẽ đồng loạt tham chiến khi Host nhấn BẮT ĐẦU.</p>
-            <div class="pin-box">
-                <span class="pin-label">TẦN SỐ TRUYỀN TIN (ROOM PIN)</span>
-                <span class="pin-code" id="host-room-pin">MOC-0000</span>
+            <h3 class="modal-title" id="host-title">🌐 ĐẤU TRƯỜNG 5 NGƯỜI (MULTIPLAYER)</h3>
+            <p class="modal-desc">Đấu trường thương trường 5 người chơi cạnh tranh trực tiếp qua WebRTC P2P.</p>
+            
+            <!-- Chuyển Tab: Tạo Phòng (Host) hoặc Vào Phòng (Join) -->
+            <div class="lobby-tabs">
+                <button class="tab-btn active" id="tab-host-btn" type="button">👑 TẠO PHÒNG (HOST)</button>
+                <button class="tab-btn" id="tab-join-btn" type="button">🔗 VÀO PHÒNG (JOIN)</button>
             </div>
-            <div class="lobby-bar">
-                <span id="lobby-player-display">Unit-07</span>
-                <button class="btn-mini" id="lobby-rename-btn" type="button">ĐỔI TÊN</button>
+
+            <!-- Tab 1: Tạo phòng làm Host -->
+            <div class="lobby-panel active" id="lobby-host-panel">
+                <div class="pin-box">
+                    <div>
+                        <span class="pin-label">MÃ PIN PHÒNG CHƠI</span>
+                        <div class="pin-code" id="host-room-pin">7788</div>
+                    </div>
+                    <button class="btn-mini" id="btn-copy-pin" type="button" title="Sao chép mã PIN">📋 SAO CHÉP</button>
+                </div>
+                <div class="lobby-bar">
+                    <span id="lobby-player-display">Unit-07 (Host)</span>
+                    <button class="btn-mini" id="lobby-rename-btn" type="button">ĐỔI TÊN</button>
+                </div>
+                <p class="field-label" style="margin-top: 10px; font-size: 11px;">DANH SÁCH 5 THÀNH VIÊN ĐẤU TRƯỜNG (AI BÙ NẾU THIẾU):</p>
+                <div class="host-player-grid" id="host-player-list"></div>
+                <div class="modal-actions">
+                    <button class="btn-primary" id="host-start-btn" type="button">🚀 BẮT ĐẦU ĐẤU TRƯỜNG 5 NGƯỜI</button>
+                    <button class="btn-ghost" id="host-reset-btn" type="button">🔄 ĐỔI MÃ PHÒNG</button>
+                </div>
             </div>
-            <div class="host-player-grid" id="host-player-list"></div>
-            <div class="modal-actions">
-                <button class="btn-primary" id="host-start-btn" type="button">🚀 KÍCH HOẠT CHIẾN DỊCH</button>
-                <button class="btn-ghost" id="host-reset-btn" type="button">🔄 ĐẶT LẠI PHÒNG</button>
+
+            <!-- Tab 2: Vào phòng bằng PIN -->
+            <div class="lobby-panel" id="lobby-join-panel" style="display: none;">
+                <p class="field-label" style="margin-top: 6px;">Nhập mã PIN 4 chữ số do Host chia sẻ:</p>
+                <input class="text-input" id="join-pin-input" type="text" maxlength="8" placeholder="Nhập mã PIN (Ví dụ: 7788)" style="font-size: 18px; letter-spacing: 2px; text-align: center; text-transform: uppercase;">
+                <div class="join-status-box" id="join-status-display">Chưa kết nối tới phòng nào.</div>
+                <div class="modal-actions">
+                    <button class="btn-primary" id="join-room-btn" type="button">🔗 KẾT NỐI VÀO PHÒNG</button>
+                </div>
             </div>
+
             <button class="btn-link" id="host-close-btn" type="button">Đóng</button>
         </div>
     </div>
@@ -163,6 +188,7 @@
     <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
     <!-- SCRIPTS -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <script src="data/story.js"></script>
     <script src="js/cinematic.js"></script>
     <script src="js/visuals.js"></script>

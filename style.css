@@ -2710,3 +2710,201 @@ h1, h2, h3 {
     background: linear-gradient(90deg, transparent, var(--tech-green), transparent);
 }
 
+/* ==================================================================
+   MULTIPLAYER 5-PLAYER ARENA & LOBBY STYLES
+   ================================================================== */
+
+/* Tabs trong Modal Tạo / Vào Phòng */
+.lobby-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.tab-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #94a3b8;
+    font-family: var(--font-heading);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background: rgba(0, 255, 136, 0.08);
+    color: #e2e8f0;
+    border-color: rgba(0, 255, 136, 0.3);
+}
+
+.tab-btn.active {
+    background: rgba(0, 255, 136, 0.15);
+    color: var(--tech-green);
+    border-color: var(--tech-green);
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+}
+
+/* Trạng thái kết nối vào phòng */
+.join-status-box {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 12.5px;
+    color: #cbd5e1;
+    text-align: center;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tag người chơi / AI trong danh sách */
+.pill-bot-tag {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+.pill-live-tag {
+    color: var(--tech-green);
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 2px;
+    animation: pulse-live 1.6s infinite ease-in-out;
+}
+
+@keyframes pulse-live {
+    0%, 100% { opacity: 1; text-shadow: 0 0 6px rgba(0, 255, 136, 0.8); }
+    50% { opacity: 0.45; text-shadow: none; }
+}
+
+/* THẺ BÀI ĐỐI THỦ THƯƠNG TRƯỜNG (COMPETITOR CARD) */
+.competitor-card {
+    border-color: rgba(0, 229, 255, 0.35) !important;
+    background: linear-gradient(175deg, rgba(10, 20, 35, 0.85) 0%, rgba(6, 12, 22, 0.95) 100%) !important;
+}
+
+.competitor-card:hover {
+    border-color: #00e5ff !important;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.35) !important;
+}
+
+.competitor-card.is-target-locked {
+    border-color: var(--tech-green) !important;
+    box-shadow: 0 0 24px var(--green-glow) !important;
+}
+
+/* Avatar và Rank Badge của Đối thủ */
+.competitor-avatar-badge-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.12) 0%, transparent 70%);
+}
+
+.competitor-avatar-badge {
+    font-size: 52px;
+    line-height: 1;
+    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+    transition: transform 0.25s ease;
+}
+
+.competitor-card:hover .competitor-avatar-badge {
+    transform: scale(1.1);
+}
+
+.competitor-rank-pill {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    color: #00e5ff;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* Thanh Khiên Thị trường Đối thủ */
+.competitor-hp-box {
+    width: 100%;
+    margin: 5px 0 6px;
+}
+
+.competitor-hp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+}
+
+.competitor-hp-text {
+    color: #00e5ff;
+    font-family: var(--font-mono, monospace);
+    font-weight: 800;
+    font-size: 10.5px;
+}
+
+.shield-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.shield-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00b4d8, #00e5ff);
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+    border-radius: 4px;
+    transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease;
+}
+
+.shield-fill.warn {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.shield-fill.danger {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* Điểm & Streak trên Thẻ bài Đối thủ */
+.score-pill {
+    background: rgba(255, 215, 0, 0.12) !important;
+    border-color: rgba(255, 215, 0, 0.4) !important;
+    color: #ffd700 !important;
+    font-size: 10.5px !important;
+}
+
+.streak-pill {
+    background: rgba(255, 87, 34, 0.12) !important;
+    border-color: rgba(255, 87, 34, 0.4) !important;
+    color: #ff7043 !important;
+    font-size: 10.5px !important;
+}
+
+

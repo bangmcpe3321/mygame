@@ -153,17 +153,23 @@ class VisualEngine {
             const isTargeted = index === this.currentTargetIndex && !isDead;
             const isQueen = alien.type === 'queen';
             const isLarge = alien.type === 'large';
+            const isRival = alien.type === 'rival' || alien.isPlayer || typeof alien.avatar !== 'undefined';
             
-            let cardClass = `tactical-card alien-battle-card card-${alien.type}`;
+            let cardClass = `tactical-card alien-battle-card card-${alien.type || 'rival'}`;
             if (isDead) cardClass += ' is-destroyed';
             if (isTargeted) cardClass += ' is-target-locked';
+            if (isRival) cardClass += ' competitor-card';
 
             // Thông tin vai trò & Rarity
             let typeTag = 'TIỂU DỊ VẬT // DRONE';
             let rarity = 'COMMON ★';
             let atkText = '⚔️ CÀO CẮN: 15 DMG';
 
-            if (isLarge) {
+            if (isRival) {
+                typeTag = alien.isPlayer ? `NGƯỜI CHƠI 0${index + 2} // THỰC` : `TẬP ĐOÀN // AI RIVAL`;
+                rarity = `RANK #${index + 2}`;
+                atkText = '⚔️ TRANH ĐOẠT: 25 DMG';
+            } else if (isLarge) {
                 typeTag = 'CHIẾN BINH GAI // BRUTE';
                 rarity = 'ELITE ★★★';
                 atkText = '⚔️ ĐUÔI GAI: 15 DMG';
@@ -175,7 +181,20 @@ class VisualEngine {
 
             // Thanh máu của thẻ bài
             let hpIndicatorsHtml = '';
-            if (isQueen) {
+            if (isRival) {
+                const hpPercent = Math.min(100, Math.max(0, (alien.hp / alien.maxHp) * 100));
+                hpIndicatorsHtml = `
+                    <div class="competitor-hp-box">
+                        <div class="competitor-hp-row">
+                            <span>🛡️ KHIÊN THỊ TRƯỜNG</span>
+                            <span class="competitor-hp-text" id="alien-hp-text-${index}">${alien.hp}/${alien.maxHp} HP</span>
+                        </div>
+                        <div class="shield-track">
+                            <div class="shield-fill ${alien.hp <= 30 ? 'danger' : alien.hp <= 60 ? 'warn' : ''}" id="alien-hp-bar-${index}" style="width: ${hpPercent}%;"></div>
+                        </div>
+                    </div>
+                `;
+            } else if (isQueen) {
                 const hpPercent = (alien.hp / alien.maxHp) * 100;
                 hpIndicatorsHtml = `
                     <div class="queen-boss-hp-box">
@@ -216,14 +235,14 @@ class VisualEngine {
             }
 
             return `
-                <div class="${cardClass}" id="alien-card-${index}" data-alien-index="${index}" title="Bấm để chọn mục tiêu này">
+                <div class="${cardClass}" id="alien-card-${index}" data-alien-index="${index}" title="Bấm để nhắm bắn đối thủ này">
                     <!-- Tâm ngắm khóa mục tiêu công nghệ xanh lá -->
                     <div class="target-crosshair-lock">
                         <span class="crosshair-bracket top-left"></span>
                         <span class="crosshair-bracket top-right"></span>
                         <span class="crosshair-bracket bottom-left"></span>
                         <span class="crosshair-bracket bottom-right"></span>
-                        <span class="target-locked-text">TARGET LOCKED</span>
+                        <span class="target-locked-text">MỤC TIÊU BẮN</span>
                     </div>
 
                     <!-- Header thẻ bài -->
@@ -232,16 +251,23 @@ class VisualEngine {
                         <span class="card-rarity">${rarity}</span>
                     </div>
 
-                    <!-- Khung ảnh tranh AI sinh vật -->
+                    <!-- Khung ảnh tranh thẻ bài -->
                     <div class="card-portrait-frame">
                         <div class="card-corner-bracket top-left"></div>
                         <div class="card-corner-bracket top-right"></div>
                         <div class="card-corner-bracket bottom-left"></div>
                         <div class="card-corner-bracket bottom-right"></div>
 
-                        <img src="${alien.image}" alt="${alien.name}" class="card-art-img" id="alien-img-${index}" />
+                        ${isRival && alien.avatar ? `
+                            <div class="competitor-avatar-badge-wrap">
+                                <span class="competitor-avatar-badge">${alien.avatar}</span>
+                                <div class="competitor-rank-pill">#${alien.rank || (index + 2)}</div>
+                            </div>
+                        ` : `
+                            <img src="${alien.image}" alt="${alien.name}" class="card-art-img" id="alien-img-${index}" />
+                        `}
                         <div class="card-scanline"></div>
-                        ${isDead ? '<div class="destroyed-stamp">ĐÃ TIÊU DIỆT</div>' : ''}
+                        ${isDead ? '<div class="destroyed-stamp">' + (isRival ? 'TÁI CƠ CẤU' : 'ĐÃ TIÊU DIỆT') + '</div>' : ''}
                     </div>
 
                     <!-- Tên & Chỉ số Thẻ bài -->
@@ -249,7 +275,12 @@ class VisualEngine {
                         <div class="card-name-title">${alien.name}</div>
                         ${hpIndicatorsHtml}
                         <div class="card-footer-stats">
-                            <span class="stat-pill monster-atk-pill">${atkText}</span>
+                            ${isRival && typeof alien.score !== 'undefined' ? `
+                                <span class="stat-pill score-pill">⭐ ${(alien.score || 0).toLocaleString('vi-VN')} đ</span>
+                                <span class="stat-pill streak-pill">🔥 x${alien.streak || 0}</span>
+                            ` : `
+                                <span class="stat-pill monster-atk-pill">${atkText}</span>
+                            `}
                         </div>
                     </div>
                 </div>
@@ -500,6 +531,23 @@ class VisualEngine {
         const card = document.getElementById(`alien-card-${index}`);
         if (!card) return;
 
+        if (alien.type === 'rival' || alien.isPlayer || typeof alien.avatar !== 'undefined') {
+            const bar = document.getElementById(`alien-hp-bar-${index}`);
+            const text = document.getElementById(`alien-hp-text-${index}`);
+            const hpPercent = Math.max(0, (newHp / alien.maxHp) * 100);
+            if (bar) {
+                bar.style.width = `${hpPercent}%`;
+                bar.className = `shield-fill ${newHp <= 30 ? 'danger' : newHp <= 60 ? 'warn' : ''}`;
+            }
+            if (text) text.textContent = `${newHp}/${alien.maxHp} HP`;
+            if (isDead) {
+                card.classList.add('is-destroyed');
+            } else {
+                card.classList.remove('is-destroyed');
+            }
+            return;
+        }
+
         if (alien.type === 'queen') {
             const bar = document.getElementById(`alien-hp-bar-${index}`);
             const text = card.querySelector('.boss-hp-val');
@@ -595,5 +643,21 @@ class VisualEngine {
             if (popup.parentNode) popup.parentNode.removeChild(popup);
         }, 900);
     }
+
+    /**
+     * Cập nhật điểm số và chuỗi của đối thủ trên thẻ bài
+     */
+    updateCompetitorScore(index, score, streak) {
+        const card = document.getElementById(`alien-card-${index}`);
+        if (!card) return;
+        const scorePill = card.querySelector('.score-pill');
+        const streakPill = card.querySelector('.streak-pill');
+        if (scorePill) scorePill.textContent = `⭐ ${(score || 0).toLocaleString('vi-VN')} đ`;
+        if (streakPill) streakPill.textContent = `🔥 x${streak || 0}`;
+    }
+}
+
+if (typeof window !== 'undefined') {
+    window.VisualEngine = VisualEngine;
 }
 
