@@ -37,7 +37,7 @@ class TraMocGame {
         this.robotMaxShield = 200;
         this.robotShield = 200;
         this.currentSectorIndex = 0;
-        this.aliensState = [];
+        this.aliensState = this.getSectorCompetitors(0);
 
         // Bộ đếm thời gian
         this.timerInterval = null;
@@ -52,6 +52,7 @@ class TraMocGame {
         this.buildAvatarGrid();
         this.bindEvents();
         this.bindMultiplayer();
+        this.aliensState = this.getSectorCompetitors(0);
         this.renderAll();
     }
 
@@ -1063,7 +1064,7 @@ class TraMocGame {
 
         this.robotShield = 200;
         this.currentSectorIndex = 0;
-        this.aliensState = [];
+        this.aliensState = this.getSectorCompetitors(0);
 
         if (clearScore) {
             this.score = 0;

@@ -27,7 +27,15 @@ class VisualEngine {
      */
     renderArena(sectorIndex, aliensState, robotShield = 200, onTargetSelect = null) {
         this.currentSector = sectorIndex;
-        this.aliens = aliensState || [];
+        if (aliensState && aliensState.length > 0) {
+            this.aliens = aliensState;
+        } else if (window.multiplayer && typeof window.multiplayer.getCompetitors === 'function') {
+            this.aliens = window.multiplayer.getCompetitors();
+        } else if (typeof SECTOR_MONSTERS !== 'undefined' && SECTOR_MONSTERS[sectorIndex]) {
+            this.aliens = JSON.parse(JSON.stringify(SECTOR_MONSTERS[sectorIndex]));
+        } else {
+            this.aliens = [];
+        }
         this.onTargetSelect = onTargetSelect;
         this.clear();
 
