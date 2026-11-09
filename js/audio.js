@@ -1,10 +1,10 @@
 /**
- * BỘ TẠO HIỆU ỨNG ÂM THANH KHOA HỌC VIỄN TƯỞNG (SCI-FI AUDIO ENGINE)
- * Sử dụng Web Audio API thuần túy, an toàn 100% không bao giờ gây crash.
- * Hiệu ứng: Súng Plasma, Nổ Acid, Gầm thét Xenomorph, Báo động Đỏ và Hải đăng SOS.
+ * BỘ TẠO HIỆU ỨNG ÂM THANH KHOA HỌC VIỄN TƯỞNG & THỊ TRƯỜNG (UNIFIED SCI-FI AUDIO ENGINE)
+ * Sử dụng Web Audio API thuần túy, an toàn 100% không bao giờ gây crash hay cần file mp3/wav ngoài.
+ * Hiệu ứng: Súng Plasma, Nổ Acid, Gầm thét Xenomorph, Báo động Đỏ, Hải đăng SOS, Streak Quizizz.
  */
 
-class SoundSystem {
+class UnifiedAudioEngine {
     constructor() {
         this.ctx = null;
         this.enabled = true;
@@ -16,16 +16,16 @@ class SoundSystem {
     init() {
         try {
             if (!this.ctx) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (AudioContext) {
-                    this.ctx = new AudioContext();
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    this.ctx = new AudioCtx();
                 }
             }
             if (this.ctx && this.ctx.state === 'suspended') {
                 this.ctx.resume().catch(() => {});
             }
         } catch (e) {
-            console.warn("SoundSystem init notice:", e);
+            console.warn("Audio init notice:", e);
         }
     }
 
@@ -34,6 +34,10 @@ class SoundSystem {
         this.init();
         if (!this.ctx) return null;
         return this.ctx;
+    }
+
+    getCtx() {
+        return this.getSafeCtx();
     }
 
     toggle() {
@@ -104,20 +108,117 @@ class SoundSystem {
         }
     }
 
-    // 3. Tiếng quái vật bị tiêu diệt / phát nổ acid
+    // 3. Tiếng gầm thét dữ dội của Nữ Chúa Xenomorph
+    playQueenRoar() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(140, now);
+            osc1.frequency.linearRampToValueAtTime(260, now + 0.2);
+            osc1.frequency.exponentialRampToValueAtTime(45, now + 0.6);
+
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(90, now);
+            osc2.frequency.exponentialRampToValueAtTime(35, now + 0.6);
+
+            gain.gain.setValueAtTime(0.6, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.65);
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.65);
+            osc2.stop(now + 0.65);
+        } catch (e) {
+            console.warn("Audio playQueenRoar:", e);
+        }
+    }
+
+    // 4. Tiếng quái vật tan biến thành khói acid độc
     playAlienDeath() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
             const now = ctx.currentTime;
-            // Tiếng gầm vỡ vụn
+            const bufferSize = ctx.sampleRate * 0.45;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+
+            const noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(800, now);
+            filter.frequency.exponentialRampToValueAtTime(120, now + 0.45);
+
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            noise.start(now);
+        } catch (e) {
+            console.warn("Audio playAlienDeath:", e);
+        }
+    }
+
+    // 5. Tiếng quái vật phản kích lao vào cắn xé
+    playAlienAttack() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(240, now);
-            osc.frequency.exponentialRampToValueAtTime(45, now + 0.4);
 
-            gain.gain.setValueAtTime(0.6, now);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(280, now);
+            osc.frequency.linearRampToValueAtTime(450, now + 0.1);
+            osc.frequency.exponentialRampToValueAtTime(90, now + 0.3);
+
+            gain.gain.setValueAtTime(0.45, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        } catch (e) {
+            console.warn("Audio playAlienAttack:", e);
+        }
+    }
+
+    // 6. Tiếng Còi Báo Động Khiên Bị Vỡ (Alarm Klaxon)
+    playAlarmKlaxon() {
+        const ctx = this.getSafeCtx();
+        if (!ctx) return;
+        try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(750, now);
+            osc.frequency.setValueAtTime(450, now + 0.15);
+            osc.frequency.setValueAtTime(750, now + 0.3);
+
+            gain.gain.setValueAtTime(0.35, now);
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
 
             osc.connect(gain);
@@ -125,94 +226,68 @@ class SoundSystem {
             osc.start(now);
             osc.stop(now + 0.45);
         } catch (e) {
-            console.warn("Audio playAlienDeath:", e);
+            console.warn("Audio playAlarmKlaxon:", e);
         }
     }
 
-    // 4. Tiếng quái vật phản công / lao tới cào xé khi trả lời sai
-    playAlienAttack() {
+    // 7. Âm thanh Kích hoạt Hải Đăng Cứu Hộ S.O.S (Beacon Activated)
+    playBeaconActivated() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
             const now = ctx.currentTime;
-            const hiss = ctx.createOscillator();
-            const hissGain = ctx.createGain();
-            hiss.type = 'sawtooth';
-            hiss.frequency.setValueAtTime(650, now);
-            hiss.frequency.linearRampToValueAtTime(950, now + 0.15);
-            hiss.frequency.linearRampToValueAtTime(300, now + 0.4);
+            const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+            notes.forEach((freq, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const startTime = now + idx * 0.14;
 
-            hissGain.gain.setValueAtTime(0.4, now);
-            hissGain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, startTime);
 
-            hiss.connect(hissGain);
-            hissGain.connect(ctx.destination);
-            hiss.start(now);
-            hiss.stop(now + 0.45);
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(0.35, startTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 1.2);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(startTime);
+                osc.stop(startTime + 1.25);
+            });
         } catch (e) {
-            console.warn("Audio playAlienAttack:", e);
+            console.warn("Audio playBeaconActivated:", e);
         }
     }
 
-    // 5. Tiếng gầm thét kinh hoàng của Nữ Chúa Alien Queen
-    playQueenRoar() {
+    // 8. Chuỗi âm thanh thưởng Streak kiểu Quizizz
+    playStreakChime() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
             const now = ctx.currentTime;
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(95, now);
-            osc.frequency.linearRampToValueAtTime(160, now + 0.5);
-            osc.frequency.linearRampToValueAtTime(55, now + 1.2);
+            const chord = [440, 554.37, 659.25, 880];
+            chord.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const st = now + i * 0.05;
 
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(400, now);
-            filter.frequency.linearRampToValueAtTime(220, now + 1.2);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, st);
 
-            gain.gain.setValueAtTime(0.7, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.3);
+                gain.gain.setValueAtTime(0.25, st);
+                gain.gain.exponentialRampToValueAtTime(0.001, st + 0.45);
 
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start(now);
-            osc.stop(now + 1.3);
-        } catch (e) {
-            console.warn("Audio playQueenRoar:", e);
-        }
-    }
-
-    // 6. Tiếng chuông combo streak tăng điểm
-    playStreakChime(streakCount = 1) {
-        const ctx = this.getSafeCtx();
-        if (!ctx) return;
-        try {
-            const now = ctx.currentTime;
-            const baseFreq = 523.25 + Math.min(streakCount * 120, 720);
-
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(baseFreq, now);
-            osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.15);
-
-            gain.gain.setValueAtTime(0.35, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.35);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(st);
+                osc.stop(st + 0.5);
+            });
         } catch (e) {
             console.warn("Audio playStreakChime:", e);
         }
     }
 
-    // 6b. Tiếng còi báo lỗi / Trả lời sai (Buzzer hạ nốt)
+    // 9. Tiếng báo sai (Wrong Buzzer)
     playWrongBuzzer() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
@@ -220,12 +295,13 @@ class SoundSystem {
             const now = ctx.currentTime;
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
+
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.setValueAtTime(160, now);
             osc.frequency.linearRampToValueAtTime(110, now + 0.35);
 
             gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.38);
 
             osc.connect(gain);
             gain.connect(ctx.destination);
@@ -236,7 +312,15 @@ class SoundSystem {
         }
     }
 
-    // 7. Tiếng đồng hồ đếm ngược Quizizz (Tick Tock điện tử)
+    // Các hàm tương thích với hệ thống giao diện
+    playCorrect(streak = 1) {
+        this.playStreakChime();
+    }
+
+    playWrong() {
+        this.playWrongBuzzer();
+    }
+
     playTick() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
@@ -245,106 +329,104 @@ class SoundSystem {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(1050, now);
-            gain.gain.setValueAtTime(0.12, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-
+            osc.frequency.setValueAtTime(1040, now);
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.04);
-        } catch (e) {
-            console.warn("Audio playTick:", e);
-        }
+            osc.stop(now + 0.05);
+        } catch (e) {}
     }
 
-    // 8. Tiếng còi báo động đỏ khẩn cấp (Red Alert Klaxon)
-    playAlarmKlaxon() {
+    playChoice() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
             const now = ctx.currentTime;
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(440, now);
-            osc.frequency.linearRampToValueAtTime(620, now + 0.4);
-
-            gain.gain.setValueAtTime(0.35, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.75);
-
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(380, now);
+            osc.frequency.exponentialRampToValueAtTime(540, now + 0.12);
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.75);
-        } catch (e) {
-            console.warn("Audio playAlarmKlaxon:", e);
-        }
+            osc.stop(now + 0.15);
+        } catch (e) {}
     }
 
-    // 9. Tiếng kích hoạt hải đăng cứu hộ S.O.S chiến thắng
-    playBeaconActivated() {
+    playCardUnlock() {
         const ctx = this.getSafeCtx();
         if (!ctx) return;
         try {
-            const notes = [440, 554.37, 659.25, 880, 1108.73];
-            notes.forEach((freq, idx) => {
-                setTimeout(() => {
-                    try {
-                        const c = this.getSafeCtx();
-                        if (!c) return;
-                        const now = c.currentTime;
-                        const osc = c.createOscillator();
-                        const gain = c.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, now);
-                        gain.gain.setValueAtTime(0.3, now);
-                        gain.gain.exponentialRampToValueAtTime(0.005, now + 0.6);
-                        osc.connect(gain);
-                        gain.connect(c.destination);
-                        osc.start(now);
-                        osc.stop(now + 0.6);
-                    } catch (e) {}
-                }, idx * 140);
+            const now = ctx.currentTime;
+            [523.25, 783.99, 1046.5].forEach((freq, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const st = now + idx * 0.08;
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, st);
+                gain.gain.setValueAtTime(0.18, st);
+                gain.gain.exponentialRampToValueAtTime(0.001, st + 0.35);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(st);
+                osc.stop(st + 0.36);
             });
-        } catch (e) {
-            console.warn("Audio playBeaconActivated:", e);
-        }
+        } catch (e) {}
     }
 
-    // 10. Âm thanh buồng máy phi thuyền (Deep Space Engine Hum)
+    playEnding() {
+        this.playBeaconActivated();
+    }
+
     startAmbient() {
         const ctx = this.getSafeCtx();
         if (!ctx || this.ambientPlaying) return;
         try {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(55, ctx.currentTime);
+            const bufferSize = ctx.sampleRate * 2;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.015;
+            }
 
-            gain.gain.setValueAtTime(0.06, ctx.currentTime);
+            this.ambientSource = ctx.createBufferSource();
+            this.ambientSource.buffer = buffer;
+            this.ambientSource.loop = true;
 
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start();
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(220, ctx.currentTime);
 
-            this.ambientSource = osc;
+            this.ambientGain = ctx.createGain();
+            this.ambientGain.gain.setValueAtTime(0.08, ctx.currentTime);
+
+            this.ambientSource.connect(filter);
+            filter.connect(this.ambientGain);
+            this.ambientGain.connect(ctx.destination);
+
+            this.ambientSource.start(0);
             this.ambientPlaying = true;
-        } catch (e) {
-            console.warn("Ambient sound init:", e);
-        }
+        } catch (e) {}
     }
 
     stopAmbient() {
-        if (this.ambientSource) {
-            try {
+        try {
+            if (this.ambientSource) {
                 this.ambientSource.stop();
                 this.ambientSource.disconnect();
-            } catch (e) {}
-            this.ambientSource = null;
-        }
-        this.ambientPlaying = false;
+                this.ambientSource = null;
+            }
+            this.ambientPlaying = false;
+        } catch (e) {}
     }
 }
 
-const sounds = new SoundSystem();
+// Khởi tạo thực thể dùng chung
+const soundSystem = new UnifiedAudioEngine();
+window.soundSystem = soundSystem;
+window.audio = soundSystem;

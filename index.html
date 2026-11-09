@@ -3,70 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aegis Protocol: Starfall | Chiến Dịch Vũ Trụ Đột Kích</title>
+    <title>Trà Mộc: Độc Quyền | Quyền Lực &amp; Cái Giá · Chiến Dịch Vũ Trụ Đột Kích</title>
+    <meta name="description" content="Game mô phỏng kinh tế &amp; bài học Triết học Mác – Lênin kết hợp Đấu trường Turn-Based Card RPG &amp; Hoạt cảnh điện ảnh.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- THANH TIÊU ĐỀ & ĐIỀU KHIỂN TRUNG TÂM (SCI-FI HEADER) -->
     <header class="game-header">
-        <div class="brand-title">
-            <span class="brand-icon">🤖</span>
-            <span>AEGIS PROTOCOL: STARFALL</span>
+        <div class="brand-block">
+            <span class="brand-mark" aria-hidden="true">🤖</span>
+            <div class="brand-text">
+                <h1 class="brand-title">TRÀ MỘC · AEGIS PROTOCOL</h1>
+                <p class="brand-sub">ĐỘC QUYỀN // QUYỀN LỰC &amp; CÁI GIÁ</p>
+            </div>
         </div>
+
         <div class="header-controls">
-            <!-- Nút Tùy Chỉnh Tên Người Chơi & Avatar Robot -->
-            <button class="btn-profile" id="player-profile-btn" title="Bấm để đổi bí danh & avatar Robot">
-                <span id="header-player-avatar">🤖</span>
-                <span id="header-player-name">Unit-07</span>
-                <span class="edit-icon">✏️</span>
+            <button class="btn-profile" id="player-profile-btn" type="button" aria-label="Đổi hồ sơ người chơi">
+                <span class="profile-avatar" id="header-player-avatar" aria-hidden="true">🤖</span>
+                <span class="profile-name" id="header-player-name">Unit-07</span>
+                <span class="edit-icon" aria-hidden="true">✏️</span>
             </button>
 
-            <!-- Điểm số & Chuỗi Streak kiểu Quizizz -->
-            <div class="hud-pill streak-pill" id="streak-display" style="display: none;">🔥 Chuỗi x1</div>
-            <div class="hud-pill" id="score-display">0 ĐIỂM</div>
+            <div class="hud-pill streak-pill" id="streak-display" style="display: none;" aria-live="polite">🔥 Chuỗi x1</div>
+            <div class="hud-pill" id="score-display" aria-live="polite">0 ĐIỂM</div>
 
-            <!-- Nút mở Leaderboard trực tiếp -->
-            <button class="btn-leaderboard" id="leaderboard-toggle-btn" title="Bảng xếp hạng phi đội">
-                <span>🏆</span>
-                <span>BẢNG XẾP HẠNG</span>
+            <button class="btn-hud" id="cards-toggle-btn" type="button" aria-label="Thẻ tri thức đã mở">
+                <span aria-hidden="true">📜</span><span class="btn-hud-label">THẺ TRI THỨC</span>
+                <span class="card-count-badge" id="cards-count-badge">0/18</span>
             </button>
-
-            <!-- Nút mở bảng điều khiển Host -->
-            <button class="btn-host-nav" id="host-control-btn" title="Phòng chỉ huy Host">
-                <span>👑</span>
-                <span>PHÒNG HOST</span>
+            <button class="btn-hud" id="leaderboard-toggle-btn" type="button" aria-label="Bảng xếp hạng">
+                <span aria-hidden="true">🏆</span><span class="btn-hud-label">XẾP HẠNG</span>
             </button>
-
-            <!-- Bật / tắt âm thanh -->
-            <button class="btn-icon" id="sound-toggle-btn" title="Bật/Tắt âm thanh">
-                <span id="sound-icon">🔊</span>
+            <button class="btn-hud" id="host-control-btn" type="button" aria-label="Phòng host">
+                <span aria-hidden="true">👑</span><span class="btn-hud-label">PHÒNG HOST</span>
+            </button>
+            <button class="btn-icon" id="sound-toggle-btn" type="button" aria-label="Bật tắt âm thanh">
+                <span id="sound-icon" aria-hidden="true">🔊</span>
             </button>
         </div>
     </header>
 
-    <!-- THANH TIẾN TRÌNH CÁC KHU VỰC (SECTOR PROGRESS STRIP) -->
-    <nav class="progress-strip" aria-label="Tiến trình chiến dịch tàu vũ trụ">
-        <div class="challenge-step active" id="step-cargo">
-            <div class="step-circle">1</div>
-            <span>KHO HÀNG (4 Drones)</span>
-        </div>
-        <div class="challenge-step" id="step-reactor">
-            <div class="step-circle">2</div>
-            <span>LÒ PHẢN ỨNG (2 Drones & 2 Brutes)</span>
-        </div>
-        <div class="challenge-step" id="step-bridge">
-            <div class="step-circle">3</div>
-            <span>CẦU TÀU (Alien Queen & Drone)</span>
-        </div>
-    </nav>
+    <!-- THANH TIẾN TRÌNH 3 HỒI / 3 SECTOR CHIẾN DỊCH -->
+    <nav class="progress-strip" id="progress-strip" aria-label="Tiến trình ba hồi"></nav>
+
+    <!-- THANH 6 CHỈ SỐ THỊ TRƯỜNG -->
+    <div class="market-bar" id="market-bar" aria-label="Sáu chỉ số thị trường"></div>
 
     <!-- KHÔNG GIAN ĐẤU TRƯỜNG CHÍNH -->
     <main class="game-viewport">
-        <!-- 1. KHU VỰC ĐẤU TRƯỜNG TURN-BASED RPG (ANGRY BIRDS EPIC STYLE) -->
+        <!-- 1. ĐẤU TRƯỜNG THẺ BÀI CHIẾN ĐẤU THEO LƯỢT (TURN-BASED CARD RPG) -->
         <section class="visual-theater" id="visual-theater" aria-label="Đấu trường chiến đấu theo lượt">
             <!-- Đấu trường giữa Robot và Quái vật ngoài hành tinh được tạo tự động bởi VisualEngine -->
         </section>
@@ -77,126 +65,109 @@
             <div class="popup-sub">⚡ Tốc độ: +450 | 🔥 Chuỗi x2</div>
         </div>
 
-        <!-- 2. BẢNG CÂU HỎI & TIMER QUIZIZZ -->
-        <section class="quiz-panel" id="quiz-panel" aria-label="Bảng câu hỏi nạp đạn súng plasma">
-            <!-- THANH ĐẾM NGƯỢC THỜI GIAN QUIZIZZ -->
-            <div class="timer-container">
-                <div class="quiz-timer-track">
-                    <div class="quiz-timer-fill timer-normal" id="quiz-timer-bar"></div>
-                </div>
-                <span class="quiz-timer-text" id="quiz-timer-text">15s</span>
-            </div>
-
-            <div class="quiz-header">
-                <span class="question-counter" id="question-counter">LƯỢT BẮN 1 / 4</span>
-                <div class="question-indicator-dots" id="indicator-dots"></div>
-            </div>
-
-            <!-- Nội dung câu hỏi -->
-            <h2 class="question-text" id="question-text">Đang kết nối hệ thống kiểm soát vũ khí...</h2>
-
-            <!-- 4 lựa chọn trả lời (Tự động chuyển câu ngay khi chọn) -->
-            <div class="options-grid" id="options-container"></div>
-
-            <!-- Hộp giải thích khoa học sau khi trả lời -->
-            <div class="explanation-box" id="explanation-box" style="display: none;"></div>
-        </section>
+        <!-- 2. KHU VỰC THỬ THÁCH QUIZ & QUYẾT ĐỊNH CHIẾN LƯỢC -->
+        <div class="game-lower-deck">
+            <section class="brief-panel" id="brief-panel" aria-label="Bối cảnh chương"></section>
+            <section class="play-panel" id="play-panel" aria-label="Khu vực ra quyết định &amp; câu hỏi"></section>
+        </div>
     </main>
 
     <!-- TRƯỜNG ĐOẠN ĐIỆN ẢNH TRUYỆN TRANH (CINEMATIC COMIC OVERLAY) -->
     <section class="cinematic-overlay" id="cinematic-container" style="display: none;"></section>
 
-    <!-- MODAL ĐỔI TÊN NGƯỜI CHƠI & CHỌN AVATAR ROBOT -->
-    <div class="profile-modal-overlay" id="profile-modal" style="display: none;">
-        <div class="profile-card">
-            <h3 class="profile-title">🤖 BÍ DANH CHIẾN ĐẤU CỦA BẠN</h3>
-            <p class="profile-desc">Nhập bí danh Robot để hiển thị trên Bảng chỉ huy trực tiếp cùng phi đội:</p>
-
-            <div class="profile-input-group">
-                <input type="text" id="custom-name-input" class="custom-name-input" placeholder="Ví dụ: Unit-07, Titan-X..." maxlength="22" autocomplete="off">
-            </div>
-
-            <div class="avatar-label">CHỌN BIỂU TƯỢNG ROBOT:</div>
-            <div class="avatar-selection-grid" id="avatar-grid">
-                <button class="avatar-btn active" data-avatar="🤖">🤖</button>
-                <button class="avatar-btn" data-avatar="⚡">⚡</button>
-                <button class="avatar-btn" data-avatar="🛡️">🛡️</button>
-                <button class="avatar-btn" data-avatar="🎯">🎯</button>
-                <button class="avatar-btn" data-avatar="🚀">🚀</button>
-                <button class="avatar-btn" data-avatar="🛸">🛸</button>
-                <button class="avatar-btn" data-avatar="🔋">🔋</button>
-                <button class="avatar-btn" data-avatar="🛰️">🛰️</button>
-                <button class="avatar-btn" data-avatar="🔮">🔮</button>
-                <button class="avatar-btn" data-avatar="⚙️">⚙️</button>
-            </div>
-
-            <div class="profile-actions">
-                <button class="btn-save-profile" id="save-profile-btn">LƯU BÍ DANH & TIẾP TỤC ➔</button>
-                <button class="btn-cancel-profile" id="cancel-profile-btn">HỦY</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- BẢNG ĐIỀU KHIỂN PHÒNG CHƠI HOST (HOST LOBBY MODAL) -->
-    <div class="host-modal-overlay" id="host-modal" style="display: none;">
-        <div class="host-card">
-            <button class="btn-close-host" id="host-close-btn" title="Đóng sảnh chờ" style="position: absolute; top: 12px; right: 18px; background: none; border: none; color: #00f3ff; font-size: 1.8rem; cursor: pointer; line-height: 1;">&times;</button>
-            <h2 class="host-title">🛰️ TRUNG TÂM CHỈ HUY CHIẾN DỊCH (HOST LOBBY)</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 6px;">
-                Tất cả Robot trong phi đội sẽ đồng loạt tham chiến khi Chỉ huy nhấn <strong>BẮT ĐẦU</strong>.
-            </p>
-
-            <div class="host-pin-box">
-                <div class="pin-label">TẦN SỐ TRUYỀN TIN (ROOM PIN)</div>
-                <div class="pin-code" id="host-room-pin">AEGIS-7</div>
-            </div>
-
-            <!-- KHU VỰC NHẬP TÊN NGAY TRONG SẢNH CHỜ -->
-            <div class="lobby-name-bar">
-                <span class="label">Bí danh của bạn:</span>
-                <span class="current-player-display" id="lobby-player-display">🤖 Unit-07</span>
-                <button class="btn-inline-rename" id="lobby-rename-btn">Đổi tên</button>
-            </div>
-
-            <div style="text-align: left; margin-bottom: 8px; font-size: 0.85rem; color: #00f3ff; font-weight: 600;">
-                DANH SÁCH CHIẾN BINH ROBOT ĐÃ KẾT NỐI:
-            </div>
-            <div class="host-player-grid" id="host-player-list"></div>
-
-            <div class="host-actions">
-                <button class="btn-deploy-start" id="host-start-btn">🚀 KÍCH HOẠT CHIẾN DỊCH CHO TOÀN PHI ĐỘI</button>
-                <button class="btn-host-reset" id="host-reset-btn">🔄 RESET BẢNG ĐIỂM</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- BẢNG XẾP HẠNG THỜI GIAN THỰC (LEADERBOARD DRAWER) -->
-    <aside class="leaderboard-drawer" id="leaderboard-drawer">
-        <div class="drawer-header">
-            <h3 class="drawer-title">🏆 BẢNG XẾP HẠNG PHI ĐỘI</h3>
-            <button class="btn-close-drawer" id="leaderboard-close-btn">&times;</button>
-        </div>
-        <div class="leaderboard-list" id="leaderboard-body"></div>
-    </aside>
-
-    <!-- MODAL DẪN TRUYỆN MỞ ĐẦU / CHUYỂN MÀN / KẾT THÚC MỞ -->
+    <!-- MODAL DẪN TRUYỆN CHUYỂN HỒI / CHUYỂN MÀN -->
     <aside class="story-overlay" id="story-overlay" style="display: none;">
         <div class="scroll-container">
             <div class="scifi-holo-border-top"></div>
-            <h1 class="story-title" id="story-title">BÁO ĐỘNG ĐỎ</h1>
-            <div class="story-subtitle" id="story-subtitle">Tàu vận tải Aegis-7 gặp nạn</div>
+            <h1 class="story-title" id="story-title">DỌN SẠCH KHO HÀNG</h1>
+            <div class="story-subtitle" id="story-subtitle">Tiến sâu vào Khoang Lò Phản Ứng</div>
             <div class="story-content" id="story-body"></div>
             <div class="scifi-holo-border-bottom"></div>
-            <button class="btn-mythic" id="story-action-btn">TIẾP TỤC</button>
+            <button class="btn-mythic" id="story-action-btn">TIẾP TỤC ➔</button>
         </div>
     </aside>
 
+    <!-- LỚP PHỦ KẾT CỤC ĐẠI THẮNG / TỔNG KẾT -->
+    <div class="ending-overlay" id="ending-overlay">
+        <div class="ending-card">
+            <p class="ending-code" id="ending-code"></p>
+            <p class="ending-icon" id="ending-icon" aria-hidden="true"></p>
+            <h2 class="ending-title" id="ending-title"></h2>
+            <blockquote class="ending-quote" id="ending-quote"></blockquote>
+            <div class="ending-body" id="ending-body"></div>
+            <div class="ending-lesson" id="ending-lesson"></div>
+            <div class="ending-cards" id="ending-cards"></div>
+            <div class="ending-actions">
+                <button class="btn-primary" id="btn-replay" type="button">🔄 CHƠI LẠI TỪ ĐẦU</button>
+                <button class="btn-ghost" id="btn-ending-leaderboard" type="button">🏆 BẢNG XẾP HẠNG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL HỒ SƠ CHIẾN BINH / NHÀ SÁNG LẬP -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+            <h3 class="modal-title" id="profile-title">HỒ SƠ NGƯỜI CHƠI</h3>
+            <p class="modal-desc">Bí danh Robot và biểu tượng hiển thị trên Bảng chỉ huy trực tiếp:</p>
+            <input class="text-input" id="custom-name-input" type="text" maxlength="22" placeholder="Nhập tên bí danh (Ví dụ: Unit-07)" aria-label="Tên hiển thị">
+            <p class="field-label">Chọn biểu tượng</p>
+            <div class="avatar-grid" id="avatar-grid"></div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="save-profile-btn" type="button">LƯU HỒ SƠ</button>
+                <button class="btn-ghost" id="cancel-profile-btn" type="button">HUỶ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PHÒNG CHƠI HOST -->
+    <div class="modal-overlay" id="host-modal">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="host-title">
+            <h3 class="modal-title" id="host-title">PHÒNG CHỈ HUY HOST (LOBBY)</h3>
+            <p class="modal-desc">Tất cả người chơi sẽ đồng loạt tham chiến khi Host nhấn BẮT ĐẦU.</p>
+            <div class="pin-box">
+                <span class="pin-label">TẦN SỐ TRUYỀN TIN (ROOM PIN)</span>
+                <span class="pin-code" id="host-room-pin">MOC-0000</span>
+            </div>
+            <div class="lobby-bar">
+                <span id="lobby-player-display">Unit-07</span>
+                <button class="btn-mini" id="lobby-rename-btn" type="button">ĐỔI TÊN</button>
+            </div>
+            <div class="host-player-grid" id="host-player-list"></div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="host-start-btn" type="button">🚀 KÍCH HOẠT CHIẾN DỊCH</button>
+                <button class="btn-ghost" id="host-reset-btn" type="button">🔄 ĐẶT LẠI PHÒNG</button>
+            </div>
+            <button class="btn-link" id="host-close-btn" type="button">Đóng</button>
+        </div>
+    </div>
+
+    <!-- NGĂN KÉO BẢNG XẾP HẠNG -->
+    <aside class="drawer" id="leaderboard-drawer" aria-label="Bảng xếp hạng">
+        <div class="drawer-header">
+            <h2 class="drawer-title">🏆 BẢNG XẾP HẠNG PHI ĐỘI</h2>
+            <button class="btn-close-drawer" id="leaderboard-close-btn" type="button" aria-label="Đóng">×</button>
+        </div>
+        <div class="drawer-list" id="leaderboard-body"></div>
+    </aside>
+
+    <!-- NGĂN KÉO THẺ TRI THỨC -->
+    <aside class="drawer" id="cards-drawer" aria-label="Thẻ tri thức">
+        <div class="drawer-header">
+            <h2 class="drawer-title">📜 THẺ TRI THỨC KINH TẾ CHÍNH TRỊ</h2>
+            <button class="btn-close-drawer" id="cards-close-btn" type="button" aria-label="Đóng">×</button>
+        </div>
+        <p class="drawer-hint" id="cards-hint">Mỗi quyết định mở khoá một thẻ tri thức.</p>
+        <div class="drawer-list" id="cards-body"></div>
+    </aside>
+
+    <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
     <!-- SCRIPTS -->
-    <script src="data/questions.js"></script>
+    <script src="data/story.js"></script>
     <script src="js/cinematic.js"></script>
-    <script src="js/multiplayer.js"></script>
-    <script src="js/audio.js"></script>
     <script src="js/visuals.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/multiplayer.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>

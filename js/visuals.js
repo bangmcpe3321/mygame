@@ -1,9 +1,9 @@
 /**
  * HỆ THỐNG ĐỒ HỌA THẺ BÀI CHIẾN ĐẤU THEO LƯỢT (TACTICAL SCI-FI CARD BATTLE ENGINE)
- * - Tông màu chủ đạo: XANH LÁ CÂY CÔNG NGHỆ (High-Tech Green / Matrix Emerald Neon).
+ * - Tông màu chủ đạo: XANH LÁ CÔNG NGHỆ (High-Tech Green / Matrix Emerald Neon).
  * - Biến nhân vật và quái vật thành các THẺ BÀI CHIẾN THUẬT (Tactical Battle Cards).
- * - Sử dụng hoàn toàn tranh AI nghệ thuật kỹ thuật số (không dùng SVG cơ bản).
- * - Hoạt ảnh chiến đấu: Đạn Plasma xanh lá chớp lóe, đòn cào xé phản kích, nổ acid tan biến.
+ * - Sử dụng hoàn toàn tranh AI nghệ thuật kỹ thuật số.
+ * - Hoạt ảnh chiến đấu: Đạn Plasma chớp lóe, đòn cào xé phản kích, nổ acid tan biến.
  */
 
 class VisualEngine {
@@ -34,19 +34,19 @@ class VisualEngine {
         const sectorConfigs = [
             {
                 id: 'cargo',
-                name: 'SECTOR 01: KHO HÀNG (CARGO BAY)',
+                name: 'SECTOR 01: KHO HÀNG (CARGO BAY) · HỒI I',
                 sub: 'Cảnh báo: 4 Dị vật nhỏ (Swarm Drones) đang cắn phá vỏ tàu!',
                 bg: 'assets/bg_cargobay.jpg'
             },
             {
                 id: 'reactor',
-                name: 'SECTOR 02: LÒ PHẢN ỨNG (REACTOR CORE)',
-                sub: 'Báo động: 2 Dị vật nhỏ & 2 Chiến binh bọc giáp gai (Xeno Brutes)!',
+                name: 'SECTOR 02: LÒ PHẢN ỨNG (REACTOR CORE) · HỒI II',
+                sub: 'Báo động: Dị vật bọc giáp gai Brutes đe dọa chuỗi năng lượng!',
                 bg: 'assets/bg_reactor.jpg'
             },
             {
                 id: 'bridge',
-                name: 'SECTOR 03: CẦU TÀU CHỈ HUY (COMMAND BRIDGE)',
+                name: 'SECTOR 03: CẦU TÀU CHỈ HUY (COMMAND BRIDGE) · HỒI III',
                 sub: 'Khẩn cấp Tối Cao: NỮ CHÚA XENOMORPH (HIVE QUEEN BOSS) ĐÃ XUẤT HIỆN!',
                 bg: 'assets/bg_bridge.jpg'
             }
@@ -128,7 +128,7 @@ class VisualEngine {
 
                 <!-- Bảng nhắc chiến thuật -->
                 <div class="arena-footer-tip" id="arena-tip">
-                    <span>💡 Gợi ý: Bấm vào một Thẻ bài Quái vật để khóa mục tiêu (Target Lock). Trả lời đúng để nạp đạn Plasma tiêu diệt mục tiêu!</span>
+                    <span>💡 Bấm vào một Thẻ bài Quái vật để khóa mục tiêu (Target Lock). Trả lời đúng để nạp đạn Plasma tiêu diệt mục tiêu!</span>
                 </div>
             </div>
         `;
@@ -194,7 +194,7 @@ class VisualEngine {
                                 <span class="hp-heart ${i < alien.hp ? 'heart-full' : 'heart-empty'}">🩸</span>
                             `).join('')}
                         </div>
-                        <span class="hp-number">${alien.hp}/2 HP</span>
+                        <span class="hp-number">${alien.hp}/${alien.maxHp} HP</span>
                     </div>
                 `;
             } else {
@@ -203,7 +203,7 @@ class VisualEngine {
                         <div class="hp-pips-group">
                             <span class="hp-heart ${alien.hp > 0 ? 'heart-full' : 'heart-empty'}">🩸</span>
                         </div>
-                        <span class="hp-number">${alien.hp}/1 HP</span>
+                        <span class="hp-number">${alien.hp}/${alien.maxHp} HP</span>
                     </div>
                 `;
             }
@@ -289,7 +289,7 @@ class VisualEngine {
 
         const cards = this.container.querySelectorAll('.alien-battle-card');
         cards.forEach((card, idx) => {
-            if (idx === targetIndex && this.aliens[idx].hp > 0) {
+            if (idx === targetIndex && this.aliens[idx] && this.aliens[idx].hp > 0) {
                 card.classList.add('is-target-locked');
             } else {
                 card.classList.remove('is-target-locked');
@@ -333,8 +333,9 @@ class VisualEngine {
         if (muzzle) muzzle.classList.add('muzzle-active');
 
         // Âm thanh bắn súng
+        const sound = window.soundSystem || window.audio;
         try {
-            if (window.soundSystem) window.soundSystem.playLaserShot();
+            if (sound && sound.playLaserShot) sound.playLaserShot();
         } catch (e) {}
 
         // 2. Tính toán quỹ đạo đạn plasma
@@ -373,11 +374,11 @@ class VisualEngine {
             this.createImpactBlast(endPos.x, endPos.y);
 
             try {
-                if (window.soundSystem) {
-                    if (this.aliens[targetIndex] && this.aliens[targetIndex].type === 'queen') {
-                        window.soundSystem.playQueenRoar();
-                    } else {
-                        window.soundSystem.playAlienHit();
+                if (sound) {
+                    if (this.aliens[targetIndex] && this.aliens[targetIndex].type === 'queen' && sound.playQueenRoar) {
+                        sound.playQueenRoar();
+                    } else if (sound.playAlienHit) {
+                        sound.playAlienHit();
                     }
                 }
             } catch (e) {}
@@ -396,7 +397,6 @@ class VisualEngine {
 
             // 4. Nếu quái vật chết
             if (isDead) {
-                // Hiện số sát thương nổ kèm thông báo tiêu diệt
                 this.showFloatingCombatText(endPos.x, endPos.y - 30, '💥 TIÊU DIỆT!', 'combat-float-number kill-damage-text');
 
                 if (targetCard) {
@@ -406,7 +406,7 @@ class VisualEngine {
 
                 setTimeout(() => {
                     try {
-                        if (window.soundSystem) window.soundSystem.playAlienDeath();
+                        if (sound && sound.playAlienDeath) sound.playAlienDeath();
                     } catch (e) {}
 
                     this.createAcidDeathBurst(endPos.x, endPos.y);
@@ -428,7 +428,7 @@ class VisualEngine {
     }
 
     /**
-     * HOẠT ẢNH DỊ VẬT NGOÀI HÀNH TINH PHẢN KÍCH KHI TRẢ LỜI SAI HOẶC HẾT GIỜ
+     * HOẠT ẢNH DỊ VẬT PHẢN KÍCH KHI TRẢ LỜI SAI HOẶC HẾT GIỜ
      */
     playAlienRetaliation(attackerIndex, robotRemainingShield, damage = 15, callback) {
         this.isAnimating = true;
@@ -444,8 +444,9 @@ class VisualEngine {
             setTimeout(() => attackerCard.classList.remove('alien-lunge-attack'), 500);
         }
 
+        const sound = window.soundSystem || window.audio;
         try {
-            if (window.soundSystem) window.soundSystem.playAlienAttack();
+            if (sound && sound.playAlienAttack) sound.playAlienAttack();
         } catch (e) {}
 
         setTimeout(() => {
@@ -467,7 +468,7 @@ class VisualEngine {
             }
 
             try {
-                if (window.soundSystem) window.soundSystem.playAlarmKlaxon();
+                if (sound && sound.playAlarmKlaxon) sound.playAlarmKlaxon();
             } catch (e) {}
 
             // Hiện chữ mất khiên
@@ -507,7 +508,7 @@ class VisualEngine {
         } else if (alien.type === 'large') {
             const hpText = card.querySelector('.hp-number');
             const hearts = card.querySelectorAll('.hp-heart');
-            if (hpText) hpText.textContent = `${newHp}/2 HP`;
+            if (hpText) hpText.textContent = `${newHp}/${alien.maxHp} HP`;
             if (hearts) {
                 hearts.forEach((h, i) => {
                     h.className = `hp-heart ${i < newHp ? 'heart-full' : 'heart-empty'}`;
@@ -516,7 +517,7 @@ class VisualEngine {
         } else {
             const hpText = card.querySelector('.hp-number');
             const hearts = card.querySelectorAll('.hp-heart');
-            if (hpText) hpText.textContent = `${newHp}/1 HP`;
+            if (hpText) hpText.textContent = `${newHp}/${alien.maxHp} HP`;
             if (hearts && hearts[0]) {
                 hearts[0].className = `hp-heart ${newHp > 0 ? 'heart-full' : 'heart-empty'}`;
             }
@@ -588,3 +589,4 @@ class VisualEngine {
         }, 900);
     }
 }
+

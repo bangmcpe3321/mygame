@@ -1,86 +1,193 @@
-# 🤖 Aegis Protocol: Starfall | Chiến Dịch Vũ Trụ Đột Kích
+# TRÀ MỘC · AEGIS PROTOCOL — Độc Quyền: Quyền Lực & Cái Giá
 
-**Aegis Protocol: Starfall** là tựa game Quiz RPG chiến đấu theo lượt (Turn-based RPG) mang phong cách chiến thuật **Angry Birds Epic** kết hợp đồ họa mỹ thuật số AI sống động và hệ thống tính điểm tốc độ **Quizizz**.
+Game kết hợp **Đấu Trường Chiến Đấu Theo Lượt (Turn-Based Card RPG)** cùng **Mô Phỏng Kinh Tế & Bài Học Triết Học Mác – Lênin**.
+Nhóm 4 · Học phần Triết học Mác – Lênin (2026).
 
----
-
-## 🌌 Cốt Truyện Bối Cảnh (Storyline)
-
-Vào năm 2284, trên hải trình vận tải khoáng thạch năng lượng đến giao thương với nền văn minh ngoài hành tinh Xylar, phi thuyền vận tải **Aegis-7** bất ngờ va chạm dữ dội với cơn bão thiên thạch không gian, khiến hệ thống động cơ phản lực trọng trường sụp đổ.
-
-Con tàu buộc phải hạ cánh khẩn cấp xuống một hành tinh cằn cỗi hoang phế ngoài rìa Ngân Hà. Ngay sau vụ va chạm kinh hoàng, lớp vỏ tàu bị xé rách và hàng trăm cá thể quái vật ngoài hành tinh dạng **Xenomorph** khát máu ồ ạt tràn vào các khoang tàu.
-
-Trước nguy cơ phi thuyền bị phá hủy hoàn toàn, **Robot Chiến Đấu Bảo An UNIT-07** tự động kích hoạt hệ thống vũ khí súng Plasma Blaster. Nhiệm vụ của bạn là điều khiển Unit-07 vượt qua 3 khu vực hiểm hóc của con tàu, tiêu diệt bầy dị vật để tiến vào **Cầu Tàu (Command Bridge)** và kích hoạt **Cột Hải Đăng Cứu Hộ Khẩn Cấp (S.O.S Rescue Beacon)** phóng thẳng vào không gian vũ trụ!
+Một game trình duyệt thuần HTML/CSS/JavaScript: **không build, không server, không phụ thuộc**.
+Mở `index.html` là chơi.
 
 ---
 
-## 🎮 Cơ Chế Chiến Đấu Theo Lượt (Turn-based RPG Mechanics - Angry Birds Epic Style)
+## Cốt truyện & Bối cảnh
 
-Chiến trường được chia thành 2 bên trực quan:
-* **Bên trái:** Robot Unit-07 với súng Plasma Blaster và thanh khiên năng lượng (100 HP Shield).
-* **Bên phải:** Đội hình quái vật ngoài hành tinh được xếp theo từng khu vực với các chỉ số máu riêng biệt.
+Năm 2124, trên **Liên bang Vành đai** — một nền văn minh sống trong các trạm không gian và vành quỹ đạo:
+Trên hải trình vận tải nguyên liệu lá Mộc thủy canh qua dải thiên thạch, phi thuyền Aegis bất ngờ gặp bão thiên thạch và va chạm hạ cánh khẩn cấp. Lớp vỏ tàu bị thủng, bầy quái vật ngoài hành tinh dạng Xenomorph ồ ạt tràn vào đe dọa trạm và cơ sở kinh doanh.
 
-### Quy Tắc Chiến Đấu & Tiêu Diệt:
-* **Trả lời đúng một câu hỏi:** Robot nạp năng lượng và bắn một tia **Plasma Blaster** bay xé gió qua màn hình, tạo vụ nổ plasma và gây **1 sát thương** lên quái vật mục tiêu.
-* **Trả lời sai hoặc hết giờ (15s):** Đội quân dị vật phản kích lao tới cắn xé/phun acid vào Robot, khiến khiên Robot bị giảm **15 điểm Shield** kèm hiệu ứng rung lắc màn hình và báo động đỏ.
-* **Người chơi có thể bấm chuột vào bất kỳ quái vật nào để khóa tâm ngắm (Target Lock)**, hoặc hệ thống sẽ tự động ưu tiên ngắm bắn quái vật còn sống đầu tiên.
+Bạn chỉ huy **Robot Bảo An UNIT-07** (trang bị súng Plasma Blaster và khiên 200 HP). Nhiệm vụ của bạn là nạp đạn Plasma bằng các câu hỏi tri thức Triết học Mác – Lênin, tiêu diệt bầy dị vật qua 3 khu vực chiến trường (`Kho Hàng`, `Lò Phản Ứng`, `Cầu Tàu`), đồng thời đưa ra 36 quyết định chiến lược để xây dựng thương hiệu Trà Mộc, giải mã bản chất của Độc Quyền và phát cột Hải Đăng Cứu Hộ S.O.S!
 
-### Chi Tiết 3 Khu Vực Thử Thách:
+Luận đề của game:
 
-1. **Khu Vực 1: Kho Hàng Bị Phá Hủy (Cargo Bay)**
-   * **Kẻ địch:** 4 Dị vật nhỏ (Swarm Drones).
-   * **Chỉ số:** 1 HP mỗi con.
-   * **Điều kiện vượt màn:** Trả lời đúng **4 câu hỏi** để tiêu diệt toàn bộ 4 con nhỏ.
-
-2. **Khu Vực 2: Khoang Lò Phản Ứng (Reactor Core)**
-   * **Kẻ địch:** 2 Dị vật nhỏ (Swarm Drones, 1 HP) + 2 Dị vật Chiến Binh bọc giáp gai (Xeno Brutes, 2 HP).
-   * **Chỉ số:** Quái nhỏ cần 1 đòn; Quái lớn bọc giáp cần **2 đòn bắn trúng** (2 câu đúng) mới bị tiêu diệt.
-   * **Điều kiện vượt màn:** Trả lời đúng **6 câu hỏi** ($1 + 1 + 2 + 2 = 6$).
-
-3. **Khu Vực 3: Cầu Tàu / Đài Chỉ Huy (Command Bridge)**
-   * **Kẻ địch:** 1 Dị vật nhỏ hộ vệ (Royal Guard Drone, 1 HP) + **1 NỮ CHÚA XENOMORPH (Alien Hive Queen Boss, 5 HP)**.
-   * **Chỉ số:** Nữ Chúa sở hữu thanh máu Boss 5 vạch chia đoạn. Cần **5 đòn bắn trúng** (5 câu đúng) để hạ gục Nữ Chúa.
-   * **Điều kiện chiến thắng:** Trả lời đúng **6 câu hỏi** ($1 + 5 = 6$) để tiêu diệt Nữ Chúa và phát tín hiệu cứu hộ!
+> Quá trình tích tụ và tập trung tư bản tất yếu sinh ra độc quyền.
+> Mỗi lựa chọn trên thương trường đều đi kèm cái giá phải trả.
 
 ---
 
-## 🎬 Hoạt Cảnh Điện Ảnh Truyện Tranh (Comic Cutscenes)
+## Cơ chế Đấu Trường RPG & Minh họa AI sống động
 
-* **Hoạt cảnh mở đầu (Intro Cutscene):** 
-  * Tự động trình chiếu 3 phân cảnh truyện tranh điện ảnh với hiệu ứng chuyển động Ken Burns và tàn tro không gian:
-    1. Cơn bão thiên thạch không gian tập kích tàu Aegis-7.
-    2. Cú hạ cánh khẩn cấp tóe lửa xuống bề mặt hành tinh hoang vu.
-    3. Bầy dị vật ngoài hành tinh tràn qua các vết thủng hành lang.
-  * Tích hợp thanh tiến trình tự động và nút **BỎ QUA (Skip)** để vào ngay trận đấu.
-* **Hoạt cảnh kết thúc chiến dịch (Victory Epilogue):**
-  * Nữ Chúa gục ngã trước luồng đạn plasma huỷ diệt.
-  * Unit-07 cắm thẻ năng lượng vào bàn điều khiển chính, phóng cột hải đăng cứu hộ màu lam rực rỡ xuyên tầng khí quyển vào vũ trụ sâu thẳm.
-  * Bảng tổng kết cấp bậc sinh tồn (Hạng S/A/B), độ chính xác và tổng điểm.
-
----
-
-## 🏆 Tính Năng Quizizz & Multiplayer Trực Tiếp
-
-* **Bộ đếm thời gian 15s:** Đổi màu từ Xanh ➔ Vàng ➔ Đỏ.
-* **Điểm thưởng tốc độ & Chuỗi Streak:** Càng trả lời nhanh và chuỗi liên tục càng nhận được nhiều điểm thưởng.
-* **Bảng xếp hạng phi đội (Live Leaderboard):** Hiển thị top người chơi cùng dàn bot người máy mô phỏng (Titan-Prime, Nova-Valkyrie, Cyber-Aegis...).
-* **Phòng chỉ huy Host:** Có Room PIN (`AEGIS-7`), cho phép Host kích hoạt chiến dịch đồng loạt cho toàn phi đội hoặc reset điểm số.
+- **Đấu trường Thẻ bài trực quan (Visual Theater):**
+  - **Bên trái:** Thẻ bài Robot Unit-07 với thanh Khiên Năng Lượng 200 HP, nòng súng phát sáng, màng bảo vệ khiên.
+  - **Bên phải:** Đội hình thẻ bài Dị vật ngoài hành tinh (Swarm Drones 1 HP, Xeno Brutes 2 HP, và Nữ Chúa Hive Queen Boss 4 HP có thanh máu vương miện).
+  - **Khóa mục tiêu (Target Lock):** Bấm chuột vào bất kỳ quái vật nào để khóa tâm ngắm.
+- **Hoạt ảnh & Hiệu ứng chiến đấu (Combat FX):**
+  - **Trả lời đúng:** Robot giật súng bắn tia Plasma xanh lá bay xé gió qua màn hình, tạo vụ nổ tia lửa hạt, trừ máu quái vật, số sát thương `-1 HP` / `💥 TIÊU DIỆT!` nổi lên kèm khói tan biến acid.
+  - **Trả lời sai hoặc hết giờ:** Dị vật lao tới cắn xé, màn hình rung lắc chớp đỏ, khiên Robot tụt 15 HP kèm còi báo động khẩn cấp.
+- **Hoạt cảnh truyện tranh điện ảnh (Cinematic Comic Cutscenes):**
+  - Phân cảnh mở đầu: Bão thiên thạch, Hạ cánh khẩn cấp, Dị vật tập kích với hiệu ứng Ken Burns và tàn tro không gian bốc lên từ canvas.
+  - Phân cảnh chuyển Hồi: Modal dẫn truyện chuyển giao giữa Kho Hàng, Lò Phản Ứng và Cầu Tàu.
+  - Phân cảnh kết thúc: Nữ Chúa gục ngã, Robot cắm thẻ kích hoạt Cột Hải Đăng Cứu Hộ S.O.S vút vào dải Ngân Hà.
 
 ---
 
-## 📂 Cấu Trúc Mã Nguồn
+## Sáu chỉ số thị trường
+
+Toàn bộ kết cục được quyết định bởi sáu chỉ số, tồn tại xuyên suốt 12 chương và **không bao giờ được
+reset giữa chương**:
+
+| Chỉ số | Ký hiệu | Ý nghĩa |
+| --- | --- | --- |
+| Vốn | 💰 | Tiền mặt, tính bằng `cr` (tín dụng) |
+| Thị phần | 📊 | Phần trăm thị trường trà của Vành đai |
+| Uy tín thương hiệu | ◈ | Mức độ được nể trọng |
+| Niềm tin người tiêu dùng | ♡ | Mức độ được tin tưởng |
+| Quan hệ chính quyền | ⌂ | Thiện chí của Hội đồng |
+| Áp lực pháp lý | § | Càng cao càng gần điều tra và chế tài |
+
+Áp lực pháp lý là chỉ số duy nhất **càng thấp càng tốt** — nó được tô đỏ khi vượt ngưỡng.
+
+## Vòng chơi
+
+Mỗi chương gồm hai bước:
+
+1. **Câu hỏi tri thức** — bốn lựa chọn, không giới hạn thời gian (người chơi có thể đọc kỹ và suy nghĩ thấu đáo). Trả lời đúng được cộng điểm
+   (`1000 + tốc độ + chuỗi`). Sai thì bị quái vật phản kích, nhưng **không chặn câu chuyện**.
+2. **Quyết định chiến lược** — ba lựa chọn. Mỗi lựa chọn có mô tả, tác động chỉ số, hệ quả thực tế
+   và một thẻ tri thức được mở khoá.
+
+Một số lựa chọn bị **khoá sau ngưỡng chỉ số** (ví dụ: cần Uy tín ≥ 18 mới dám đề nghị sáp nhập ngược).
+Nút bị khoá hiển thị rõ phần còn thiếu, ví dụ `🔒 Uy tín ≥ 18 (hiện 12)`.
+
+Điểm số phục vụ bảng xếp hạng và chuỗi thắng. **Điểm không quyết định kết cục — sáu chỉ số mới quyết định.**
+
+## Mười hai chương, ba hồi
+
+| Hồi | Chương | Chủ đề |
+| --- | --- | --- |
+| HỒI I · Khởi nghiệp | 1 – 4 | Một quầy nhỏ học cách tồn tại |
+| HỒI II · Mở rộng | 5 – 8 | Thị phần và cái giá của nó |
+| HỒI III · Phán quyết | 9 – 12 | Quyền lực đứng trước luật chơi |
+
+Các chương đi từ giá bán và chuỗi cung ứng, qua sáp nhập và bán phá giá, đến công chúng, nhà nước,
+lao động, nền tảng, cartel, điều tra chống độc quyền và hiến chương thị trường.
+
+## Sáu kết thúc
+
+| Mã | Kết thúc | Điều kiện điển hình |
+| --- | --- | --- |
+| 01 · Quyền lực | ♛ **Đế chế độc quyền** | Thị phần ≥ 62%, niềm tin thấp, đã thôn tính nhiều lần |
+| 02 · Pháp lý | ⚖ **Ngày công ty bị chia tách** | Áp lực pháp lý ≥ 80 |
+| 03 · Sinh tồn | ◌ **Khi kết sắt trống rỗng** | Vốn ≤ 8 |
+| 04 · Bền vững | ✦ **Dẫn đầu nhờ đổi mới** | Uy tín tốt, niềm tin ≥ 45 |
+| 05 · Niềm tin | ✕ **Bị tẩy chay** | Niềm tin ≤ 12 |
+| 06 · Bí mật | ❖ **Hiến chương Mộc** | Niềm tin ≥ 70, uy tín ≥ 55, chính quyền ≥ 60, pháp lý thấp |
+
+Thứ tự ưu tiên khi xét kết cục: phá sản → chia tách → tẩy chay → hiến chương → đế chế → đổi mới.
+Logic nằm ở `resolveEnding()` trong `data/story.js`.
+
+## Mười tám thẻ tri thức
+
+Mỗi quyết định mở một thẻ; trả lời đúng một số câu hỏi mở thêm thẻ phụ. Thẻ được lưu trong
+**ngăn kéo Thẻ tri thức** (nút 🗂 trên thanh đầu trang) và hiển thị tên, khái niệm tóm tắt và
+phân tích chuyên sâu.
+
+`Cạnh tranh` · `Chiến tranh giá` · `Độc quyền tư nhân` · `Độc quyền nhà nước` ·
+`Lợi nhuận độc quyền` · `Thôn tính & sáp nhập` · `Thao túng giá` · `Luật chống độc quyền` ·
+`Cartel` · `Thị phần` · `Bán phá giá` · `Niềm tin người tiêu dùng` · `Đổi mới sáng tạo` ·
+`Trách nhiệm xã hội` · `Chia tách doanh nghiệp` · `Liên minh cạnh tranh` ·
+`Người tiêu dùng` · `Hiến chương thị trường`
+
+## Tính năng nhiều người chơi
+
+- **Hồ sơ**: đổi tên và avatar (mười biểu tượng), lưu vào `localStorage`.
+- **Bảng xếp hạng trực tiếp**: bạn cùng năm đối thủ máy (Vệ Tinh Xanh, Thương Nhân Sao, Quỹ Đầu Tư Vành,
+  Kiểm Toán Viên, Lữ Khách Ga). Đối thủ trả lời theo nhịp 3,8 giây khi phòng đang chạy.
+- **Phòng Host**: mã phòng dạng `MOC-xxxx`, danh sách người chơi, nút bắt đầu và đặt lại.
+- Đồng bộ giữa các tab cùng máy qua `BroadcastChannel` + sự kiện `storage`.
+
+## Điều khiển bàn phím
+
+| Phím | Tác dụng |
+| --- | --- |
+| `1` – `4` hoặc `A` – `D` | Chọn đáp án |
+| `Enter` / `Space` | Sang bước quyết định, sang chương tiếp |
+| `1` – `3` | Chọn một trong ba quyết định |
+| `Esc` | Đóng ngăn kéo hoặc hộp thoại |
+
+## Bố cục
+
+Ứng dụng chiếm trọn chiều cao màn hình, **không cuộn trang** trên desktop:
+
+```
+header            (hồ sơ · điểm · thẻ · xếp hạng · host · âm thanh)
+progress-strip    (3 hồi, cuộn ngang nếu hẹp)
+market-bar        (6 chỉ số)
+game-viewport     ├── brief-panel   (tóm tắt chương — tự cuộn bên trong)
+                  └── play-panel    (câu hỏi / lựa chọn / hệ quả)
+```
+
+Chỉ bảng tóm tắt bên trái tự cuộn khi nội dung dài. Bốn nút đáp án luôn nằm trong khung nhìn.
+Dưới 880px bố cục chuyển thành một cột và trang được phép cuộn dọc.
+
+## Trợ năng
+
+Điều khiển hoàn toàn bằng bàn phím, vòng focus hiển thị rõ, thông báo qua `aria-live`,
+và tôn trọng `prefers-reduced-motion` (tắt toàn bộ hoạt ảnh).
+
+## Cấu trúc mã nguồn
 
 ```
 mygame/
-├── index.html            # Giao diện chính, HUD, Timer & Sảnh chờ Host
-├── style.css             # Giao diện Sci-Fi, hoạt ảnh súng Plasma, đạn bay, nổ va chạm
+├── index.html            # Khung ứng dụng, đấu trường visual-theater, HUD, Timer & Sảnh chờ Host
+├── style.css             # Giao diện Sci-Fi, đấu trường arena, hoạt ảnh súng Plasma, đạn bay, nổ va chạm
 ├── data/
-│   └── questions.js      # Lời dẫn truyện 3 màn và 24 câu hỏi thiên văn/vật lý vũ trụ
+│   └── story.js          # 12 chương Triết học Mác - Lênin, 6 chỉ số, 18 thẻ tri thức, 6 kết cục, cinematics
 ├── js/
-│   ├── cinematic.js      # Hoạt cảnh truyện tranh mở đầu & kết thúc (Ken Burns, Particle System)
-│   ├── audio.js          # Hệ thống âm thanh Web Audio API (Laser, Alien Hit, Acid Death, Klaxon, Beacon)
-│   ├── visuals.js        # Đấu trường RPG theo lượt, hoạt ảnh Robot bắn và quái phản kích
+│   ├── cinematic.js      # Hoạt cảnh truyện tranh mở đầu & kết thúc (Ken Burns, Canvas Particle System)
+│   ├── visuals.js        # Đấu trường RPG theo lượt, hoạt ảnh Robot bắn Plasma và quái vật phản kích
+│   ├── audio.js          # Hệ thống âm thanh Web Audio API (Laser, Alien Hit, Acid Death, Klaxon, Beacon, Streak)
 │   ├── multiplayer.js    # Bảng xếp hạng trực tiếp & quản trị phòng Host
-│   └── game.js           # Bộ điều khiển vòng lặp chính của Aegis Protocol
-└── assets/               # Đồ họa AI (Robot cầm súng, quái vật, hình nền 3 khu vực, cinematic)
+│   └── game.js           # Bộ điều khiển vòng lặp chính tích hợp chiến đấu và quyết định thị trường
+└── assets/               # Đồ họa tranh AI (Robot Unit-07, quái vật ngoài hành tinh, hình nền 3 khu vực, cinematic)
 ```
+
+Tất cả script là thẻ `<script>` cổ điển dùng chung biến toàn cục — không module, không bundler.
+Thứ tự nạp: `data/story.js` → `js/cinematic.js` → `js/visuals.js` → `js/audio.js` → `js/multiplayer.js` → `js/game.js`.
+
+### Chỉnh sửa nội dung
+
+Mọi câu chữ nằm trong `data/story.js`. Thêm hoặc sửa một chương chỉ cần sửa `CHAPTERS`;
+giao diện tự sinh theo đúng cấu trúc dữ liệu:
+
+```js
+{
+  id, act, year, place, stage, title, scene,
+  situation: [ '...', '...' ],
+  dialogue: { speaker, text },
+  question: { prompt, options: [4], correctIndex, explanation, insightCard? },
+  choices: [
+    {
+      title, desc,
+      deltas: { capital, share, reputation, trust, gov, legal },
+      outcome,
+      card,                 // slug trong CARDS
+      require?              // { tenChiSo: nguongToiThieu }
+    }
+  ]
+}
+```
+
+## Ghi chú
+
+- Tiền tệ trong game là `cr` (tín dụng), không phải `đồng`.
+- Kịch bản gốc được lưu ở `STORY.md`; bản trong game đã chuyển bối cảnh từ Trái Đất sang Vành đai
+  nhưng giữ nguyên toàn bộ số liệu tác động chỉ số và nội dung lý luận.
+- Toàn bộ ảnh mỹ thuật số AI trong `assets/` được liên kết trực tiếp vào Đấu trường chiến đấu (`visuals.js`) và Hoạt cảnh điện ảnh (`cinematic.js`).
