@@ -1,5 +1,5 @@
 /**
- * HỆ THỐNG PHÂN CẢNH ĐIỆN ẢNH & TRUYỆN TRANH (AEGIS PROTOCOL CINEMATICS)
+ * HỆ THỐNG PHÂN CẢNH ĐIỆN ẢNH & TRUYỆN TRANH (SCI-FI CINEMATIC ENGINE)
  * - Tự động chuyển cảnh với hiệu ứng Ken Burns, tàn tro không gian và thanh tiến trình.
  * - Hộp thoại truyện tranh công nghệ cao luôn hiển thị sắc nét, cố định và rõ ràng.
  * - Hỗ trợ nút "HỒI TIẾP THEO ➔" để chuyển nhanh và "BỎ QUA ⏭" để vào thẳng trận đấu.
@@ -175,3 +175,4 @@ class SciFiCinematic {
         }
     }
 }
+

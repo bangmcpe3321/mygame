@@ -3,6 +3,8 @@
 .env.*
 *.config.json
 mcp_config.json
+opencode.json
+opencode.json.*
 
 # Thư mục tạm & log
 *.log
