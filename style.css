@@ -513,24 +513,25 @@ h1, h2, h3 {
 }
 
 .game-lower-deck {
-    display: grid;
-    grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 12px;
     flex: 1;
-    min-height: 340px;
+    min-height: auto;
 }
 
-/* --------------------------- BẢNG BỐI CẢNH ------------------------ */
+/* --------------------------- BẢNG BỐI CẢNH (ĐẨY LÊN TRÊN ĐỂ DỄ NHÌN) ------------------------ */
 
 .brief-panel {
     min-height: 0;
+    max-height: 195px;
     overflow-y: auto;
-    padding: 16px 16px 18px;
+    padding: 14px 18px 16px;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line-soft);
+    border: 1px solid rgba(0, 255, 136, 0.35);
     background:
-        linear-gradient(180deg, rgba(16, 32, 36, 0.9), rgba(8, 16, 19, 0.86));
-    box-shadow: var(--shadow-deep);
+        linear-gradient(135deg, rgba(8, 24, 18, 0.94) 0%, rgba(4, 14, 10, 0.9) 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 255, 136, 0.05);
     scrollbar-width: thin;
     scrollbar-color: var(--line-mid) transparent;
 }
@@ -1570,6 +1571,12 @@ h1, h2, h3 {
         grid-template-columns: 1fr;
     }
 
+    .arena-battlefield {
+        justify-content: center !important;
+        padding-right: 0 !important;
+        gap: 12px !important;
+    }
+
     .aliens-formation-grid {
         grid-template-columns: repeat(2, minmax(120px, 1fr)) !important;
     }
@@ -1579,6 +1586,7 @@ h1, h2, h3 {
     }
 
     .hero-combatant-zone {
+        margin-left: 0 !important;
         flex: 0 0 160px !important;
     }
 
@@ -1782,11 +1790,12 @@ h1, h2, h3 {
 
 .arena-battlefield {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    margin: 12px 0;
+    margin: 10px 0;
     position: relative;
-    gap: 16px;
+    gap: 20px;
+    padding-right: 12px;
 }
 
 /* THẺ BÀI CHIẾN THUẬT */
@@ -1932,11 +1941,19 @@ h1, h2, h3 {
     color: #ff7b92;
 }
 
-/* THẺ BÀI ROBOT HERO (TRÁI) */
+/* THẺ BÀI ROBOT HERO (TRÁI NHƯNG THU GỌN VỀ BÊN PHẢI) */
 .hero-combatant-zone {
-    flex: 0 0 220px;
+    flex: 0 0 210px;
     display: flex;
     justify-content: center;
+    margin-left: auto;
+}
+
+.combat-crossfire-zone {
+    flex: 0 0 28px;
+    height: 100%;
+    position: relative;
+    pointer-events: none;
 }
 
 .hero-battle-card {
@@ -2016,9 +2033,9 @@ h1, h2, h3 {
 
 /* THẺ BÀI QUÁI VẬT ALIEN SQUAD (PHẢI) */
 .aliens-combatant-zone {
-    flex: 1;
+    flex: 0 0 auto;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .aliens-formation-grid {
