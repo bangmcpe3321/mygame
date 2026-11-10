@@ -37,6 +37,7 @@ class TraMocGame {
         this.robotMaxShield = 200;
         this.robotShield = 200;
         this.currentSectorIndex = 0;
+        this.selectedTargetIndex = 0;
         this.aliensState = this.getSectorCompetitors(0);
 
         // Bộ đếm thời gian
@@ -210,8 +211,8 @@ class TraMocGame {
                     this.el.joinStatusDisplay.innerHTML = `⏳ Đang kết nối tới phòng #${pin}...`;
                 }
                 if (window.multiplayer) {
-                    window.multiplayer.joinRoomByPin(pin, (success, msg) => {
-                        if (success) {
+                    window.multiplayer.joinRoomByPin(pin, (status, msg) => {
+                        if (status === true) {
                             if (this.el.joinStatusDisplay) {
                                 this.el.joinStatusDisplay.innerHTML = `🟢 <span style="color:var(--tech-green)">${msg}</span>`;
                             }
@@ -221,9 +222,13 @@ class TraMocGame {
                             this.spawnToast(msg, 'is-good');
                             this.renderHostPlayers();
                             this.renderLeaderboard();
+                        } else if (status === 'loading') {
+                            if (this.el.joinStatusDisplay) {
+                                this.el.joinStatusDisplay.innerHTML = `⏳ <span style="color:#00e5ff">${msg}</span>`;
+                            }
                         } else {
                             if (this.el.joinStatusDisplay) {
-                                this.el.joinStatusDisplay.innerHTML = `🔴 <span style="color:var(--danger)">${msg}</span>`;
+                                this.el.joinStatusDisplay.innerHTML = `🔴 <span style="color:var(--danger, #ef4444)">${msg}</span>`;
                             }
                             this.spawnToast(msg, 'is-bad');
                         }
@@ -360,7 +365,12 @@ class TraMocGame {
         this.renderProgress();
         this.renderMarketBar();
         if (this.visuals) {
-            this.visuals.renderArena(this.currentSectorIndex, this.aliensState, this.robotShield);
+            if (typeof this.selectedTargetIndex === 'number' && this.aliensState && this.aliensState[this.selectedTargetIndex] && this.aliensState[this.selectedTargetIndex].hp > 0) {
+                this.visuals.currentTargetIndex = this.selectedTargetIndex;
+            }
+            this.visuals.renderArena(this.currentSectorIndex, this.aliensState, this.robotShield, (idx) => {
+                this.selectedTargetIndex = idx;
+            });
         }
         this.renderBrief();
         this.renderPlay();
@@ -796,7 +806,12 @@ class TraMocGame {
 
         // Render Đấu trường VisualEngine
         if (this.visuals) {
-            this.visuals.renderArena(this.currentSectorIndex, this.aliensState, this.robotShield);
+            if (typeof this.selectedTargetIndex === 'number' && this.aliensState && this.aliensState[this.selectedTargetIndex] && this.aliensState[this.selectedTargetIndex].hp > 0) {
+                this.visuals.currentTargetIndex = this.selectedTargetIndex;
+            }
+            this.visuals.renderArena(this.currentSectorIndex, this.aliensState, this.robotShield, (idx) => {
+                this.selectedTargetIndex = idx;
+            });
         }
 
         this.renderProgress();
@@ -833,10 +848,12 @@ class TraMocGame {
             if (q.insightCard) this.unlockCard(q.insightCard);
 
             // Tìm mục tiêu đang chọn hoặc mục tiêu còn sống đầu tiên
-            let targetIdx = this.visuals ? this.visuals.currentTargetIndex : 0;
+            let targetIdx = this.visuals && typeof this.visuals.currentTargetIndex === 'number' ? this.visuals.currentTargetIndex : (typeof this.selectedTargetIndex === 'number' ? this.selectedTargetIndex : 0);
             if (!this.aliensState[targetIdx] || this.aliensState[targetIdx].hp <= 0) {
                 targetIdx = this.aliensState.findIndex((a) => a.hp > 0);
             }
+            this.selectedTargetIndex = targetIdx;
+            if (this.visuals) this.visuals.currentTargetIndex = targetIdx;
 
             if (targetIdx !== -1) {
                 const target = this.aliensState[targetIdx];
@@ -1068,6 +1085,7 @@ class TraMocGame {
 
         this.robotShield = 200;
         this.currentSectorIndex = 0;
+        this.selectedTargetIndex = 0;
         this.aliensState = this.getSectorCompetitors(0);
 
         if (clearScore) {

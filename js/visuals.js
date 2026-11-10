@@ -62,8 +62,13 @@ class VisualEngine {
 
         const config = sectorConfigs[sectorIndex] || sectorConfigs[0];
 
-        // Tự động tìm mục tiêu còn sống đầu tiên
-        this.autoSelectFirstAliveTarget();
+        // Giữ nguyên mục tiêu người chơi đã chọn nếu mục tiêu đó vẫn còn sống
+        const isCurrentTargetValid = typeof this.currentTargetIndex === 'number' &&
+                                     this.aliens[this.currentTargetIndex] &&
+                                     this.aliens[this.currentTargetIndex].hp > 0;
+        if (!isCurrentTargetValid) {
+            this.autoSelectFirstAliveTarget();
+        }
 
         const arenaHtml = `
             <div class="scifi-arena star-formation-arena" id="scifi-arena" style="background-image: linear-gradient(rgba(3, 10, 6, 0.8), rgba(3, 10, 6, 0.92)), url('${config.bg}');">
@@ -204,18 +209,20 @@ class VisualEngine {
     }
 
     /**
-     * Bắt sự kiện khi click thẻ bài để chọn mục tiêu
+     * Bắt sự kiện khi click / tap thẻ bài để chọn mục tiêu
      */
     bindAlienClickEvents() {
         const cards = this.container.querySelectorAll('.alien-battle-card');
         cards.forEach(card => {
-            card.addEventListener('click', () => {
+            const handleSelect = (e) => {
                 if (this.isAnimating) return;
                 const idx = parseInt(card.getAttribute('data-alien-index'), 10);
-                if (this.aliens[idx] && this.aliens[idx].hp > 0) {
+                if (typeof idx === 'number' && !isNaN(idx) && this.aliens[idx] && this.aliens[idx].hp > 0) {
                     this.selectTarget(idx);
                 }
-            });
+            };
+            card.addEventListener('click', handleSelect);
+            card.addEventListener('pointerdown', handleSelect);
         });
     }
 
@@ -241,7 +248,8 @@ class VisualEngine {
         this.currentTargetIndex = targetIndex;
 
         const cards = this.container.querySelectorAll('.alien-battle-card');
-        cards.forEach((card, idx) => {
+        cards.forEach((card) => {
+            const idx = parseInt(card.getAttribute('data-alien-index'), 10);
             if (idx === targetIndex && this.aliens[idx] && this.aliens[idx].hp > 0) {
                 card.classList.add('is-target-locked');
             } else {
@@ -249,7 +257,13 @@ class VisualEngine {
             }
         });
 
-        if (this.onTargetSelect) {
+        // Âm thanh phản hồi khi chọn mục tiêu
+        const sound = window.soundSystem || window.audio;
+        try {
+            if (sound && typeof sound.playChoice === 'function') sound.playChoice();
+        } catch (e) {}
+
+        if (typeof this.onTargetSelect === 'function') {
             this.onTargetSelect(targetIndex);
         }
     }

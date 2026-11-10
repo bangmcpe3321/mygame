@@ -7,6 +7,39 @@
  * - Tự động bù các Tập Đoàn Đối Thủ AI nếu phòng có dưới 5 người chơi thật.
  */
 
+/**
+ * CẤU HÌNH ICE SERVERS TOÀN DIỆN (STUN & TURN RELAY)
+ * -------------------------------------------------------------
+ * Vượt qua Symmetric NAT, CGNAT và Tường lửa (Firewall) chặn UDP
+ * thường gặp ở Mạng Trường Học / Ký Túc Xá / Doanh nghiệp.
+ */
+const PEER_ICE_CONFIG = {
+    iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'stun:stun2.l.google.com:19302' },
+        { urls: 'stun:stun3.l.google.com:19302' },
+        { urls: 'stun:stun4.l.google.com:19302' },
+        { urls: 'stun:stun.cloudflare.com:3478' },
+        { urls: 'stun:global.stun.twilio.com:3478' },
+        // Máy chủ trung chuyển TURN Relay qua cổng TCP 443 (HTTPS) - Vượt tường lửa trường học
+        {
+            urls: [
+                'turn:openrelay.metered.ca:80',
+                'turn:openrelay.metered.ca:443',
+                'turn:openrelay.metered.ca:443?transport=tcp'
+            ],
+            username: 'openrelay',
+            credential: 'openrelay'
+        }
+    ],
+    iceCandidatePoolSize: 10
+};
+
+if (typeof window !== 'undefined') {
+    window.PEER_ICE_CONFIG = PEER_ICE_CONFIG;
+}
+
 class MarketMultiplayer {
     constructor() {
         this.channelName = 'tra_moc_pvp_channel';
@@ -134,10 +167,11 @@ class MarketMultiplayer {
         if (typeof Peer === 'undefined') return;
 
         try {
-            // Khởi tạo Peer Host theo mã phòng
+            // Khởi tạo Peer Host theo mã phòng với cấu hình STUN & TURN Relay
             const peerId = 'tramoc_room_' + this.roomCode;
             this.peer = new Peer(peerId, {
-                debug: 0
+                debug: 0,
+                config: PEER_ICE_CONFIG
             });
 
             this.peer.on('open', () => {
@@ -149,9 +183,11 @@ class MarketMultiplayer {
             });
 
             this.peer.on('error', (err) => {
-                // Nếu ID đã tồn tại (phòng đã có người làm host), tạo peer ngẫu nhiên
+                // Nếu ID đã tồn tại (phòng đã có người làm host), tạo peer ngẫu nhiên với ICE config
                 if (err.type === 'unavailable-id') {
-                    this.peer = new Peer({ debug: 0 });
+                    this.peer = new Peer({ debug: 0, config: PEER_ICE_CONFIG });
+                } else {
+                    console.warn('PeerJS Host event:', err);
                 }
             });
         } catch (e) {
@@ -448,20 +484,35 @@ class MarketMultiplayer {
             return false;
         }
 
-        if (onStatusCallback) onStatusCallback(null, 'Đang tìm kiếm phòng ' + cleanPin + '...');
+        if (onStatusCallback) onStatusCallback('loading', 'Đang kết nối phòng ' + cleanPin + ' qua WebRTC (Hỗ trợ TURN)...');
 
         const targetPeerId = 'tramoc_room_' + cleanPin;
 
         if (typeof Peer !== 'undefined') {
             try {
                 if (this.peer) this.peer.destroy();
-                this.peer = new Peer({ debug: 0 });
+                this.peer = new Peer({
+                    debug: 0,
+                    config: PEER_ICE_CONFIG
+                });
+
+                let hasConnected = false;
+                const connectionTimeout = setTimeout(() => {
+                    if (!hasConnected) {
+                        if (this.hostConn) try { this.hostConn.close(); } catch (e) {}
+                        if (onStatusCallback) {
+                            onStatusCallback(false, 'Hết thời gian kết nối tới phòng ' + cleanPin + ' (Mạng trường học có thể chặn cổng P2P UDP).');
+                        }
+                    }
+                }, 12000);
 
                 this.peer.on('open', () => {
-                    const conn = this.peer.connect(targetPeerId);
+                    const conn = this.peer.connect(targetPeerId, { reliable: true });
                     this.hostConn = conn;
 
                     conn.on('open', () => {
+                        hasConnected = true;
+                        clearTimeout(connectionTimeout);
                         this.isHost = false;
                         this.roomCode = cleanPin;
                         conn.send({
@@ -473,12 +524,24 @@ class MarketMultiplayer {
                             this.handleMessage(data);
                         });
 
-                        if (onStatusCallback) onStatusCallback(true, '🟢 Đã kết nối phòng ' + cleanPin + '! Chờ Host bắt đầu...');
+                        if (onStatusCallback) onStatusCallback(true, 'Đã kết nối phòng ' + cleanPin + '! Chờ Host bắt đầu...');
                     });
 
                     conn.on('error', (err) => {
+                        clearTimeout(connectionTimeout);
                         if (onStatusCallback) onStatusCallback(false, 'Không thể kết nối tới phòng ' + cleanPin + '. Vui lòng kiểm tra lại mã PIN.');
                     });
+                });
+
+                this.peer.on('error', (err) => {
+                    clearTimeout(connectionTimeout);
+                    if (err.type === 'peer-unavailable') {
+                        if (onStatusCallback) onStatusCallback(false, 'Không tìm thấy phòng ' + cleanPin + '. Hãy chắc chắn Host đã tạo phòng và đang online!');
+                    } else if (err.type === 'network' || err.type === 'server-error') {
+                        if (onStatusCallback) onStatusCallback(false, 'Máy chủ PeerJS báo lỗi mạng. Mạng trường có thể đang chặn WebSocket.');
+                    } else {
+                        if (onStatusCallback) onStatusCallback(false, 'Lỗi kết nối WebRTC: ' + (err.type || err.message));
+                    }
                 });
             } catch (e) {
                 // Fallback nếu PeerJS lỗi
@@ -488,7 +551,7 @@ class MarketMultiplayer {
                     type: 'PLAYER_JOIN_REQUEST',
                     player: this.buildSelfEntry()
                 });
-                if (onStatusCallback) onStatusCallback(true, '🟢 Đã gửi yêu cầu vào phòng ' + cleanPin + ' (Chế độ Cục bộ).');
+                if (onStatusCallback) onStatusCallback(true, 'Đã gửi yêu cầu vào phòng ' + cleanPin + ' (Chế độ Cục bộ).');
             }
         } else {
             this.isHost = false;
@@ -497,7 +560,7 @@ class MarketMultiplayer {
                 type: 'PLAYER_JOIN_REQUEST',
                 player: this.buildSelfEntry()
             });
-            if (onStatusCallback) onStatusCallback(true, '🟢 Đã gửi yêu cầu vào phòng ' + cleanPin + '.');
+            if (onStatusCallback) onStatusCallback(true, 'Đã gửi yêu cầu vào phòng ' + cleanPin + '.');
         }
 
         return true;
